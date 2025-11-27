@@ -1,8 +1,20 @@
 import 'package:flutter/material.dart';
+
 import 'package:safe_vault/views/home_page.dart';
+import 'package:provider/provider.dart';
+
+import 'package:safe_vault/viewmodels/DatabaseService.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        // Providers to add
+        Provider(create: (_) => DatabaseService()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
