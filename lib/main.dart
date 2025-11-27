@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:safe_vault/view/home_page.dart';
+import 'package:safe_vault/views/home_page.dart';
 
 void main() {
   runApp(const MyApp());
