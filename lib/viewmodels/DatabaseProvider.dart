@@ -140,6 +140,26 @@ class DatabaseProvider with ChangeNotifier {
     return result;
   }
 
+
+  /// Retrieve a password by its id from the database.<br>
+  /// Returns the password.<br>
+  /// @param id The id of the password to retrieve.<br>
+  Future<Password?> retrievePasswordFromId(int id) async {
+    if(_db == null) {
+      throw Exception("Database is not initialized");
+    }
+    final List<Map<String, dynamic>> queryResult = await _db!.query(
+      'Password',
+      where: 'id_pwd = ?',
+      whereArgs: [id],
+    );
+    if(queryResult.isEmpty) {
+      return null;
+    }
+    final result = Password.fromMap(queryResult.first);
+    return result;
+  }
+
   /// Update a password in the database.<br>
   /// Returns the number of rows affected.<br>
   /// @param pwd The password to update.<br>

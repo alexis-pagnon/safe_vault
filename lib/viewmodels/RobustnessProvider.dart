@@ -19,10 +19,10 @@ class RobustnessProvider with ChangeNotifier {
   int _strong = 0;
   int _totalScore = 0;
 
-  List<int> _strongPasswords = [];
-  List<int> _weakPasswords = [];
-  List<int> _compromisedPasswords = [];
-  List<int> _reusedPasswords = [];
+  final List<int> _strongPasswords = [];
+  final List<int> _weakPasswords = [];
+  final List<int> _compromisedPasswords = [];
+  final List<int> _reusedPasswords = [];
 
   RobustnessProvider({required this.databaseProvider});
 
