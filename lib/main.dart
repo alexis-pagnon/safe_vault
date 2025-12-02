@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:safe_vault/views/home_page.dart';
 import 'package:provider/provider.dart';
 
-import 'package:safe_vault/viewmodels/DatabaseService.dart';
+import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
         // Providers to add
-        Provider(create: (_) => DatabaseService()),
+        Provider(create: (_) => DatabaseProvider()),
       ],
       child: const MyApp(),
     ),

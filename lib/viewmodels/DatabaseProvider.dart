@@ -5,7 +5,7 @@ import 'package:path/path.dart';
 import '../models/database/Note.dart';
 import '../models/database/Password.dart';
 
-class DatabaseService with ChangeNotifier {
+class DatabaseProvider with ChangeNotifier {
   String _databaseName = "safe_vault.db";
   Database? _db;
 
@@ -36,11 +36,9 @@ class DatabaseService with ChangeNotifier {
   Future<bool> doesExist() async {
     String path = await getDatabasesPath();
     if(await databaseExists(join(path,_databaseName))){
-      notifyListeners();
       return true;
     }
     else {
-      notifyListeners();
       return false;
     }
   }
@@ -75,6 +73,7 @@ class DatabaseService with ChangeNotifier {
         password TEXT NOT NULL,
         username TEXT NOT NULL,
         website TEXT,
+        is_favorite INTEGER NOT NULL,
         id_category INTEGER,
         FOREIGN KEY (id_category) REFERENCES Category (id_category) ON DELETE CASCADE
       );
@@ -127,20 +126,17 @@ class DatabaseService with ChangeNotifier {
       throw Exception("Database is not initialized");
     }
     final result = await _db!.insert('Password', pwd.toMap());
-    notifyListeners();
     return result;
   }
 
   /// Retrieve all passwords from the database.<br>
   /// Returns a list of passwords.<br>
-  /// @param pwd The password to insert.<br>
-  Future<List<Password>> retrievePasswords(Password pwd) async {
+  Future<List<Password>> retrievePasswords() async {
     if(_db == null) {
       throw Exception("Database is not initialized");
     }
     final List<Map<String, dynamic>> queryResult = await _db!.query('Password');
     final result = queryResult.map((e) => Password.fromMap(e)).toList();
-    notifyListeners();
     return result;
   }
 
@@ -157,7 +153,6 @@ class DatabaseService with ChangeNotifier {
       where: 'id_pwd = ?',
       whereArgs: [pwd.id_pwd],
     );
-    notifyListeners();
     return result;
   }
 
@@ -174,7 +169,6 @@ class DatabaseService with ChangeNotifier {
       where: 'id_pwd = ?',
       whereArgs: [id],
     );
-    notifyListeners();
     return result;
   }
 
@@ -189,21 +183,18 @@ class DatabaseService with ChangeNotifier {
       throw Exception("Database is not initialized");
     }
     final result = await _db!.insert('Note', note.toMap());
-    notifyListeners();
     return result;
   }
 
 
   /// Retrieve all notes from the database.<br>
   /// Returns a list of notes.<br>
-  /// @param note The notes to insert.<br>
-  Future<List<Note>> retrieveNotes(Note note) async {
+  Future<List<Note>> retrieveNotes() async {
     if(_db == null) {
       throw Exception("Database is not initialized");
     }
     final List<Map<String, dynamic>> queryResult = await _db!.query('Note');
     final result = queryResult.map((e) => Note.fromMap(e)).toList();
-    notifyListeners();
     return result;
   }
 
@@ -220,7 +211,6 @@ class DatabaseService with ChangeNotifier {
       where: 'id_note = ?',
       whereArgs: [note.id_note],
     );
-    notifyListeners();
     return result;
   }
 
@@ -237,7 +227,6 @@ class DatabaseService with ChangeNotifier {
       where: 'id_note = ?',
       whereArgs: [id],
     );
-    notifyListeners();
     return result;
   }
 
