@@ -1,0 +1,76 @@
+import 'package:flutter/material.dart';
+import 'package:safe_vault/models/theme/AppColors.dart';
+
+class AppThemes {
+  static final ThemeData light = ThemeData(
+    brightness: Brightness.light,
+    fontFamily: "Montserrat",
+    useMaterial3: true,
+    extensions: const [
+      AppColors(
+        text1: Color(0xFFFFFFFF),
+        text2: Color(0xFF000000),
+        text3: Color(0xFF1F2937),
+        text4: Color(0xFF6B7280),
+        text5: Color(0xFF4B5563),
+        hintText: Color(0xFF979CA5),
+        background: Color(0xFFF1F5F9),
+        containerBackground1: Color(0xFFFFFFFF),
+        containerBackground2: Color(0xFFF9FAFB),
+        dropShadow: Color(0x1A000000),
+        pinkLight: Color(0xFFFDF2F8),
+        orangeLight: Color(0xFFFFF7ED),
+        greenLight: Color(0xFFF0FDF4),
+        purpleLight: Color(0xFFFAF5FF),
+        pinkDarker: Color(0xFFDB2777),
+        orangeDarker: Color(0xFFEA580C),
+        greenDarker: Color(0xFF16A34A),
+        purpleDarker: Color(0xFF9333EA),
+        navbarIconsBackground: Color(0xFFE2E8F0),
+        navbarIconsColor: Color(0xFF475569),
+        gradientButtonsStart: Color(0xFF673AB7),
+        gradientButtonsEnd: Color(0xFF512DA8),
+        gradientButtonsUnavailableStart: Color(0xFF673AB7),
+        gradientButtonsUnavailableEnd: Color(0xFF512DA8),
+        gradientTopStart: Color(0xFF673AB7),
+        gradientTopEnd: Color(0xFF512DA8),
+      ),
+    ],
+  );
+
+  static final ThemeData dark = ThemeData(
+    brightness: Brightness.dark,
+    fontFamily: "Montserrat",
+    useMaterial3: true,
+    extensions: const [
+      AppColors(
+        text1: Color(0xFFFFFFFF),
+        text2: Color(0xFFFFFFFF),
+        text3: Color(0xFFD7DDE6),
+        text4: Color(0xFFBBBBBB),
+        text5: Color(0xFFFFFFFF),
+        hintText: Color(0xFFB8B8B8),
+        background: Color(0xFF171717),
+        containerBackground1: Color(0xFF2C2C2C),
+        containerBackground2: Color(0xFF3C3C3C),
+        dropShadow: Color(0x1AFFFFFF),
+        pinkLight: Color(0xFFDB2777),
+        orangeLight: Color(0xFFEA580C),
+        greenLight: Color(0xFF16A34A),
+        purpleLight: Color(0xFF9333EA),
+        pinkDarker: Color(0xFFDB2777),
+        orangeDarker: Color(0xFFEA580C),
+        greenDarker: Color(0xFF16A34A),
+        purpleDarker: Color(0xFF9333EA),
+        navbarIconsBackground: Color(0xFF3C3C3C),
+        navbarIconsColor: Color(0xFFFFFFFF),
+        gradientButtonsStart: Color(0XFF4A2999),
+        gradientButtonsEnd: Color(0xFF46287C),
+        gradientButtonsUnavailableStart: Color(0xFF4A2999),
+        gradientButtonsUnavailableEnd: Color(0xFF46287C),
+        gradientTopStart: Color(0xFF46287C),
+        gradientTopEnd: Color(0xFF4A2999),
+      ),
+    ],
+  );
+}

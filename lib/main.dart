@@ -1,23 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:safe_vault/views/home_page.dart';
+import 'package:provider/provider.dart';
+import 'package:safe_vault/viewmodels/theme/ThemeController.dart';
+import 'package:safe_vault/views/HomePage.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeController(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final theme = context.watch<ThemeController>().theme;
+
     return MaterialApp(
       title: 'SafeVault',
-      theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
+      theme: theme,
+      debugShowCheckedModeBanner: false,
       home: const HomePage(),
     );
   }
 }
+
 
