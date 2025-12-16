@@ -9,7 +9,7 @@ import 'package:pointycastle/digests/sha1.dart';
 import 'dart:async';
 
 import 'DatabaseProvider.dart';
-import '../models/PasswordGenerator.dart';
+import 'package:safe_vault/models/PasswordGenerator.dart';
 
 class RobustnessProvider with ChangeNotifier {
   DatabaseProvider _databaseProvider;

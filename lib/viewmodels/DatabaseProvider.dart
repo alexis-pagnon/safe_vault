@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sqflite_sqlcipher/sqflite.dart';
 import 'package:path/path.dart';
 
-import '../models/database/Note.dart';
-import '../models/database/Password.dart';
+import 'package:safe_vault/models/database/Note.dart';
+import 'package:safe_vault/models/database/Password.dart';
 
 class DatabaseProvider with ChangeNotifier {
   String _databaseName = "safe_vault.db";

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:safe_vault/viewmodels/RobustnessProvider.dart';
-
+import 'package:safe_vault/viewmodels/SharedPreferencesProvider.dart';
+import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
 import 'package:safe_vault/views/home_page.dart';
 import 'package:provider/provider.dart';
-
-import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
 
 void main() {
   runApp(
@@ -12,6 +11,8 @@ void main() {
       providers: [
         // Providers to add
         ChangeNotifierProvider(create: (_) => DatabaseProvider()..init()),
+
+        ChangeNotifierProvider(create: (_) => SharedPreferencesProvider()..init()),
 
         ChangeNotifierProxyProvider<DatabaseProvider, RobustnessProvider>(
           create: (context) => RobustnessProvider(
@@ -32,9 +33,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<DatabaseProvider>(
-      builder: (context, dbProvider, _) {
-        if (!dbProvider.isReady) {
+    return Consumer2<DatabaseProvider, SharedPreferencesProvider>(
+      builder: (context, dbProvider, sharedPrefProvider, _) {
+        if (!dbProvider.isReady || !sharedPrefProvider.initialized) {
           return const MaterialApp(
             home: Scaffold(
               body: Center(child: CircularProgressIndicator()),

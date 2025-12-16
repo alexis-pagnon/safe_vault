@@ -3,36 +3,58 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SharedPreferencesProvider with ChangeNotifier {
-  final Future<SharedPreferencesWithCache> _prefs =
-  SharedPreferencesWithCache.create(
+class SharedPreferencesProvider extends ChangeNotifier {
+  late final SharedPreferencesWithCache _prefs;
+
+  String _hashedPassword = '';
+  String _theme = 'light';
+  bool _firstTime = true;
+  bool _initialized = false; // Indicates if initialization is complete
+
+  bool get firstTime => _firstTime;
+  String get hashedPassword => _hashedPassword;
+  String get theme => _theme;
+  bool get initialized => _initialized;
+
+
+  /// Initialize SharedPreferences and load values
+  Future<void> init() async {
+    // Load SharedPreferences with caching
+    _prefs = await SharedPreferencesWithCache.create(
       cacheOptions: const SharedPreferencesWithCacheOptions(
-          allowList: <String>{'hashed_password', 'theme' }));
+        allowList: {'first_time', 'hashed_password', 'theme'},
+      ),
+    );
 
-  /// Get the hash of the master password
-  Future<String> getHashedPassword() async {
-    final SharedPreferencesWithCache prefs = await _prefs;
-    return prefs.getString('hashed_password') ?? '';
-  }
+    _firstTime = _prefs.getBool('first_time') ?? true;
+    _hashedPassword = _prefs.getString('hashed_password') ?? '';
+    _theme = _prefs.getString('theme') ?? 'light';
 
-  /// Set the hash of the master password
-  Future<void> setHashedPassword(String hashedPassword) async {
-    final SharedPreferencesWithCache prefs = await _prefs;
-    await prefs.setString('hashed_password', hashedPassword);
+    _initialized = true;
     notifyListeners();
   }
 
-  /// Get the selected theme (light or dark)
-  Future<String> getTheme() async {
-    final SharedPreferencesWithCache prefs = await _prefs;
-    return prefs.getString('theme') ?? 'light';
-  }
 
-  /// Set the selected theme (light or dark)
-  Future<void> setTheme(String theme) async {
-    final SharedPreferencesWithCache prefs = await _prefs;
-    await prefs.setString('theme', theme);
+  /// Update first time flag
+  Future<void> setFirstTime(bool value) async {
+    _firstTime = value;
+    await _prefs.setBool('first_time', value);
     notifyListeners();
   }
 
+
+  /// Update hashed password
+  Future<void> setHashedPassword(String value) async {
+    _hashedPassword = value;
+    await _prefs.setString('hashed_password', value);
+    notifyListeners();
+  }
+
+
+  /// Update theme (light/dark)
+  Future<void> setTheme(String value) async {
+    _theme = value;
+    await _prefs.setString('theme', value);
+    notifyListeners();
+  }
 }

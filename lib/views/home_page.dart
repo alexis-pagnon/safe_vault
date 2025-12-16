@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:safe_vault/viewmodels/RobustnessProvider.dart';
 
-import '../models/database/Password.dart';
-import '../viewmodels/DatabaseProvider.dart';
+import 'package:safe_vault/models/database/Password.dart';
+import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
