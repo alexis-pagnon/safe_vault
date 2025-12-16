@@ -1,6 +1,6 @@
 
 class Password {
-  final int id_pwd;
+  final int? id_pwd;
   final String password;
   final String username;
   final String website;
@@ -8,7 +8,7 @@ class Password {
   final int id_category;
 
   Password({
-    required this.id_pwd,
+    this.id_pwd,
     required this.password,
     required this.username,
     String? website,
@@ -23,7 +23,7 @@ class Password {
       'password': password,
       'username': username,
       'website': website,
-      'is_favorite': is_favorite,
+      'is_favorite': is_favorite ? 1 : 0,
       'id_category': id_category,
     };
   }

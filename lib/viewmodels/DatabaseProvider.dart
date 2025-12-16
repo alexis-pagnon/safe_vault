@@ -8,8 +8,29 @@ import '../models/database/Password.dart';
 class DatabaseProvider with ChangeNotifier {
   String _databaseName = "safe_vault.db";
   Database? _db;
+  bool _isReady = false;
+  List<Password> _passwords = [];
+  List<Note> _notes = [];
+  int _passwordVersion = 0;
+  int _noteVersion = 0;
+
 
   String get databaseName => _databaseName;
+  bool get isReady => _isReady;
+  List<Password> get passwords => _passwords;
+  List<Note> get notes => _notes;
+
+  int get passwordVersion => _passwordVersion;
+  int get noteVersion => _noteVersion;
+
+
+  Future<void> init() async {
+    await initializeDatabase('azerty');
+    await openDatabaseWithPassword('azerty');
+    _isReady = true;
+    notifyListeners();
+  }
+
 
   void setDatabaseName(String name) {
     _databaseName = name;
@@ -42,6 +63,25 @@ class DatabaseProvider with ChangeNotifier {
       return false;
     }
   }
+
+
+
+  /// Load all passwords from the database into the provider's state.<br>
+  Future<void> loadPasswords() async {
+    _passwords = await retrievePasswords();
+    _passwordVersion++;
+    notifyListeners();
+  }
+
+
+  /// Load all notes from the database into the provider's state.<br>
+  Future<void> loadNotes() async {
+    _notes = await retrieveNotes();
+    _noteVersion++;
+    notifyListeners();
+  }
+
+
 
   // ============== DATABASE INITIALIZATION ===============
 
@@ -126,6 +166,7 @@ class DatabaseProvider with ChangeNotifier {
       throw Exception("Database is not initialized");
     }
     final result = await _db!.insert('Password', pwd.toMap());
+    await loadPasswords(); // refresh data
     return result;
   }
 
@@ -173,6 +214,7 @@ class DatabaseProvider with ChangeNotifier {
       where: 'id_pwd = ?',
       whereArgs: [pwd.id_pwd],
     );
+    await loadPasswords(); // refresh data
     return result;
   }
 
@@ -189,6 +231,7 @@ class DatabaseProvider with ChangeNotifier {
       where: 'id_pwd = ?',
       whereArgs: [id],
     );
+    await loadPasswords(); // refresh data
     return result;
   }
 
@@ -203,6 +246,7 @@ class DatabaseProvider with ChangeNotifier {
       throw Exception("Database is not initialized");
     }
     final result = await _db!.insert('Note', note.toMap());
+    await loadNotes(); // refresh data
     return result;
   }
 
@@ -231,6 +275,7 @@ class DatabaseProvider with ChangeNotifier {
       where: 'id_note = ?',
       whereArgs: [note.id_note],
     );
+    await loadNotes(); // refresh data
     return result;
   }
 
@@ -247,6 +292,7 @@ class DatabaseProvider with ChangeNotifier {
       where: 'id_note = ?',
       whereArgs: [id],
     );
+    await loadNotes(); // refresh data
     return result;
   }
 

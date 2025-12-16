@@ -12,19 +12,23 @@ import 'dart:async';
 import 'DatabaseProvider.dart';
 
 class RobustnessProvider with ChangeNotifier {
-  final DatabaseProvider databaseProvider;
-  int _compromised = 0;
-  int _weak = 0;
-  int _reused = 0;
-  int _strong = 0;
-  int _totalScore = 0;
+  DatabaseProvider _databaseProvider;
 
   final List<int> _strongPasswords = [];
   final List<int> _weakPasswords = [];
   final List<int> _compromisedPasswords = [];
   final List<int> _reusedPasswords = [];
 
-  RobustnessProvider({required this.databaseProvider});
+  final Map<String, bool> _compromisedCache = {};
+  int _lastPasswordVersion = -1; // Track last password version to detect changes
+
+  int _compromised = 0;
+  int _weak = 0;
+  int _reused = 0;
+  int _strong = 0;
+  int _totalScore = 0;
+
+  RobustnessProvider(this._databaseProvider);
 
   int get compromised => _compromised;
   int get weak => _weak;
@@ -35,6 +39,47 @@ class RobustnessProvider with ChangeNotifier {
   List<int> get weakPasswords => _weakPasswords;
   List<int> get compromisedPasswords => _compromisedPasswords;
   List<int> get reusedPasswords => _reusedPasswords;
+
+
+  /// Update the database provider and re-analyze passwords if they have changed
+  void updateDatabase(DatabaseProvider db) {
+    _databaseProvider = db;
+    if (db.passwordVersion != _lastPasswordVersion) {
+      _lastPasswordVersion = db.passwordVersion;
+      analyzeAllPwdRobustness();
+    }
+  }
+
+
+  /// Check if the passwords have changed
+  bool _passwordsChanged(List<Password> oldPasswords, List<Password> newPasswords) {
+    if (oldPasswords.length != newPasswords.length) {
+      return true;
+    }
+    for (int i = 0; i < oldPasswords.length; i++) {
+      if (oldPasswords[i].id_pwd != newPasswords[i].id_pwd ||
+          oldPasswords[i].password != newPasswords[i].password) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+  /// Reset all counts and lists
+  void _reset() {
+    _compromised = 0;
+    _weak = 0;
+    _reused = 0;
+    _strong = 0;
+    _totalScore = 0;
+
+    _strongPasswords.clear();
+    _weakPasswords.clear();
+    _compromisedPasswords.clear();
+    _reusedPasswords.clear();
+
+  }
 
   /// Compute entropy score of a password
   double computeEntropyScore(String password) {
@@ -76,167 +121,84 @@ class RobustnessProvider with ChangeNotifier {
   /// Analyze password robustness
   Future<void> analyzeAllPwdRobustness() async {
     // Reset counts
-    _compromised = 0;
-    _weak = 0;
-    _reused = 0;
-    _strong = 0;
-    _totalScore = 0;
-
-    // Fetch passwords from the database
-    var db = databaseProvider;
+    _reset();
 
     try {
-      var passwords = await db.retrievePasswords();
+      final passwords = _databaseProvider.passwords;
       // Analyze each password
 
-      Map<String,int> seenPasswords = {};
+      // Reused passwords grouping
+      final Map<String, List<int>> groups = {};
+      for (final p in passwords) {
+        groups.putIfAbsent(p.password, () => []).add(p.id_pwd!);
+      }
 
-      for(var passwordEntry in passwords) {
-        double entropyScore = computeEntropyScore(passwordEntry.password);
+      List<String> reusedPwdFound = [];
+
+      // Analyze each password
+      for (final p in passwords) {
+        final entropy = computeEntropyScore(p.password);
+
+        // Strength categorization
+        if (entropy <= 59) {
+          _weak++;
+          _weakPasswords.add(p.id_pwd!);
+        } else {
+          _strong++;
+          _strongPasswords.add(p.id_pwd!);
+        }
 
         // Reused password check
-        if(seenPasswords.keys.contains(passwordEntry.password)) {
-          seenPasswords[passwordEntry.password] = seenPasswords[passwordEntry.password]! + 1;
-        }
-        else {
-          seenPasswords[passwordEntry.password] = 1;
+        if (groups[p.password]!.length > 1 && !reusedPwdFound.contains(p.password)) {
+          _reused++;
+          _reusedPasswords.add(p.id_pwd!);
+          reusedPwdFound.add(p.password);
         }
 
+        // Compromised check
         try {
-          // Compromised check
-          if(await isCompromised(passwordEntry.password)) {
+          if (await isCompromisedCached(p.password)) {
             _compromised++;
-
-            if(!_compromisedPasswords.contains(passwordEntry.id_pwd)) {
-              _compromisedPasswords.add(passwordEntry.id_pwd);
-            }
+            _compromisedPasswords.add(p.id_pwd!);
           }
         }
         catch (e) {
           print("Error checking compromised password: $e");
         }
 
-        // Strength categorization
-        if(entropyScore <= 59) {
-          _weak++;
-          if(!_weakPasswords.contains(passwordEntry.id_pwd)) {
-            _weakPasswords.add(passwordEntry.id_pwd);
-          }
-        }
-        else if(entropyScore > 59) {
-          _strong++;
-          if(!_strongPasswords.contains(passwordEntry.id_pwd)) {
-            _strongPasswords.add(passwordEntry.id_pwd);
-          }
-        }
       }
-
-      // Count reused passwords
-      seenPasswords.forEach((key, value) {
-        if(value > 1) {
-          _reused += 1;
-          for(var passwordEntry in passwords) {
-            if(passwordEntry.password == key) {
-              if(!_reusedPasswords.contains(passwordEntry.id_pwd)) {
-                _reusedPasswords.add(passwordEntry.id_pwd);
-              }
-            }
-          }
-        }
-      });
 
       // Compute total score
       int totalPasswords = _strong + _weak;
       if(totalPasswords > 0) {
         double baseScore = _strong / totalPasswords * 100;
         double penalty = ( 100 * _reused + 250 * _compromised ) / totalPasswords;
-
         _totalScore = max(0, (baseScore - penalty)).round();
-
       } else {
         _totalScore = 100;
       }
-
-      notifyListeners();
     }
     catch (e) {
-      print("Error: $e");
-      notifyListeners();
-      return;
+     print("Error: $e");
     }
-  }
-
-
-  /// Analyze robustness of a single password
-  Future<void> analyzeSinglePwdRobustness(Password password) async {
-    // Compute entropy score
-    double entropyScore = computeEntropyScore(password.password);
-
-    // Reused password check
-    var db = databaseProvider;
-    var passwords = await db.retrievePasswords();
-
-    for(var passwordEntry in passwords) {
-      if(passwordEntry.password == password.password) {
-        _reused += 1;
-
-        if(!_reusedPasswords.contains(password.id_pwd)) {
-          _reusedPasswords.add(password.id_pwd);
-        }
-
-        break;
-      }
-    }
-
-
-    // Compromised check
-    try {
-      if(await isCompromised(password.password)) {
-        _compromised++;
-        if(!_strongPasswords.contains(password.id_pwd)) {
-          _strongPasswords.add(password.id_pwd);
-        }
-      }
-    }
-    catch (e) {
-      print("Error checking compromised password: $e");
-    }
-
-    // Strength categorization
-    if(entropyScore <= 59) {
-      _weak++;
-      if(!_weakPasswords.contains(password.id_pwd)) {
-        _weakPasswords.add(password.id_pwd);
-      }
-    }
-    else if(entropyScore > 59) {
-      _strong++;
-      if(!_strongPasswords.contains(password.id_pwd)) {
-        _strongPasswords.add(password.id_pwd);
-      }
-    }
-
-    // Compute total score
-    int totalPasswords = _strong + _weak;
-    if(totalPasswords > 0) {
-      double baseScore = _strong / totalPasswords * 100;
-      double penalty = ( 100 * _reused + 250 * _compromised ) / totalPasswords;
-
-      _totalScore = max(0, (baseScore - penalty)).round();
-
-    } else {
-      _totalScore = 100;
-    }
-
     notifyListeners();
   }
 
 
+  /// Check if a password is compromised with caching
+  Future<bool> isCompromisedCached(String password) async {
+    if (_compromisedCache.containsKey(password)) {
+      return _compromisedCache[password]!;
+    }
+
+    final result = await isCompromised(password);
+    _compromisedCache[password] = result;
+    return result;
+  }
+
   /// Check if a password is compromised with the Have I Been Pwned API
   Future<bool> isCompromised(String password) async {
-
     try {
-
       // Get SHA-1 hash of the password
       final sha1 = SHA1Digest();
       final hash = sha1.process(utf8.encode(password));
