@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../models/theme/AppColors.dart';
+import 'package:safe_vault/views/widgets/CustomCard.dart';
+import 'package:safe_vault/views/widgets/CustomSvgButton.dart';
+import 'package:sleek_circular_slider/sleek_circular_slider.dart';
+import '../../models/theme/AppColors.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _MyHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
@@ -17,13 +20,15 @@ class _MyHomePageState extends State<HomePage> {
     final totalWidth = MediaQuery.of(context).size.width;
     final totalHeight = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      backgroundColor: colors.background,
-      body: SafeArea(
-        child: SingleChildScrollView(
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: colors.background,
+        body: SingleChildScrollView(
           physics: BouncingScrollPhysics(decelerationRate: ScrollDecelerationRate.normal),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: totalHeight * 0.022,
             children: <Widget>[
               // Top Side
               Container(
@@ -37,7 +42,7 @@ class _MyHomePageState extends State<HomePage> {
                   ),
                   borderRadius: BorderRadius.only(bottomLeft: Radius.circular(45), bottomRight: Radius.circular(45)),
                 ),
-          
+
                 child: Column(
                   children: [
                     // Titles + Top Right Icon
@@ -66,14 +71,14 @@ class _MyHomePageState extends State<HomePage> {
                                   color: colors.text1,
                                 ),
                               ),
-                      
-                          ],
+
+                            ],
                           ),
 
                           // Icon
 
                         ],
-                      
+
                       ),
                     ),
 
@@ -105,10 +110,36 @@ class _MyHomePageState extends State<HomePage> {
                             ),
 
                             // Score
-                            Placeholder(
-                              fallbackHeight: totalHeight * 0.13,
-                              color: Colors.red,
-                              strokeWidth: 1,
+                            Expanded(
+                              child: Center(
+                                child: SleekCircularSlider(
+                                  appearance: CircularSliderAppearance(
+                                    customWidths: CustomSliderWidths(progressBarWidth: 10, trackWidth: 8),
+                                    infoProperties: InfoProperties(
+                                      mainLabelStyle: GoogleFonts.montserrat(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.w500,
+                                        color: colors.greenDarker,
+                                      ),
+
+                                      modifier: (double value) {
+                                        return '${value.toInt()}';
+                                      },
+                                    ),
+                                    customColors: CustomSliderColors(
+                                      dotColor: Colors.transparent,
+                                      progressBarColors: [colors.greenLight, colors.greenDarker,],
+                                      gradientStartAngle: 0,
+                                      gradientEndAngle: 270,
+                                      trackColor: Color(0xFFD9D9D9),
+                                    ),
+                                    size: 140,
+                                  ),
+                                  min: 0,
+                                  max: 100,
+                                  initialValue: 80,
+                                ),
+                              ),
                             ),
 
                             // Infos
@@ -263,17 +294,86 @@ class _MyHomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-          
+
                   ],
                 ),
               ),
-          
-              // Middle Buttons
-              Container(color: Colors.black, height: 500, width: totalWidth,),
-              Container(color: Colors.red, height: 500, width: totalWidth,),
-              Container(color: Colors.orange, height: 500, width: totalWidth,),
-          
-          
+
+              // Bottom Side
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: totalWidth * 0.07),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: totalHeight * 0.022,
+                  children: [
+                    Text(
+                      "Catégories",
+                      style: GoogleFonts.montserrat(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: colors.text2,
+                      ),
+                    ),
+
+                    // Categories
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Website
+                        CustomCard(
+                          svgPath: 'assets/svg/internet.svg',
+                          title: 'Sites Web',
+                          subtitle: '12 mots de passe',
+                        ),
+
+                        // Website
+                        CustomCard(
+                          svgPath: 'assets/svg/social_network.svg',
+                          title: 'Réseaux Sociaux',
+                          subtitle: '24 mots de passe',
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Apps
+                        CustomCard(
+                          svgPath: 'assets/svg/smartphone.svg',
+                          title: 'Applications',
+                          subtitle: '56 mots de passe',
+                        ),
+
+                        // Website
+                        CustomCard(
+                          svgPath: 'assets/svg/shopping_cart.svg',
+                          title: 'Paiements',
+                          subtitle: '41 mots de passe',
+                        ),
+                      ],
+                    ),
+
+                    // Generate Password Button
+                    CustomSvgButton(
+                      title: 'Générateur de mots de passe',
+                      svgPath: 'assets/svg/stars.svg',
+                      onPressed: () {},
+                    ),
+
+                    // Secured Notes Button
+                    CustomSvgButton(
+                      title: 'Notes sécurisées',
+                      svgPath: 'assets/svg/notes.svg',
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+              ),
+
+              // Spacing
+              SizedBox(height: totalHeight * 0.12),
+
             ],
           ),
         ),

@@ -11,8 +11,10 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_svg: ^2.2.3
   google_fonts: ^6.3.2
   provider: ^6.1.5+1
+  sleek_circular_slider: ^2.1.0
   sqflite_sqlcipher: ^3.4.0
 
 
@@ -26,3 +28,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+    - assets/svg/

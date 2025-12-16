@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:safe_vault/viewmodels/theme/ThemeController.dart';
-import 'package:safe_vault/views/HomePage.dart';
+import 'package:safe_vault/views/pages/RootPage.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeController(),
@@ -23,7 +28,7 @@ class MyApp extends StatelessWidget {
       title: 'SafeVault',
       theme: theme,
       debugShowCheckedModeBanner: false,
-      home: const HomePage(),
+      home: const RootPage(),
     );
   }
 }
