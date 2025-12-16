@@ -6,10 +6,10 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pointycastle/digests/sha1.dart';
-import 'package:safe_vault/models/database/Password.dart';
 import 'dart:async';
 
 import 'DatabaseProvider.dart';
+import '../models/PasswordGenerator.dart';
 
 class RobustnessProvider with ChangeNotifier {
   DatabaseProvider _databaseProvider;
@@ -51,21 +51,6 @@ class RobustnessProvider with ChangeNotifier {
   }
 
 
-  /// Check if the passwords have changed
-  bool _passwordsChanged(List<Password> oldPasswords, List<Password> newPasswords) {
-    if (oldPasswords.length != newPasswords.length) {
-      return true;
-    }
-    for (int i = 0; i < oldPasswords.length; i++) {
-      if (oldPasswords[i].id_pwd != newPasswords[i].id_pwd ||
-          oldPasswords[i].password != newPasswords[i].password) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-
   /// Reset all counts and lists
   void _reset() {
     _compromised = 0;
@@ -81,42 +66,6 @@ class RobustnessProvider with ChangeNotifier {
 
   }
 
-  /// Compute entropy score of a password
-  double computeEntropyScore(String password) {
-    int R = 0; // Size of the character set
-    int L = password.length;
-
-    // Determine the character set size
-    bool hasLower = false;
-    bool hasUpper = false;
-    bool hasDigit = false;
-    bool hasSpecial = false;
-    for(var char in password.codeUnits) {
-      if(char >= 97 && char <= 122) { // a-z
-        hasLower = true;
-      }
-      else if(char >= 65 && char <= 90) { // A-Z
-        hasUpper = true;
-      }
-      else if(char >= 48 && char <= 57) { // 0-9
-        hasDigit = true;
-      }
-      else { // Special characters
-        hasSpecial = true;
-      }
-
-      if(hasLower && hasUpper && hasDigit && hasSpecial) {
-        break;
-      }
-    }
-
-    if(hasLower) R += 26;
-    if(hasUpper) R += 26;
-    if(hasDigit) R += 10;
-    if(hasSpecial) R += 30; // !, @, #, $, %, ^, &, *, (, ), -, _, =, +, [, {, ], }, |, ;, :, ', ", <, ,, >, ., ?, /, ~
-
-    return log(pow(R, L))/log(2);
-  }
 
   /// Analyze password robustness
   Future<void> analyzeAllPwdRobustness() async {
@@ -137,7 +86,7 @@ class RobustnessProvider with ChangeNotifier {
 
       // Analyze each password
       for (final p in passwords) {
-        final entropy = computeEntropyScore(p.password);
+        final entropy = PasswordGenerator.computeEntropyScore(p.password);
 
         // Strength categorization
         if (entropy <= 59) {
