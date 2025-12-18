@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class VaultsPage extends StatefulWidget {
-  const VaultsPage({super.key});
+class PasswordsPage extends StatefulWidget {
+  const PasswordsPage({super.key});
 
   @override
-  State<VaultsPage> createState() => _VaultsPageState();
+  State<PasswordsPage> createState() => _PasswordsPageState();
 }
 
-class _VaultsPageState extends State<VaultsPage> {
+class _PasswordsPageState extends State<PasswordsPage> {
   @override
   Widget build(BuildContext context) {
     // final colors = Theme.of(context).extension<AppColors>()!;

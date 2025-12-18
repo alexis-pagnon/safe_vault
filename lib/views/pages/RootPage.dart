@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:safe_vault/views/pages/NewPasswordPage.dart';
 import '../../models/theme/AppColors.dart';
 import '../widgets/CustomNavBar.dart';
 import 'GenerationPage.dart';
 import 'HomePage.dart';
 import 'NotesPage.dart';
-import 'VaultsPage.dart';
+import 'PasswordsPage.dart';
 
 class RootPage extends StatefulWidget {
   const RootPage({super.key});
@@ -15,7 +16,7 @@ class RootPage extends StatefulWidget {
 }
 
 class _RootPageState extends State<RootPage> {
-  List<Widget> pages = [HomePage(), VaultsPage(), GenerationPage(), NotesPage()];
+  List<Widget> pages = [HomePage(), PasswordsPage(), NewPasswordPage(), GenerationPage(), NotesPage()];
   final ValueNotifier<int> selectedIndex = ValueNotifier<int>(0);
   final PageController pageController = PageController();
 

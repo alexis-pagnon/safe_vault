@@ -56,11 +56,11 @@ class _CustomNavBarState extends State<CustomNavBar> {
               height: totalHeight * 0.09,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: colors.containerBackground1,
                 borderRadius: BorderRadius.circular(25),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black12,
+                    color: colors.dropShadow,
                     blurRadius: 8,
                     offset: Offset(0, -6),
                   ),
@@ -91,20 +91,20 @@ class _CustomNavBarState extends State<CustomNavBar> {
                   InkWell(
                       onTap: () {
                         setState(() {
-                          selectedIndex = 2;
-                          widget.pageController.jumpToPage(2);
-                        });
-                      },
-                      child: _navItem(Icons.auto_awesome_rounded, selectedIndex == 2, context)
-                  ),
-                  InkWell(
-                      onTap: () {
-                        setState(() {
                           selectedIndex = 3;
                           widget.pageController.jumpToPage(3);
                         });
                       },
-                      child: _navItem(Icons.article_rounded, selectedIndex == 3, context)
+                      child: _navItem(Icons.auto_awesome_rounded, selectedIndex == 3, context)
+                  ),
+                  InkWell(
+                      onTap: () {
+                        setState(() {
+                          selectedIndex = 4;
+                          widget.pageController.jumpToPage(4);
+                        });
+                      },
+                      child: _navItem(Icons.article_rounded, selectedIndex == 4, context)
                   ),
                 ],
               ),
@@ -117,24 +117,33 @@ class _CustomNavBarState extends State<CustomNavBar> {
             left: 0,
             right: 0,
             child: Center(
-              child: Container(
-                height: 60,
-                width: 60,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [colors.gradientButtonsStart, colors.gradientButtonsEnd],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
+              child: InkWell(
+                onTap: () {
+                  setState(() {
+                    selectedIndex = 2;
+                    widget.pageController.jumpToPage(2);
+                  });
+                },
+
+                child: Container(
+                  height: 60,
+                  width: 60,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [colors.gradientButtonsStart, colors.gradientButtonsEnd],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 10,
+                      )
+                    ],
                   ),
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 10,
-                    )
-                  ],
+                  child: Icon(Icons.add, color: Colors.white, size: 35),
                 ),
-                child: Icon(Icons.add, color: Colors.white, size: 35),
               ),
             ),
           ),

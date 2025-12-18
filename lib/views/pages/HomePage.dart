@@ -110,6 +110,7 @@ class _HomePageState extends State<HomePage> {
                             ),
 
                             // Score
+                            // TODO: Alexis: Changer la valeur initiale du SleekCircularSlider avec la vraie
                             Expanded(
                               child: Center(
                                 child: SleekCircularSlider(
@@ -143,6 +144,7 @@ class _HomePageState extends State<HomePage> {
                             ),
 
                             // Infos
+                            // TODO: Alexis: Changer les chiffres avec les vrais
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
@@ -218,7 +220,6 @@ class _HomePageState extends State<HomePage> {
 
                               ],
                             ),
-
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
@@ -317,6 +318,7 @@ class _HomePageState extends State<HomePage> {
                     ),
 
                     // Categories
+                    // TODO: ALEXIS: Change le subtitle avec le vrai nombre de mots de passe
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -372,7 +374,7 @@ class _HomePageState extends State<HomePage> {
               ),
 
               // Spacing
-              SizedBox(height: totalHeight * 0.12),
+              SizedBox(height: totalHeight * 0.05),
 
             ],
           ),
