@@ -6,15 +6,18 @@ import 'package:safe_vault/viewmodels/RobustnessProvider.dart';
 import 'package:safe_vault/models/database/Password.dart';
 import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+
+// TODO : Remove this home page, it's only for testing purposes
+
+class TestPage extends StatefulWidget {
+  const TestPage({super.key});
 
 
   @override
-  State<HomePage> createState() => _MyHomePageState();
+  State<TestPage> createState() => _TestPageState();
 }
 
-class _MyHomePageState extends State<HomePage> {
+class _TestPageState extends State<TestPage> {
 
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();

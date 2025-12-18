@@ -3,15 +3,27 @@ import 'package:safe_vault/viewmodels/RobustnessProvider.dart';
 import 'package:safe_vault/viewmodels/SharedPreferencesProvider.dart';
 import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
 import 'package:safe_vault/viewmodels/AuthenticationProvider.dart';
-import 'package:safe_vault/views/home_page.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
+import 'package:safe_vault/viewmodels/theme/ThemeController.dart';
+import 'package:safe_vault/views/pages/RootPage.dart';
+
+import 'package:safe_vault/views/testPage.dart'; // TODO : remove this import
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
   runApp(
     MultiProvider(
       providers: [
         // Providers to add
+
+
         ChangeNotifierProvider(create: (_) => DatabaseProvider()..init('azerty')), // TODO : remove the init from here since it will be called in AuthenticationProvider
+
+        ChangeNotifierProvider(create: (_) => ThemeController()),
 
         ChangeNotifierProvider(create: (_) => SharedPreferencesProvider()..init()),
 
@@ -45,12 +57,13 @@ class AppRoot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO : colors = ...
+
+    final theme = context.watch<ThemeController>().theme;
+
     return MaterialApp(
         title: 'SafeVault',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        ),
+        theme: theme,
+        debugShowCheckedModeBanner: false,
         home: const MyApp()
     );
   }
@@ -73,9 +86,11 @@ class MyApp extends StatelessWidget {
 
         // TODO : Check if first time + redirect to authentication page
 
-         return const HomePage();
+         return const RootPage();
+
 
       },
     );
   }
 }
+
