@@ -31,14 +31,10 @@ class _MyHomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final dbProvider = Provider.of<DatabaseProvider>(context, listen: false);
-    final robustnessProvider = Provider.of<DatabaseProvider>(context, listen: false);
-
 
     return Scaffold(
       appBar: AppBar(
-
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-
       ),
       body: Center(
         child: Column(

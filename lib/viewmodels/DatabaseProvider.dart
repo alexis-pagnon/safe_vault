@@ -8,7 +8,7 @@ import 'package:safe_vault/models/database/Password.dart';
 class DatabaseProvider with ChangeNotifier {
   String _databaseName = "safe_vault.db";
   Database? _db;
-  bool _isReady = false;
+  bool _isOpened = false;
   List<Password> _passwords = [];
   List<Note> _notes = [];
   int _passwordVersion = 0;
@@ -16,7 +16,7 @@ class DatabaseProvider with ChangeNotifier {
 
 
   String get databaseName => _databaseName;
-  bool get isReady => _isReady;
+  bool get isOpened => _isOpened;
   List<Password> get passwords => _passwords;
   List<Note> get notes => _notes;
 
@@ -24,10 +24,10 @@ class DatabaseProvider with ChangeNotifier {
   int get noteVersion => _noteVersion;
 
 
-  Future<void> init() async {
-    await initializeDatabase('azerty');
-    await openDatabaseWithPassword('azerty');
-    _isReady = true;
+  Future<void> init(String key) async {
+    await initializeDatabase(key);
+    // await openDatabaseWithPassword(key); // already opened in initializeDatabase
+    _isOpened = true;
     notifyListeners();
   }
 
