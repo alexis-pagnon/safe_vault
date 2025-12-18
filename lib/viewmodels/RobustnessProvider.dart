@@ -28,7 +28,9 @@ class RobustnessProvider with ChangeNotifier {
   int _strong = 0;
   int _totalScore = 0;
 
-  RobustnessProvider(this._databaseProvider);
+  RobustnessProvider(this._databaseProvider) {
+    _databaseProvider.addListener(_onDatabaseChanged);
+  }
 
   int get compromised => _compromised;
   int get weak => _weak;
@@ -41,14 +43,22 @@ class RobustnessProvider with ChangeNotifier {
   List<int> get reusedPasswords => _reusedPasswords;
 
 
-  /// Update the database provider and re-analyze passwords if they have changed
-  void updateDatabase(DatabaseProvider db) {
-    _databaseProvider = db;
-    if (db.passwordVersion != _lastPasswordVersion) {
-      _lastPasswordVersion = db.passwordVersion;
-      analyzeAllPwdRobustness();
-    }
+  /// Handle database changes
+  void _onDatabaseChanged() {
+    if (!_databaseProvider.isOpened) return;
+    final version = _databaseProvider.passwordVersion;
+    if (version == _lastPasswordVersion) return;
+    _lastPasswordVersion = version;
+    analyzeAllPwdRobustness();
   }
+
+
+  @override
+  void dispose() {
+    _databaseProvider.removeListener(_onDatabaseChanged);
+    super.dispose();
+  }
+
 
 
   /// Reset all counts and lists
@@ -69,6 +79,12 @@ class RobustnessProvider with ChangeNotifier {
 
   /// Analyze password robustness
   Future<void> analyzeAllPwdRobustness() async {
+
+    if(!_databaseProvider.isOpened) {
+      print("Error: Database is not opened");
+      return;
+    }
+
     // Reset counts
     _reset();
 

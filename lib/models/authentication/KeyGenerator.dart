@@ -58,4 +58,12 @@ class KeyGenerator {
   }
 
 
+  /// Hash a password using SHA-256
+  static String hashPassword(String password) {
+    final digest = SHA256Digest();
+    final hash = digest.process(Uint8List.fromList(utf8.encode(password)));
+    return hex.encode(hash);
+  }
+
+
 }

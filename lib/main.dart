@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:safe_vault/viewmodels/RobustnessProvider.dart';
-import 'package:safe_vault/viewmodels/SharedPreferencesProvider.dart';
+import 'package:safe_vault/models/SharedPreferencesRepository.dart';
 import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
 import 'package:safe_vault/viewmodels/AuthenticationProvider.dart';
 import 'package:provider/provider.dart';
@@ -9,42 +10,48 @@ import 'package:safe_vault/viewmodels/theme/ThemeController.dart';
 import 'package:safe_vault/views/pages/RootPage.dart';
 
 import 'package:safe_vault/views/testPage.dart'; // TODO : remove this import
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+import 'models/authentication/SecureStorageRepository.dart';
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
+  final prefs = await SharedPreferencesWithCache.create(
+    cacheOptions: const SharedPreferencesWithCacheOptions(
+      allowList: {'first_time', 'hashed_password', 'theme'},
+    ),
+  );
+  const secureStorage = FlutterSecureStorage();
+
+  final sharedPreferencesRepo = SharedPreferencesRepository(prefs);
+  final secureStorageRepo = SecureStorageRepository(secureStorage);
+
   runApp(
     MultiProvider(
       providers: [
-        // Providers to add
-
-
-        ChangeNotifierProvider(create: (_) => DatabaseProvider()..init('azerty')), // TODO : remove the init from here since it will be called in AuthenticationProvider
-
         ChangeNotifierProvider(create: (_) => ThemeController()),
 
-        ChangeNotifierProvider(create: (_) => SharedPreferencesProvider()..init()),
+        ChangeNotifierProvider(create: (_) => DatabaseProvider()),
 
-        // TODO : Add SharedPreferencesProvider to AuthenticationProvider ? (to save the hashed master password in shared preferences ?)
-        ChangeNotifierProxyProvider<DatabaseProvider, AuthenticationProvider>(
+        Provider.value(value: sharedPreferencesRepo),
+        Provider.value(value: secureStorageRepo),
+
+        ChangeNotifierProvider(
           create: (context) => AuthenticationProvider(
-            context.read<DatabaseProvider>(),
+            databaseProvider: context.read<DatabaseProvider>(),
+            sharedPreferencesRepository: sharedPreferencesRepo,
+            secureStorage: secureStorageRepo,
           ),
-          update: (context, dbProvider, authenticationProvider) =>
-          authenticationProvider!..initDB(dbProvider),
         ),
 
-
-        ChangeNotifierProxyProvider<DatabaseProvider, RobustnessProvider>(
+        ChangeNotifierProvider(
           create: (context) => RobustnessProvider(
             context.read<DatabaseProvider>(),
           ),
-          update: (context, dbProvider, robustnessProvider) =>
-          robustnessProvider!..updateDatabase(dbProvider),
         ),
-
       ],
       child: const AppRoot(),
     ),
@@ -74,21 +81,28 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<DatabaseProvider, SharedPreferencesProvider>(
-      builder: (context, dbProvider, sharedPrefProvider, _) {
-        // TODO : check authentication isReady -> do the authentication check -> then check dbProvider.isOpened
-
-        if (!dbProvider.isOpened || !sharedPrefProvider.initialized) {
-          return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
-          );
+    return Consumer<AuthenticationProvider>(
+      builder: (_, auth, _) {
+        // Check if the user is authenticated
+        if (!auth.isAuthenticated) {
+          // TODO : Replace with AuthenticationPage()
+          // return const TestPage1(); // Test the database / robustness
+          return const TestPage2();  // Test the registration / authentication
         }
 
-        // TODO : Check if first time + redirect to authentication page
 
-         return const RootPage();
-
-
+        return Consumer<DatabaseProvider>(
+          builder: (_, db, _) {
+            // User is authenticated, check if the database is opened
+            if (!db.isOpened) {
+              return const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              );
+            }
+            // User is authenticated + database is opened -> navigate to the root page
+            return const RootPage();
+          },
+        );
       },
     );
   }

@@ -26,7 +26,6 @@ class DatabaseProvider with ChangeNotifier {
 
   Future<void> init(String key) async {
     await initializeDatabase(key);
-    // await openDatabaseWithPassword(key); // already opened in initializeDatabase
     _isOpened = true;
     notifyListeners();
   }
@@ -41,6 +40,7 @@ class DatabaseProvider with ChangeNotifier {
   /// @param password The password to open the database.<br>
   Future<void> openDatabaseWithPassword(String password) async {
     _db = await openDatabase(join(await getDatabasesPath(), _databaseName), password: password);
+    _isOpened = true;
     notifyListeners();
   }
 
@@ -71,6 +71,7 @@ class DatabaseProvider with ChangeNotifier {
     _passwords = await retrievePasswords();
     _passwordVersion++;
     notifyListeners();
+    print("Password version: ${_passwordVersion}");
   }
 
 
@@ -95,7 +96,6 @@ class DatabaseProvider with ChangeNotifier {
         onConfigure: _onConfigure,
         password: password
       );
-    notifyListeners();
   }
 
 

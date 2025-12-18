@@ -1,56 +1,36 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:safe_vault/models/KeyGenerator.dart';
+import 'package:safe_vault/models/authentication/KeyGenerator.dart';
 
+import 'package:safe_vault/models/SharedPreferencesRepository.dart';
+import 'package:safe_vault/models/authentication/SecureStorageRepository.dart';
 import 'DatabaseProvider.dart';
-import 'SharedPreferencesProvider.dart';
 
 class AuthenticationProvider extends ChangeNotifier {
-  bool _isReady = false;
-  bool _isDbReady = false;
-  bool _isSpReady = true; // TODO : initialize to false when SP init added
   bool _isAuthenticated = false;
-  DatabaseProvider _databaseProvider;
-  SharedPreferencesProvider? _sharedPreferencesProvider; // TODO : make it non-nullable when SP init added
+  final DatabaseProvider _databaseProvider;
+  final SharedPreferencesRepository _sharedPreferencesRepository;
+  final SecureStorageRepository _secureStorage;
 
-  bool get isReady => _isReady;
   bool get isAuthenticated => _isAuthenticated;
 
 
-  // AuthenticationProvider(this._databaseProvider, this._sharedPreferencesProvider);
-  AuthenticationProvider(this._databaseProvider);
 
-  Future<void> initDB(DatabaseProvider dbProvider) async {
-    _databaseProvider = dbProvider;
-    _isDbReady = true;
-    if(_isSpReady) {
-      _isReady = true;
-      notifyListeners();
-    }
-  }
+  AuthenticationProvider({
+    required DatabaseProvider databaseProvider,
+    required SharedPreferencesRepository sharedPreferencesRepository,
+    required SecureStorageRepository secureStorage,
+  })  : _databaseProvider = databaseProvider,
+        _sharedPreferencesRepository = sharedPreferencesRepository,
+        _secureStorage = secureStorage;
 
 
-  Future<void> initSP(SharedPreferencesProvider spProvider) async {
-    _sharedPreferencesProvider = spProvider;
-    _isSpReady = true;
-    if(_isDbReady) {
-      _isReady = true;
-      notifyListeners();
-    }
-  }
-
-
-  /// Authenticate the user
-  void authenticate() {
-    _isAuthenticated = true;
-    notifyListeners();
-  }
 
 
   /// Logout the user
   void logout() {
+    // TODO
     _isAuthenticated = false;
     notifyListeners();
   }
@@ -60,27 +40,45 @@ class AuthenticationProvider extends ChangeNotifier {
   /// Create a derived key and store it securely.<br>
   /// Init the database, secured by the new key.<br>
   Future<void> registerNewUser(String masterPassword) async { // TODO : not called for the moment
-    // Create a derived key from the master password
-    final key = KeyGenerator.createDeriveKeyFromPassword(masterPassword);
-    final keyString = KeyGenerator.keyToHex(key);
 
-    // Store the derived key securely
-    final storage = FlutterSecureStorage();
-    try {
-      await storage.write(key: 'derived_key', value: keyString);
-    } catch (e) {
-      throw Exception('Failed to store the derived key securely: $e');
+    final passwordHash = KeyGenerator.hashPassword(masterPassword);
+    await _sharedPreferencesRepository.setHashedPassword(passwordHash);
+
+    final dbKey = KeyGenerator.keyToHex(
+      KeyGenerator.createDeriveKeyFromPassword(masterPassword),
+    );
+
+    await _secureStorage.saveDbKey(dbKey);
+    await _databaseProvider.init(dbKey); // will initialize the database -> DatabaseProvider
+    await _sharedPreferencesRepository.setFirstTime(false);
+
+    _isAuthenticated = true;
+    notifyListeners();
+
+  }
+
+
+  /// Authenticate the user
+  Future<void> authenticate(String masterPassword) async {
+    final passwordHash = KeyGenerator.hashPassword(masterPassword);
+    final String savedHash = _sharedPreferencesRepository.hashedPassword ?? '';
+
+    if (passwordHash != savedHash) {
+      throw Exception('Invalid master password');
     }
+    else {
+      final dbKey = await _secureStorage.readDbKey();
 
-    // Initialize the database with the derived key
-    _databaseProvider.init(keyString); // will initialize the database -> DatabaseProvider will do the notifyListeners()
+      if(dbKey == null) {
+        throw Exception('Database key not found');
+      }
+      else {
+        await _databaseProvider.init(dbKey);
+        _isAuthenticated = true;
+        notifyListeners();
+      }
+    }
   }
-
-
-  void authenticateUser(String masterPassword) {
-
-  }
-
 
 }
 
