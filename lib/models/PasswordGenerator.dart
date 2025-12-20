@@ -85,8 +85,8 @@ class PasswordGenerator {
 
   /// Complete password strength analysis<br>
   /// @param password The password to analyze<br>
-  /// @return A map containing the strength and criteria met (length >= 12, uppercase, numbers, specialChars)
-  Map<String, dynamic> completePasswordStrengthAnalysis(String password) {
+  /// @return A map containing the strength and criteria met (strength, length >= 12, uppercase, numbers, specialChars)
+  static Map<String, dynamic> completePasswordStrengthAnalysis(String password) {
     double entropy = computeEntropyScore(password);
     String strength;
     if (entropy < 28) {

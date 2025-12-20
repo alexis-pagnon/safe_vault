@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:safe_vault/models/PasswordGenerator.dart';
 import '../../models/theme/AppColors.dart';
 
 class CustomStrengthWidget extends StatefulWidget {
@@ -20,6 +21,7 @@ class CustomStrengthWidget extends StatefulWidget {
 class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
   Color currentColor = Color(0xFFFB2C36); // Default to very weak color
   String currentStrength = "Très faible"; // Default strength to very weak
+  Map<String, dynamic> analysisResults = {"strength": "Très faible", "length": false, "uppercase": false, "numbers": false, "specialChars": false};
 
   @override
   void initState() {
@@ -75,11 +77,11 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
   void _onTextChanged() {
     String password = widget.controller.text;
 
-    // TODO: ALEXIS: Met ici l'appel de ta fonction d'évaluation de mot de passe avec l'attribut password ci-dessus
+    // TODO: Check si l'évaluation de mot de passe est correcte
+    analysisResults = PasswordGenerator.completePasswordStrengthAnalysis(password);
 
     setState(() {
-      // TODO: ALEXIS: Met à jour la variable currentStrength avec le résultat de l'évaluation
-      // currentStrength = ...
+      currentStrength = analysisResults["strength"];
       changeColor(currentStrength);
     });
   }
@@ -156,10 +158,10 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
                 ),
               ),
 
-              // TODO: ALEXIS: Remplace les if (true) par les vraies conditions
+              // TODO: Check si ça marche + il y a rien d'affiché quand c'est respecté ?
 
               // 12 characters
-              if(true)
+              if(!analysisResults["length"])
                 Row(
                 spacing: totalWidth * 0.02,
                 children: [
@@ -180,7 +182,7 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
               ),
 
               // Uppercase letters
-              if(true)
+              if(!analysisResults["uppercase"])
                 Row(
                 spacing: totalWidth * 0.02,
                 children: [
@@ -201,7 +203,7 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
               ),
 
               // Numbers
-              if(true)
+              if(!analysisResults["numbers"])
                 Row(
                 spacing: totalWidth * 0.02,
                 children: [
@@ -222,7 +224,7 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
               ),
 
               // Special characters
-              if(true)
+              if(!analysisResults["specialChars"])
                 Row(
                 spacing: totalWidth * 0.02,
                 children: [

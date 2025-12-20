@@ -20,12 +20,23 @@ class DatabaseProvider with ChangeNotifier {
   List<Password> get passwords => _passwords;
   List<Note> get notes => _notes;
 
+  List<Password> get favoritePasswords => _passwords.where((pwd) => pwd.is_favorite).toList();
+
+  List<Password> get categoryWebPasswords => _passwords.where((pwd) => pwd.id_category == 1).toList();
+  List<Password> get categorySocialPasswords => _passwords.where((pwd) => pwd.id_category == 2).toList();
+  List<Password> get categoryAppPasswords => _passwords.where((pwd) => pwd.id_category == 3).toList();
+  List<Password> get categoryPaymentPasswords => _passwords.where((pwd) => pwd.id_category == 4).toList();
+
+
+
+
   int get passwordVersion => _passwordVersion;
   int get noteVersion => _noteVersion;
 
 
   Future<void> init(String key) async {
     await initializeDatabase(key);
+    await loadPasswords();
     _isOpened = true;
     notifyListeners();
   }
@@ -141,15 +152,19 @@ class DatabaseProvider with ChangeNotifier {
 
   Future<void> insertCategories(Database db) async {
     await db.insert('Category', {
+      'id_category': 1,
       'title': 'Sites Web'
     });
     await db.insert('Category', {
+      'id_category': 2,
       'title': 'Réseaux Sociaux'
     });
     await db.insert('Category', {
+      'id_category': 3,
       'title': 'Applications'
     });
     await db.insert('Category', {
+      'id_category': 4,
       'title': 'Paiements'
     });
   }

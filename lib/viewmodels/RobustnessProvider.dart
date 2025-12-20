@@ -30,6 +30,7 @@ class RobustnessProvider with ChangeNotifier {
 
   RobustnessProvider(this._databaseProvider) {
     _databaseProvider.addListener(_onDatabaseChanged);
+    _tryInitialAnalysis();
   }
 
   int get compromised => _compromised;
@@ -50,6 +51,15 @@ class RobustnessProvider with ChangeNotifier {
     if (version == _lastPasswordVersion) return;
     _lastPasswordVersion = version;
     analyzeAllPwdRobustness();
+  }
+
+  /// Try initial analysis if database is already opened
+  void _tryInitialAnalysis() {
+    if (_databaseProvider.isOpened &&
+        _lastPasswordVersion != _databaseProvider.passwordVersion) {
+      _lastPasswordVersion = _databaseProvider.passwordVersion;
+      analyzeAllPwdRobustness();
+    }
   }
 
 

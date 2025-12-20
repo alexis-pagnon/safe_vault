@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:safe_vault/views/testPage.dart';
 
 class PasswordsPage extends StatefulWidget {
   const PasswordsPage({super.key});
@@ -17,7 +18,9 @@ class _PasswordsPageState extends State<PasswordsPage> {
     return Scaffold(
       backgroundColor: Colors.green,
 
-      body: SafeArea(child: SizedBox()),
+      body: SafeArea(
+          child: TestPage3() // TODO : replace with PasswordsPage content
+      ),
     );
   }
 }

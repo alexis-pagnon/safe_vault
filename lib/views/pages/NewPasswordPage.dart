@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:safe_vault/models/PasswordGenerator.dart';
 import 'package:safe_vault/views/widgets/CustomLittleCard.dart';
 import 'package:safe_vault/views/widgets/CustomSvgButton.dart';
 import 'package:safe_vault/views/widgets/CustomTextField.dart';
@@ -288,7 +289,9 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                               title: 'Générer un mot de passe',
                               svgPath: 'assets/svg/stars.svg',
                               onPressed: (){
-                                // TODO: Alexis: Appeler ta fonction qui génère un mot de passe fort avec 20 caractères
+                                // TODO: check la fonction qui génère un mot de passe fort avec 20 caractères
+                                controllers[3].text = PasswordGenerator.generateRandomPassword(20, true, true, true, true);
+                                setState(() {});
                               }
                           ),
                         ],

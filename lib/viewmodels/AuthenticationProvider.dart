@@ -29,8 +29,7 @@ class AuthenticationProvider extends ChangeNotifier {
 
 
   /// Logout the user
-  void logout() {
-    // TODO
+  void logout() { // TODO
     _isAuthenticated = false;
     notifyListeners();
   }
@@ -39,7 +38,7 @@ class AuthenticationProvider extends ChangeNotifier {
   /// Register a new user with the given master password.<br>
   /// Create a derived key and store it securely.<br>
   /// Init the database, secured by the new key.<br>
-  Future<void> registerNewUser(String masterPassword) async { // TODO : not called for the moment
+  Future<void> registerNewUser(String masterPassword) async {
 
     final passwordHash = KeyGenerator.hashPassword(masterPassword);
     await _sharedPreferencesRepository.setHashedPassword(passwordHash);
