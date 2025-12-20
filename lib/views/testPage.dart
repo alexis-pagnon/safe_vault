@@ -146,13 +146,20 @@ class _TestPage2State extends State<TestPage2> {
                     },
                     child: Text('Register'),
                   )
-                : ElevatedButton(
-                    onPressed: () {
-                      // Simulate authentication
-                      context.read<AuthenticationProvider>().authenticate("azerty");
-                    },
-                    child: Text('Authenticate'),
-                  ),
+                : Column(
+                  children: [
+                    ElevatedButton(
+                        onPressed: () {
+                          // Simulate authentication
+                          context.read<AuthenticationProvider>().authenticate("azerty");
+                        },
+                        child: Text('Authenticate'),
+                      ),
+                    SizedBox(height: 20),
+
+                    ElevatedButton(onPressed: () {context.read<AuthenticationProvider>().authenticateWithBiometrics();}, child: Text("Biometric Auth")), // TODO
+                  ],
+                ),
           ],
         ),
       ),

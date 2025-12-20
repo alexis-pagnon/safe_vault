@@ -2,10 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:safe_vault/models/authentication/KeyGenerator.dart';
-
 import 'package:safe_vault/models/SharedPreferencesRepository.dart';
 import 'package:safe_vault/models/authentication/SecureStorageRepository.dart';
-import 'DatabaseProvider.dart';
+import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
+
+import 'package:local_auth/local_auth.dart';
 
 class AuthenticationProvider extends ChangeNotifier {
   bool _isAuthenticated = false;
@@ -76,6 +77,38 @@ class AuthenticationProvider extends ChangeNotifier {
         _isAuthenticated = true;
         notifyListeners();
       }
+    }
+  }
+
+
+  /// Authenticate using biometrics
+  Future<void> authenticateWithBiometrics() async {
+    final localAuth = LocalAuthentication();
+    final canCheckBiometrics = await localAuth.canCheckBiometrics;
+    final isDeviceSupported = await localAuth.isDeviceSupported();
+
+    if (!canCheckBiometrics || !isDeviceSupported) {
+      throw Exception('Biometric authentication not available');
+    }
+
+    final didAuthenticate = await localAuth.authenticate(
+      localizedReason: 'Please authenticate to access your vault',
+      biometricOnly: true,
+    );
+
+    if (didAuthenticate) {
+      final dbKey = await _secureStorage.readDbKey();
+
+      if(dbKey == null) {
+        throw Exception('Database key not found');
+      }
+      else {
+        await _databaseProvider.init(dbKey);
+        _isAuthenticated = true;
+        notifyListeners();
+      }
+    } else {
+      throw Exception('Biometric authentication failed');
     }
   }
 
