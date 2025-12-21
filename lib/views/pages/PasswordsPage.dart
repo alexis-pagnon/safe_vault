@@ -18,9 +18,7 @@ class _PasswordsPageState extends State<PasswordsPage> {
     return Scaffold(
       backgroundColor: Colors.green,
 
-      body: SafeArea(
-          child: TestPage3() // TODO : replace with PasswordsPage content
-      ),
+      body: TestPage3(),
     );
   }
 }

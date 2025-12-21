@@ -24,19 +24,21 @@ class _RootPageState extends State<RootPage> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>()!;
 
-    return Scaffold(
-      backgroundColor: colors.background,
-      bottomNavigationBar: CustomNavBar(pageController: pageController, selectedIndexNotifier: selectedIndex,),
-      body: PageView(
-        controller: pageController,
-        scrollDirection: Axis.horizontal,
-        children: pages,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: colors.background,
+        bottomNavigationBar: CustomNavBar(pageController: pageController, selectedIndexNotifier: selectedIndex,),
+        body: PageView(
+          controller: pageController,
+          scrollDirection: Axis.horizontal,
+          children: pages,
 
-        onPageChanged: (int index) {
-          setState(() {
-            selectedIndex.value = index;
-          });
-        },
+          onPageChanged: (int index) {
+            setState(() {
+              selectedIndex.value = index;
+            });
+          },
+        ),
       ),
     );
   }
