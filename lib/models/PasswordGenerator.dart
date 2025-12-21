@@ -40,6 +40,19 @@ class PasswordGenerator {
       password += charPool[index];
     }
 
+    Map<String, dynamic> analysis = completePasswordStrengthAnalysis(password);
+    while(analysis["uppercase"] != useUppercase ||
+        analysis["numbers"] != useNumbers ||
+        analysis["specialChars"] != useSpecialChars) {
+      // Regenerate password until it meets the criteria
+      password = "";
+      for(int i = 0; i <  nbChars; i++) {
+        int index = rand.nextInt(charPool.length);
+        password += charPool[index];
+      }
+      analysis = completePasswordStrengthAnalysis(password);
+    }
+
     return password;
   }
 
