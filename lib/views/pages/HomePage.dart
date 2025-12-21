@@ -16,13 +16,31 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<Color> currentGradient = [];
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  List<Color> _getGradientForScore(int score, AppColors colors) {
+    if (score < 25) {
+      return [ Color(0xFFFF3939).withOpacity(0.3), Color(0xFFFF3939)];
+    } else if (score < 50) {
+      return [Color(0xFFFF8239).withOpacity(0.3), Color(0xFFFF8239)];
+    } else if (score < 75) {
+      return [Color(0xFFFFD739).withOpacity(0.3), Color(0xFFFFD739)];
+    } else {
+      return [colors.greenDarker.withOpacity(0.3), colors.greenDarker];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>()!;
     final totalWidth = MediaQuery.of(context).size.width;
     final totalHeight = MediaQuery.of(context).size.height;
+
 
 
     return SafeArea(
@@ -80,6 +98,13 @@ class _HomePageState extends State<HomePage> {
 
                         child: Consumer<RobustnessProvider>(
                           builder: (BuildContext context, RobustnessProvider robustnessProvider, Widget? child) {
+
+                            // Update the gradient based on the score
+                            currentGradient = _getGradientForScore(robustnessProvider.totalScore, colors);
+
+                            print("score: ${robustnessProvider.totalScore}");
+                            print("gradient: $currentGradient");
+
                             return Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,24 +126,26 @@ class _HomePageState extends State<HomePage> {
                                       appearance: CircularSliderAppearance(
                                         customWidths: CustomSliderWidths(progressBarWidth: 10, trackWidth: 8),
                                         infoProperties: InfoProperties(
-                                          mainLabelStyle: GoogleFonts.montserrat(fontSize: 30, fontWeight: FontWeight.w500, color: colors.greenDarker),
+                                          mainLabelStyle: GoogleFonts.montserrat(fontSize: 30, fontWeight: FontWeight.w500, color: currentGradient.last),
 
                                           modifier: (double value) {
                                             return '${value.toInt()}';
                                           },
                                         ),
+
                                         customColors: CustomSliderColors(
                                           dotColor: Colors.transparent,
-                                          progressBarColors: [colors.greenLight, colors.greenDarker],
-                                          gradientStartAngle: 0,
-                                          gradientEndAngle: 270,
+                                          progressBarColors: currentGradient,
                                           trackColor: Color(0xFFD9D9D9),
+                                          gradientStartAngle: -150,
+                                          shadowColor: currentGradient.first.withOpacity(0.4),
+
                                         ),
                                         size: 140,
                                       ),
                                       min: 0,
                                       max: 100,
-                                      initialValue: robustnessProvider.totalScore.toDouble(), // TODO : score ici ?
+                                      initialValue: robustnessProvider.totalScore.toDouble(),
                                     ),
                                   ),
                                 ),
