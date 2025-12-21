@@ -27,6 +27,13 @@ class DatabaseProvider with ChangeNotifier {
   List<Password> get categoryAppPasswords => _passwords.where((pwd) => pwd.id_category == 3).toList();
   List<Password> get categoryPaymentPasswords => _passwords.where((pwd) => pwd.id_category == 4).toList();
 
+  List<Password> searchPasswords(String query) {
+    return _passwords.where((pwd) =>
+      pwd.service.toLowerCase().contains(query.toLowerCase()) ||
+      pwd.website.toLowerCase().contains(query.toLowerCase())
+    ).toList();
+  }
+
 
 
 
@@ -36,9 +43,10 @@ class DatabaseProvider with ChangeNotifier {
 
   Future<void> init(String key) async {
     await initializeDatabase(key);
-    await loadPasswords();
     _isOpened = true;
     notifyListeners();
+    await loadPasswords();
+    await loadNotes();
   }
 
 
@@ -123,6 +131,7 @@ class DatabaseProvider with ChangeNotifier {
         id_pwd INTEGER PRIMARY KEY AUTOINCREMENT,
         password TEXT NOT NULL,
         username TEXT NOT NULL,
+        service TEXT NOT NULL,
         website TEXT,
         is_favorite INTEGER NOT NULL,
         id_category INTEGER,

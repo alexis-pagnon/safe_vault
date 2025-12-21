@@ -90,7 +90,7 @@ class _TestPage1State extends State<TestPage1> {
                     // Save the password to the database
                     String username = _usernameController.text;
                     String password = _passwordController.text;
-                    dbProvider.insertPassword(Password(password: password, username: username, id_category: 1));
+                    dbProvider.insertPassword(Password(password: password, username: username, service: 'None', id_category: 1));
                   },
                   child: Text('Save Password'),
                 ),
@@ -157,7 +157,8 @@ class _TestPage2State extends State<TestPage2> {
                       ),
                     SizedBox(height: 20),
 
-                    ElevatedButton(onPressed: () {context.read<AuthenticationProvider>().authenticateWithBiometrics();}, child: Text("Biometric Auth")), // TODO
+                    if(context.watch<AuthenticationProvider>().canUseBiometrics)
+                    ElevatedButton(onPressed: () {context.read<AuthenticationProvider>().authenticateWithBiometrics();}, child: Text("Biometric Auth")),
                   ],
                 ),
           ],
@@ -230,7 +231,7 @@ class _TestPage3State extends State<TestPage3> {
                 // Save the password to the database
                 String username = _usernameController.text;
                 String password = _passwordController.text;
-                dbProvider.insertPassword(Password(password: password, username: username, id_category: _sliderValue.toInt()));
+                dbProvider.insertPassword(Password(password: password, username: username, service: 'None', id_category: _sliderValue.toInt()));
               },
               child: Text('Save Password'),
             ),

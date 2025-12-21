@@ -14,8 +14,10 @@ class AuthenticationProvider extends ChangeNotifier {
   final SharedPreferencesRepository _sharedPreferencesRepository;
   final SecureStorageRepository _secureStorage;
 
-  bool get isAuthenticated => _isAuthenticated;
+  bool _canUseBiometrics = false;
 
+  bool get isAuthenticated => _isAuthenticated;
+  bool get canUseBiometrics => _canUseBiometrics;
 
 
   AuthenticationProvider({
@@ -24,7 +26,9 @@ class AuthenticationProvider extends ChangeNotifier {
     required SecureStorageRepository secureStorage,
   })  : _databaseProvider = databaseProvider,
         _sharedPreferencesRepository = sharedPreferencesRepository,
-        _secureStorage = secureStorage;
+        _secureStorage = secureStorage {
+    _initBiometrics();
+  }
 
 
 
@@ -80,6 +84,20 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
+  void _initBiometrics() async {
+    final localAuth = LocalAuthentication();
+    final canCheckBiometrics = await localAuth.canCheckBiometrics;
+    final isDeviceSupported = await localAuth.isDeviceSupported();
+
+    if(canCheckBiometrics && isDeviceSupported) {
+      _canUseBiometrics = true;
+    }
+    else {
+      _canUseBiometrics = false;
+    }
+    notifyListeners();
+  }
+
 
   /// Authenticate using biometrics
   Future<void> authenticateWithBiometrics() async {
@@ -91,26 +109,31 @@ class AuthenticationProvider extends ChangeNotifier {
       throw Exception('Biometric authentication not available');
     }
 
-    final didAuthenticate = await localAuth.authenticate(
-      localizedReason: 'Please authenticate to access your vault',
-      biometricOnly: true,
-    );
+    try {
+      final didAuthenticate = await localAuth.authenticate(
+        localizedReason: 'Please authenticate to access your vault',
+        biometricOnly: true,
+      );
 
-    if (didAuthenticate) {
-      final dbKey = await _secureStorage.readDbKey();
+      if (didAuthenticate) {
+        final dbKey = await _secureStorage.readDbKey();
 
-      if(dbKey == null) {
-        throw Exception('Database key not found');
+        if(dbKey == null) {
+          throw Exception('Database key not found');
+        }
+        else {
+          await _databaseProvider.init(dbKey);
+          _isAuthenticated = true;
+          notifyListeners();
+        }
       }
-      else {
-        await _databaseProvider.init(dbKey);
-        _isAuthenticated = true;
-        notifyListeners();
-      }
-    } else {
-      throw Exception('Biometric authentication failed');
+    } catch (e) {
+      print('Error checking biometrics: $e');
     }
+
   }
+
+
 
 }
 
