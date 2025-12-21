@@ -5,6 +5,7 @@ import 'package:safe_vault/views/widgets/CustomLittleCard.dart';
 import 'package:safe_vault/views/widgets/CustomSvgButton.dart';
 import 'package:safe_vault/views/widgets/CustomTextField.dart';
 import '../../models/theme/AppColors.dart';
+import '../widgets/CustomButton.dart';
 import '../widgets/CustomStrengthWidget.dart';
 
 class NewPasswordPage extends StatefulWidget {
@@ -297,6 +298,14 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                         ],
                       ),
 
+                    ),
+
+                    // Save Button
+                    CustomButton(
+                        title: "Enregistrer",
+                        onPressed: () {
+                          // TODO: Alexis: Save le mdp dans la BDD
+                        },
                     ),
                   ],
                 ),

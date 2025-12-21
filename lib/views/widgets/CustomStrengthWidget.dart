@@ -38,22 +38,22 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
   void changeColor(String strength) {
     switch (strength) {
       case "Très faible":
-        currentColor = Color(0xFFFB2C36);
+        currentColor = Color(0xFFFF3939);
         break;
       case "Faible":
-        currentColor = Color(0xFFFFA500);
+        currentColor = Color(0xFFFF8239);
         break;
       case "Moyen":
-        currentColor = Color(0xFFFFD700);
+        currentColor = Color(0xFFFFD739);
         break;
       case "Fort":
-        currentColor = Color(0xFF9ACD32);
+        currentColor = Color(0xFF1FC974);
         break;
       case "Très fort":
-        currentColor = Color(0xFF008000);
+        currentColor = Color(0xFF06B800);
         break;
       default:
-        currentColor = Color(0xFFFB2C36);
+        currentColor = Color(0xFFFF3939);
     }
   }
 
@@ -92,6 +92,9 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
     final totalWidth = MediaQuery.of(context).size.width;
     final totalHeight = MediaQuery.of(context).size.height;
 
+    if(widget.controller.text.isEmpty) {
+      return SizedBox.shrink();
+    }
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
 
@@ -130,12 +133,13 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
           value: getValue(currentStrength),
           minHeight: totalHeight * 0.015,
           backgroundColor: colors.containerBackground2,
-          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFB2C36)),
+          valueColor: AlwaysStoppedAnimation<Color>(currentColor),
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
 
         // Recommendations Card
-        Container(
+        if(!analysisResults["length"] || !analysisResults["uppercase"] || !analysisResults["numbers"] || !analysisResults["specialChars"])
+          Container(
           width: double.infinity,
           decoration: BoxDecoration(
             color: colors.containerBackground2,
@@ -157,8 +161,6 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
                   color: colors.text2,
                 ),
               ),
-
-              // TODO: Check si ça marche + il y a rien d'affiché quand c'est respecté ?
 
               // 12 characters
               if(!analysisResults["length"])
