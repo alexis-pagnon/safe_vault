@@ -82,6 +82,7 @@ class _PasswordsPageState extends State<PasswordsPage> {
                     hintText: "Rechercher...",
                     controller: controller,
                     search: true,
+                    delete: true,
                     onChanged: (value) {
                       dbProvider.setQuery(value);
                     },
@@ -132,7 +133,6 @@ class _PasswordsPageState extends State<PasswordsPage> {
                               print("Favoris");
                               dbProvider.setCategory(1);
                             },
-
                           ),
                           CustomCategoryButton(
                             index: 2,
@@ -172,7 +172,6 @@ class _PasswordsPageState extends State<PasswordsPage> {
                               selectedCategoryNotifier.value = 5;
                               print("Paiements");
                               dbProvider.setCategory(5);
-
                             },
                           ),
 
