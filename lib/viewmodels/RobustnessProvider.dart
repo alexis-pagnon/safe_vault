@@ -147,7 +147,7 @@ class RobustnessProvider with ChangeNotifier {
       int totalPasswords = _strong + _weak;
       if(totalPasswords > 0) {
         double baseScore = _strong / totalPasswords * 100;
-        double penalty = ( 100 * _reused + 250 * _compromised ) / totalPasswords;
+        double penalty = (3 * _reused + _compromised)/baseScore*100;
         _totalScore = max(0, (baseScore - penalty)).round();
       } else {
         _totalScore = 100;
