@@ -77,7 +77,6 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
   void _onTextChanged() {
     String password = widget.controller.text;
 
-    // TODO: Check si l'évaluation de mot de passe est correcte
     analysisResults = PasswordGenerator.completePasswordStrengthAnalysis(password);
 
     setState(() {

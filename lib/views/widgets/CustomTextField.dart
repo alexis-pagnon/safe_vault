@@ -10,6 +10,7 @@ class CustomTextField extends StatefulWidget {
   final bool search;
   final TextEditingController controller;
   final bool editable;
+  final Function(String)? onChanged;
 
   const CustomTextField({
     super.key,
@@ -19,6 +20,7 @@ class CustomTextField extends StatefulWidget {
     this.search = false,
     required this.controller,
     this.editable = true,
+    this.onChanged,
   });
 
   @override
@@ -40,6 +42,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       autocorrect: !widget.eye,
       readOnly: !widget.editable,
       controller: widget.controller,
+      onChanged: widget.onChanged,
 
       style: GoogleFonts.montserrat(
         fontSize: 14,

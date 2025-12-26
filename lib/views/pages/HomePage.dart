@@ -148,7 +148,6 @@ class _HomePageState extends State<HomePage> {
                               ),
 
                               // Infos
-                              // TODO: Check si les valeurs sont bonnes
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
@@ -266,7 +265,6 @@ class _HomePageState extends State<HomePage> {
                       ),
 
                       // Categories
-                      // TODO: ALEXIS: Change le subtitle avec le vrai nombre de mots de passe -> Mettre un Consumer<DatabaseProvider> ?
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

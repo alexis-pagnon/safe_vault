@@ -298,7 +298,6 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                             title: 'Générer un mot de passe',
                             svgPath: 'assets/svg/stars.svg',
                             onPressed: (){
-                              // TODO: check la fonction qui génère un mot de passe fort avec 20 caractères
                               controllers[3].text = PasswordGenerator.generateRandomPassword(20, true, true, true, true);
                               setState(() {});
                             }
@@ -312,7 +311,7 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                   CustomButton(
                       title: "Enregistrer",
                       onPressed: () {
-                        // TODO: Alexis: Vérifier si je save bien dans la bdd
+                        // Insert the new password into the database
                         dbProvider.insertPassword(Password(
                           password: controllers[3].text,
                           username: controllers[1].text,

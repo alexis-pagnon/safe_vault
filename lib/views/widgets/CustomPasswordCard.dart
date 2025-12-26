@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
 import 'package:safe_vault/views/widgets/CustomTextField.dart';
 import '../../models/database/Password.dart';
 import '../../models/theme/AppColors.dart';
@@ -32,6 +34,8 @@ class _CustomPasswordCardState extends State<CustomPasswordCard> {
     final colors = Theme.of(context).extension<AppColors>()!;
     final totalHeight = MediaQuery.of(context).size.height;
     final totalWidth = MediaQuery.of(context).size.width;
+
+    final dbProvider = Provider.of<DatabaseProvider>(context, listen: false);
 
     return Container(
       width: totalWidth * 0.85,
@@ -111,8 +115,8 @@ class _CustomPasswordCardState extends State<CustomPasswordCard> {
                         // Favorite
                         InkWell(
                           child: SvgPicture.asset(
-                            test ? "assets/svg/favorite_filled.svg" : "assets/svg/favorite.svg",
-                            colorFilter: test // TODO: Alexis: Remplacer par widget.password.is_favorite une fois que tout marchera
+                            widget.password.is_favorite ? "assets/svg/favorite_filled.svg" : "assets/svg/favorite.svg",
+                            colorFilter: widget.password.is_favorite
                                 ? ColorFilter.mode(Color(0xFFFB2C36), BlendMode.srcIn)
                                 : ColorFilter.mode(colors.text4, BlendMode.srcIn),
 
@@ -120,10 +124,8 @@ class _CustomPasswordCardState extends State<CustomPasswordCard> {
                           ),
 
                           onTap: () {
-                            // TODO: Alexis: Modifier le statut favori pour que je puisse actualiser l'UI, en attendant j'ai mis une variable temporaire
-                            setState(() {
-                              test = !test;
-                            });
+                            // Update favorite status
+                            dbProvider.toggleFavoriteStatus(widget.password.id_pwd!,!widget.password.is_favorite);
                           },
                         ),
 

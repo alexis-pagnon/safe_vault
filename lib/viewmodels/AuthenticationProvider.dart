@@ -34,8 +34,9 @@ class AuthenticationProvider extends ChangeNotifier {
 
 
   /// Logout the user
-  void logout() { // TODO
+  void logout() async {
     _isAuthenticated = false;
+    await  _databaseProvider.closeDatabase();
     notifyListeners();
   }
 

@@ -19,14 +19,10 @@ class _PasswordsPageState extends State<PasswordsPage> {
   final TextEditingController controller = TextEditingController();
   final ValueNotifier<int> selectedCategoryNotifier = ValueNotifier<int>(0);
 
+
   @override
   void initState() {
     super.initState();
-    controller.addListener(() {
-      // TODO: Alexis: Faire la logique de recherche ici pour n'afficher que ce qui contient ce qui a été tappe (je pense qu'on peut tout mettre en minuscule et juste check si c'est bien dedans)
-
-      print("Texte actuel : ${controller.text}");
-    });
   }
 
   @override
@@ -41,6 +37,9 @@ class _PasswordsPageState extends State<PasswordsPage> {
     final colors = Theme.of(context).extension<AppColors>()!;
     final totalWidth = MediaQuery.of(context).size.width;
     final totalHeight = MediaQuery.of(context).size.height;
+
+    final dbProvider = Provider.of<DatabaseProvider>(context, listen: false);
+
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -83,6 +82,9 @@ class _PasswordsPageState extends State<PasswordsPage> {
                     hintText: "Rechercher...",
                     controller: controller,
                     search: true,
+                    onChanged: (value) {
+                      dbProvider.setQuery(value);
+                    },
                   ),
                 ],
               ),
@@ -111,7 +113,6 @@ class _PasswordsPageState extends State<PasswordsPage> {
                           SizedBox(width: totalWidth * 0.03),
 
                           // Category Buttons
-                          // TODO: Alexis: Faire la logique dans chacune des fonctions pour que ça n'affiche que les bons mdps
                           CustomCategoryButton(
                             index: 0,
                             selectedIndexNotifier: selectedCategoryNotifier,
@@ -119,6 +120,7 @@ class _PasswordsPageState extends State<PasswordsPage> {
                             onPressed: () {
                               selectedCategoryNotifier.value = 0;
                               print("Tous");
+                              dbProvider.setCategory(0);
                             },
                           ),
                           CustomCategoryButton(
@@ -128,15 +130,18 @@ class _PasswordsPageState extends State<PasswordsPage> {
                             onPressed: () {
                               selectedCategoryNotifier.value = 1;
                               print("Favoris");
+                              dbProvider.setCategory(1);
                             },
+
                           ),
                           CustomCategoryButton(
                             index: 2,
                             selectedIndexNotifier: selectedCategoryNotifier,
-                            text: "Site Web",
+                            text: "Sites Web",
                             onPressed: () {
                               selectedCategoryNotifier.value = 2;
-                              print("Site Web");
+                              print("Sites Web");
+                              dbProvider.setCategory(2);
                             },
                           ),
                           CustomCategoryButton(
@@ -146,6 +151,7 @@ class _PasswordsPageState extends State<PasswordsPage> {
                             onPressed: () {
                               selectedCategoryNotifier.value = 3;
                               print("Réseaux Sociaux");
+                              dbProvider.setCategory(3);
                             },
                           ),
                           CustomCategoryButton(
@@ -155,6 +161,7 @@ class _PasswordsPageState extends State<PasswordsPage> {
                             onPressed: () {
                               selectedCategoryNotifier.value = 4;
                               print("Applications");
+                              dbProvider.setCategory(4);
                             },
                           ),
                           CustomCategoryButton(
@@ -164,6 +171,8 @@ class _PasswordsPageState extends State<PasswordsPage> {
                             onPressed: () {
                               selectedCategoryNotifier.value = 5;
                               print("Paiements");
+                              dbProvider.setCategory(5);
+
                             },
                           ),
 
@@ -179,10 +188,11 @@ class _PasswordsPageState extends State<PasswordsPage> {
                 // Password Cards
                 Consumer<DatabaseProvider>(
                   builder: (context, dbProvider, _) {
-                    final passwords = dbProvider.passwords;
+
+                    final passwords = dbProvider.filteredPasswords();
 
                     if (passwords.isEmpty) {
-                      return Text("No passwords saved");
+                      return Text("Aucun mot de passe trouvé.");
                     }
                     return Column(
                       spacing: totalHeight * 0.025,
@@ -192,8 +202,6 @@ class _PasswordsPageState extends State<PasswordsPage> {
                     );
                   },
                 ),
-
-
               ],
             ),
 

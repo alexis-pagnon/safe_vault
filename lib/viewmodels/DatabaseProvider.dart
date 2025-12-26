@@ -13,6 +13,8 @@ class DatabaseProvider with ChangeNotifier {
   List<Note> _notes = [];
   int _passwordVersion = 0;
   int _noteVersion = 0;
+  int _category = 0;
+  String _query = '';
 
 
   String get databaseName => _databaseName;
@@ -27,18 +29,10 @@ class DatabaseProvider with ChangeNotifier {
   List<Password> get categoryAppPasswords => _passwords.where((pwd) => pwd.id_category == 3).toList();
   List<Password> get categoryPaymentPasswords => _passwords.where((pwd) => pwd.id_category == 4).toList();
 
-  List<Password> searchPasswords(String query) {
-    return _passwords.where((pwd) =>
-      pwd.service.toLowerCase().contains(query.toLowerCase()) ||
-      pwd.website.toLowerCase().contains(query.toLowerCase())
-    ).toList();
-  }
-
-
-
-
   int get passwordVersion => _passwordVersion;
   int get noteVersion => _noteVersion;
+
+
 
 
   Future<void> init(String key) async {
@@ -69,7 +63,6 @@ class DatabaseProvider with ChangeNotifier {
       await _db!.close();
       _db = null;
     }
-    notifyListeners();
   }
 
   /// Return true if the database exists.<br>
@@ -90,7 +83,7 @@ class DatabaseProvider with ChangeNotifier {
     _passwords = await retrievePasswords();
     _passwordVersion++;
     notifyListeners();
-    print("Password version: ${_passwordVersion}");
+    print("Password version: $_passwordVersion");
   }
 
 
@@ -99,6 +92,101 @@ class DatabaseProvider with ChangeNotifier {
     _notes = await retrieveNotes();
     _noteVersion++;
     notifyListeners();
+  }
+
+
+  void setCategory(int category) {
+    _category = category;
+    notifyListeners();
+  }
+
+  void setQuery(String query) {
+    _query = query;
+    notifyListeners();
+  }
+
+  /// Search passwords by service or website.<br>
+  List<Password> searchPasswordsInList(List<Password> passwords, String query) {
+    return passwords.where((pwd) =>
+    pwd.service.toLowerCase().contains(query.toLowerCase()) ||
+        pwd.website.toLowerCase().contains(query.toLowerCase())
+    ).toList();
+  }
+
+
+  /// Apply filter (and query) to passwords.<br>
+  /// Returns the filtered list of passwords.<br>
+  /// Filters : 
+  /// - 0= All,
+  /// - 1 = Favorites,
+  /// - 2 = Web,
+  /// - 3 = Social,
+  /// - 4 = App,
+  /// - 5 = Payment,
+  /// - default = All.<br>
+  List<Password> filteredPasswords() {
+    List<Password> result = [];
+    switch(_category) {
+      case 0:
+        if(_query.isNotEmpty) {
+          result = searchPasswordsInList(_passwords, _query);
+        }
+        else {
+          result = _passwords;
+        }
+        break;
+      case 1:
+        if(_query.isNotEmpty) {
+          result =  searchPasswordsInList(favoritePasswords, _query);
+        }
+        else {
+          result =  favoritePasswords;
+        }
+        break;
+      case 2:
+        if(_query.isNotEmpty) {
+          result =  searchPasswordsInList(categoryWebPasswords, _query);
+        }
+        else {
+          result =  categoryWebPasswords;
+        }
+        break;
+      case 3:
+        if(_query.isNotEmpty) {
+          result =  searchPasswordsInList(categorySocialPasswords, _query);
+        }
+        else {
+          result =  categorySocialPasswords;
+        }
+        break;
+      case 4:
+        if(_query.isNotEmpty) {
+          result =  searchPasswordsInList(categoryAppPasswords, _query);
+        }
+        else {
+          result =  categoryAppPasswords;
+        }
+        break;
+      case 5:
+        if(_query.isNotEmpty) {
+          result =  searchPasswordsInList(categoryPaymentPasswords, _query);
+        }
+        else {
+          result =  categoryPaymentPasswords;
+        }
+        break;
+      default:
+        if(_query.isNotEmpty) {
+          result =  searchPasswordsInList(_passwords, _query);
+        }
+        else {
+          result =  _passwords;
+        }
+        break;
+    }
+    // favorites first
+    result.sort((a, b) => a.service.toLowerCase().compareTo(b.service.toLowerCase()));
+    return result; //TODO : favorites first ? -> non car refresh UI trop violent ?
   }
 
 
@@ -239,6 +327,22 @@ class DatabaseProvider with ChangeNotifier {
       whereArgs: [pwd.id_pwd],
     );
     await loadPasswords(); // refresh data
+    return result;
+  }
+
+
+  /// Toggle the favorite status of a password in the database.<br>
+  Future<int> toggleFavoriteStatus(int id, bool isFavorite) async {
+    if(_db == null) {
+      throw Exception("Database is not initialized");
+    }
+    final result = await _db!.update(
+      'Password',
+      {'is_favorite': isFavorite ? 1 : 0},
+      where: 'id_pwd = ?',
+      whereArgs: [id],
+    );
+    await loadPasswords();
     return result;
   }
 
