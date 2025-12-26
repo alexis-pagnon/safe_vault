@@ -83,6 +83,7 @@ class _PasswordsPageState extends State<PasswordsPage> {
                     hintText: "Rechercher...",
                     controller: controller,
                     search: true,
+                    delete: true,
                   ),
                 ],
               ),

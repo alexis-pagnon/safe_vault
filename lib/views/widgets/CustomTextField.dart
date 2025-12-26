@@ -8,6 +8,7 @@ class CustomTextField extends StatefulWidget {
   final bool copy;
   final bool eye;
   final bool search;
+  final bool delete;
   final TextEditingController controller;
   final bool editable;
 
@@ -17,6 +18,7 @@ class CustomTextField extends StatefulWidget {
     this.copy = false,
     this.eye = false,
     this.search = false,
+    this.delete = false,
     required this.controller,
     this.editable = true,
   });
@@ -103,7 +105,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   ),
                 ),
 
-            if(widget.eye && widget.copy)
+            if(widget.eye && widget.copy || widget.eye && widget.delete || widget.copy && widget.delete)
               SizedBox(width: totalWidth * 0.02),
 
             if(widget.copy)
@@ -117,7 +119,19 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 ),
               ),
 
-            if(widget.eye || widget.copy)
+            if(widget.delete)
+              InkWell(
+                onTap: () {
+                  widget.controller.clear();
+                },
+                child: Icon(
+                  Icons.close_rounded,
+                  color: colors.text4,
+                  weight: 500,
+                )
+              ),
+
+            if(widget.eye || widget.copy || widget.delete)
               SizedBox(width: totalWidth * 0.03),
           ],
         ),
