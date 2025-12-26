@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:safe_vault/models/PasswordGenerator.dart';
 import 'package:safe_vault/views/widgets/CustomLittleCard.dart';
 import 'package:safe_vault/views/widgets/CustomSvgButton.dart';
 import 'package:safe_vault/views/widgets/CustomTextField.dart';
+import '../../models/database/Password.dart';
 import '../../models/theme/AppColors.dart';
+import '../../viewmodels/DatabaseProvider.dart';
 import '../widgets/CustomButton.dart';
 import '../widgets/CustomStrengthWidget.dart';
 
 class NewPasswordPage extends StatefulWidget {
-  const NewPasswordPage({super.key});
+  final PageController pageController;
+
+  const NewPasswordPage({
+    super.key,
+    required this.pageController,
+  });
 
   @override
   State<NewPasswordPage> createState() => _NewPasswordPageState();
@@ -36,6 +44,7 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
     final colors = Theme.of(context).extension<AppColors>()!;
     final totalWidth = MediaQuery.of(context).size.width;
     final totalHeight = MediaQuery.of(context).size.height;
+    final dbProvider = Provider.of<DatabaseProvider>(context, listen: false);
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -303,7 +312,24 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                   CustomButton(
                       title: "Enregistrer",
                       onPressed: () {
-                        // TODO: Alexis: Save le mdp dans la BDD
+                        // TODO: Alexis: Vérifier si je save bien dans la bdd
+                        dbProvider.insertPassword(Password(
+                          password: controllers[3].text,
+                          username: controllers[1].text,
+                          service: controllers[0].text,
+                          id_category: selectedIndex.value + 1,
+                          website: controllers[2].text,
+                          is_favorite: false,
+                        ));
+
+                        // Clear all TextFields
+                        for (var controller in controllers) {
+                          controller.clear();
+                        }
+
+                        // Return to the home page
+                        widget.pageController.jumpToPage(0);
+
                       },
                   ),
                 ],

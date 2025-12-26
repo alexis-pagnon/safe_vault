@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../models/theme/AppColors.dart';
 
@@ -8,6 +9,7 @@ class CustomTextField extends StatefulWidget {
   final bool eye;
   final bool search;
   final TextEditingController controller;
+  final bool editable;
 
   const CustomTextField({
     super.key,
@@ -16,6 +18,7 @@ class CustomTextField extends StatefulWidget {
     this.eye = false,
     this.search = false,
     required this.controller,
+    this.editable = true,
   });
 
   @override
@@ -30,13 +33,12 @@ class _CustomTextFieldState extends State<CustomTextField> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>()!;
     final totalWidth = MediaQuery.of(context).size.width;
-    final totalHeight = MediaQuery.of(context).size.height;
 
     return TextField(
       obscureText: widget.eye ? !eyeState : false,
-      enableSuggestions: widget.eye ? false : true,
-      autocorrect: widget.eye ? false : true,
-
+      enableSuggestions: !widget.eye,
+      autocorrect: !widget.eye,
+      readOnly: !widget.editable,
       controller: widget.controller,
 
       style: GoogleFonts.montserrat(
@@ -46,18 +48,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
       ),
 
       decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: Colors.red, //Color(0xFFE5E7EB)
-            width: 1,
-          ),
-        ),
 
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: colors.text4.withOpacity(0.5),
+            color: colors.text4.withAlpha(127),
             width: 1,
           ),
         ),
@@ -65,8 +60,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: colors.gradientButtonsStart,
-            width: 1.5,
+            color: widget.editable ? colors.gradientButtonsStart : colors.text4.withAlpha(127),
+            width: widget.editable ? 1.5 : 1,
           ),
         ),
 
@@ -79,6 +74,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
         fillColor: colors.containerBackground2,
         filled: true,
+
 
         prefixIcon: widget.search
           ? Padding(
@@ -112,14 +108,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
             if(widget.copy)
               InkWell(
-                  onTap: () {
-                    print("TESTTTTTTTTTTTTTT2");
-                  },
-                    child: Icon(
-                                Icons.copy_rounded,
-                                color: colors.text4,
-                              ),
-                  ),
+                onTap: () {
+                  Clipboard.setData(ClipboardData(text: widget.controller.text));
+                },
+                child: Icon(
+                  Icons.copy_rounded,
+                  color: colors.text4,
+                ),
+              ),
 
             if(widget.eye || widget.copy)
               SizedBox(width: totalWidth * 0.03),

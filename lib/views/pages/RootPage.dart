@@ -16,7 +16,6 @@ class RootPage extends StatefulWidget {
 }
 
 class _RootPageState extends State<RootPage> {
-  List<Widget> pages = [HomePage(), PasswordsPage(), NewPasswordPage(), GenerationPage(), NotesPage()];
   final ValueNotifier<int> selectedIndex = ValueNotifier<int>(0);
   final PageController pageController = PageController();
 
@@ -31,7 +30,13 @@ class _RootPageState extends State<RootPage> {
         body: PageView(
           controller: pageController,
           scrollDirection: Axis.horizontal,
-          children: pages,
+          children: [
+            HomePage(),
+            PasswordsPage(),
+            NewPasswordPage(pageController: pageController),
+            GenerationPage(),
+            NotesPage()
+          ],
 
           onPageChanged: (int index) {
             setState(() {

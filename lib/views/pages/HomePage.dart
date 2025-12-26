@@ -25,13 +25,13 @@ class _HomePageState extends State<HomePage> {
 
   List<Color> _getGradientForScore(int score, AppColors colors) {
     if (score < 25) {
-      return [ Color(0xFFFF3939).withOpacity(0.3), Color(0xFFFF3939)];
+      return [ Color(0xFFFF3939).withAlpha(76), Color(0xFFFF3939)];
     } else if (score < 50) {
-      return [Color(0xFFFF8239).withOpacity(0.3), Color(0xFFFF8239)];
+      return [Color(0xFFFF8239).withAlpha(76), Color(0xFFFF8239)];
     } else if (score < 75) {
-      return [Color(0xFFFFD739).withOpacity(0.3), Color(0xFFFFD739)];
+      return [Color(0xFFFFD739).withAlpha(76), Color(0xFFFFD739)];
     } else {
-      return [colors.greenDarker.withOpacity(0.3), colors.greenDarker];
+      return [colors.greenDarker.withAlpha(76), colors.greenDarker];
     }
   }
 
@@ -40,8 +40,6 @@ class _HomePageState extends State<HomePage> {
     final colors = Theme.of(context).extension<AppColors>()!;
     final totalWidth = MediaQuery.of(context).size.width;
     final totalHeight = MediaQuery.of(context).size.height;
-
-
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -137,7 +135,7 @@ class _HomePageState extends State<HomePage> {
                                         progressBarColors: currentGradient,
                                         trackColor: Color(0xFFD9D9D9),
                                         gradientStartAngle: -150,
-                                        shadowColor: currentGradient.first.withOpacity(0.4),
+                                        shadowColor: currentGradient.first.withAlpha(125),
 
                                       ),
                                       size: 140,
@@ -166,7 +164,6 @@ class _HomePageState extends State<HomePage> {
                                           "${robustnessProvider.compromised}",
                                           style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500, color: colors.pinkDarker),
                                         ),
-
                                         Text(
                                           "Compromis",
                                           style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w400, color: colors.text5),
