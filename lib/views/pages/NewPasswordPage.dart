@@ -49,7 +49,7 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
     return Scaffold(
       backgroundColor: colors.background,
       body: SingleChildScrollView(
-        physics: PageScrollPhysics(),
+
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -287,6 +287,7 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                         CustomTextField(
                           hintText: 'ex: w!qn&fXI)4+FVL8jFZ',
                           eye: true,
+                          delete: true,
                           controller: controllers[3],
                         ),
 

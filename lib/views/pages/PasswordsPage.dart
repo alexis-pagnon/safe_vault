@@ -44,7 +44,6 @@ class _PasswordsPageState extends State<PasswordsPage> {
     return Scaffold(
       backgroundColor: colors.background,
       body: SingleChildScrollView(
-        physics: PageScrollPhysics(),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
