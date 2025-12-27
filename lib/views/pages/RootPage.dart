@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:safe_vault/views/pages/NewPasswordPage.dart';
 import '../../models/theme/AppColors.dart';
 import '../widgets/CustomNavBar.dart';
+import 'ConnexionPage.dart';
 import 'GenerationPage.dart';
 import 'HomePage.dart';
 import 'NotesPage.dart';
@@ -35,7 +36,8 @@ class _RootPageState extends State<RootPage> {
             PasswordsPage(),
             NewPasswordPage(pageController: pageController),
             GenerationPage(),
-            NotesPage()
+            NotesPage(),
+            CreationPage(),
           ],
 
           onPageChanged: (int index) {
