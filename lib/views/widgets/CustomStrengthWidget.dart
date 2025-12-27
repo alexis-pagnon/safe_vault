@@ -6,11 +6,13 @@ import '../../models/theme/AppColors.dart';
 
 class CustomStrengthWidget extends StatefulWidget {
   final TextEditingController controller;
+  final bool obligation;
 
 
   const CustomStrengthWidget({
     super.key,
     required this.controller,
+    this.obligation = false,
   });
 
   @override
@@ -154,7 +156,7 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
             children: [
               // Title
               Text(
-                "Recommandations :",
+                widget.obligation ? "Critères requis :" : "Recommandations :",
                 style: GoogleFonts.montserrat(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,

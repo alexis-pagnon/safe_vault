@@ -3,6 +3,7 @@ import 'package:safe_vault/views/pages/NewPasswordPage.dart';
 import '../../models/theme/AppColors.dart';
 import '../widgets/CustomNavBar.dart';
 import 'ConnexionPage.dart';
+import 'CreationPage.dart';
 import 'GenerationPage.dart';
 import 'HomePage.dart';
 import 'NotesPage.dart';
@@ -37,7 +38,8 @@ class _RootPageState extends State<RootPage> {
             NewPasswordPage(pageController: pageController),
             GenerationPage(),
             NotesPage(),
-            CreationPage(),
+            ConnexionPage(pageController: pageController),
+            CreationPage(pageController: pageController),
           ],
 
           onPageChanged: (int index) {

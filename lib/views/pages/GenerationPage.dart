@@ -37,7 +37,6 @@ class _GenerationPageState extends State<GenerationPage> {
     return Scaffold(
       backgroundColor: colors.background,
       body: SingleChildScrollView(
-        physics: PageScrollPhysics(),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,

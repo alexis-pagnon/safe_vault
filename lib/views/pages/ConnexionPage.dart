@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:safe_vault/views/widgets/CustomTextField.dart';
 import '../../models/theme/AppColors.dart';
@@ -9,17 +10,19 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 // TODO: Adam: Faire des animations de FadeIn pour le texte en mode Pro
 
 
-class CreationPage extends StatefulWidget {
+class ConnexionPage extends StatefulWidget {
+  final PageController pageController;
 
-  const CreationPage({
+  const ConnexionPage({
     super.key,
+    required this.pageController,
   });
 
   @override
-  State<CreationPage> createState() => _CreationPageState();
+  State<ConnexionPage> createState() => _ConnexionPageState();
 }
 
-class _CreationPageState extends State<CreationPage> {
+class _ConnexionPageState extends State<ConnexionPage> {
   TextEditingController controller = TextEditingController();
 
   @override
@@ -41,45 +44,52 @@ class _CreationPageState extends State<CreationPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
-          spacing: totalHeight * 0.022,
+          spacing: totalHeight * 0.042,
           children: <Widget>[
-            // Logo
-            Container(
-              height: totalWidth * 0.2,
-              width: totalWidth * 0.2,
-              padding: EdgeInsets.all(totalWidth * 0.04),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [colors.gradientButtonsStart, colors.gradientButtonsEnd],
-                  begin: AlignmentGeometry.centerLeft,
-                  end: AlignmentGeometry.centerRight,
+
+            // First Part
+            Column(
+              spacing: totalHeight * 0.02,
+              children: [
+                // Logo
+                Container(
+                  height: totalWidth * 0.2,
+                  width: totalWidth * 0.2,
+                  padding: EdgeInsets.all(totalWidth * 0.05),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [colors.gradientButtonsStart, colors.gradientButtonsEnd],
+                      begin: AlignmentGeometry.centerLeft,
+                      end: AlignmentGeometry.centerRight,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(totalWidth * 0.06)),
+                  ),
+                  child: SvgPicture.asset(
+                    'assets/svg/lock.svg',
+                    colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                  ),
                 ),
-                borderRadius: BorderRadius.all(Radius.circular(totalWidth * 0.05)),
-              ),
-              child: Icon(
-                Icons.lock_outline_rounded,
-                color: colors.text1,
-              )
-            ),
 
-            // Title
-            Text(
-              "Bienvenue",
-              style: GoogleFonts.montserrat(
-                color: colors.text2,
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+                // Title
+                Text(
+                  "Bienvenue",
+                  style: GoogleFonts.montserrat(
+                    color: colors.text2,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
 
-            // Subtitle
-            Text(
-              "Entrez votre mot de passe maître",
-              style: GoogleFonts.montserrat(
-                color: colors.text2,
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-              ),
+                // Subtitle
+                Text(
+                  "Entrez votre mot de passe maître",
+                  style: GoogleFonts.montserrat(
+                    color: colors.text2,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
 
             // TextField
@@ -115,7 +125,7 @@ class _CreationPageState extends State<CreationPage> {
 
                 if (isPasswordCorrect) {
                   // Go to the Home Page
-                  // widget.pageController.jumpToPage(0);
+                  widget.pageController.jumpToPage(0);
                 }
                 else {
                   final snackBar = SnackBar(
