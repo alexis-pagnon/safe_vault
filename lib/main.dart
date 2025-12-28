@@ -7,9 +7,10 @@ import 'package:safe_vault/viewmodels/AuthenticationProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:safe_vault/viewmodels/theme/ThemeController.dart';
+import 'package:safe_vault/views/pages/ConnexionPage.dart';
+import 'package:safe_vault/views/pages/RegisterPage.dart';
 import 'package:safe_vault/views/pages/RootPage.dart';
 
-import 'package:safe_vault/views/testPage.dart'; // TODO : remove this import
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'models/authentication/SecureStorageRepository.dart';
@@ -85,9 +86,13 @@ class MyApp extends StatelessWidget {
       builder: (_, auth, _) {
         // Check if the user is authenticated
         if (!auth.isAuthenticated) {
-          // TODO : Replace with AuthenticationPage()
-          // return const TestPage1(); // Test the database / robustness
-          return const TestPage2();  // Test the registration / authentication
+          if(context.watch<SharedPreferencesRepository>().firstTime) {
+            return const RegisterPage();
+          }
+          else {
+            return const ConnexionPage();
+          }
+          // return const TestPage2();  // Test the registration / authentication
         }
 
 

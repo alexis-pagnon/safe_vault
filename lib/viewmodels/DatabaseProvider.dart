@@ -186,7 +186,7 @@ class DatabaseProvider with ChangeNotifier {
     }
     // favorites first
     result.sort((a, b) => a.service.toLowerCase().compareTo(b.service.toLowerCase()));
-    return result; //TODO : favorites first ? -> non car refresh UI trop violent ?
+    return result;
   }
 
 

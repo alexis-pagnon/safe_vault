@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:safe_vault/viewmodels/AuthenticationProvider.dart';
 import 'package:safe_vault/views/widgets/CustomTextField.dart';
 import '../../models/theme/AppColors.dart';
 import '../widgets/CustomButton.dart';
@@ -11,11 +13,9 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
 
 class ConnexionPage extends StatefulWidget {
-  final PageController pageController;
 
   const ConnexionPage({
     super.key,
-    required this.pageController,
   });
 
   @override
@@ -24,6 +24,11 @@ class ConnexionPage extends StatefulWidget {
 
 class _ConnexionPageState extends State<ConnexionPage> {
   TextEditingController controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -36,6 +41,8 @@ class _ConnexionPageState extends State<ConnexionPage> {
     final colors = Theme.of(context).extension<AppColors>()!;
     final totalWidth = MediaQuery.of(context).size.width;
     final totalHeight = MediaQuery.of(context).size.height;
+
+    final authenticationProvider = Provider.of<AuthenticationProvider>(context, listen: false);
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -119,15 +126,11 @@ class _ConnexionPageState extends State<ConnexionPage> {
             // Button
             CustomButton(
               title: "Déverrouiller",
-              onPressed: () {
-                // TODO: Alexis: Vérifier le mot de passe maître
-                final isPasswordCorrect = false;
+              onPressed: () async {
 
-                if (isPasswordCorrect) {
-                  // Go to the Home Page
-                  widget.pageController.jumpToPage(0);
-                }
-                else {
+                try {
+                  await authenticationProvider.authenticate(controller.text);
+                } catch (e) {
                   final snackBar = SnackBar(
                     elevation: 0,
                     behavior: SnackBarBehavior.floating,
@@ -142,6 +145,7 @@ class _ConnexionPageState extends State<ConnexionPage> {
 
                   ScaffoldMessenger.of(context).showSnackBar(snackBar, snackBarAnimationStyle: AnimationStyle(curve: Curves.easeIn, duration: Duration(milliseconds: 100)));
                 }
+
               },
             ),
 
