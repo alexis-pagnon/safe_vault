@@ -286,10 +286,14 @@ class _HomePageState extends State<HomePage> {
                       ),
 
                       // Generate Password Button
-                      CustomSvgButton(title: 'Générateur de mots de passe', svgPath: 'assets/svg/stars.svg', onPressed: () {}),
+                      CustomSvgButton(title: 'Générateur de mots de passe', svgPath: 'assets/svg/stars.svg', onPressed: () {
+                        // TODO : widget.pageController.jumpToPage(3); ?
+                      }),
 
                       // Secured Notes Button
-                      CustomSvgButton(title: 'Notes sécurisées', svgPath: 'assets/svg/notes.svg', onPressed: () {}),
+                      CustomSvgButton(title: 'Notes sécurisées', svgPath: 'assets/svg/notes.svg', onPressed: () {
+                        // TODO : widget.pageController.jumpToPage(4); ?
+                      }),
                     ],
                   );
                 },
