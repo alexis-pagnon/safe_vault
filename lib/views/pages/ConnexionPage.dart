@@ -28,6 +28,7 @@ class _ConnexionPageState extends State<ConnexionPage> {
   @override
   void initState() {
     super.initState();
+
   }
 
   @override
@@ -148,6 +149,27 @@ class _ConnexionPageState extends State<ConnexionPage> {
 
               },
             ),
+
+            // Biometric Authentication Button
+            Consumer<AuthenticationProvider>(
+              builder: (context, authProvider, _) {
+                if(authProvider.canUseBiometrics) {
+                  return CustomButton(
+                    title: "Utiliser l'authentification biométrique",
+                    onPressed: () async {
+                      try {
+                        await authenticationProvider.authenticateWithBiometrics();
+                      } catch (e) {
+                        print(e);
+                      }
+                    },
+                  );
+                }
+                return SizedBox.shrink();
+              },
+            ),
+
+
 
           ],
         ),

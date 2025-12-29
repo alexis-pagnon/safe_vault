@@ -151,8 +151,9 @@ class _CustomPasswordCardState extends State<CustomPasswordCard> {
                               onSelected: (String value) {
                                 if (value == 'edit') {
                                   print('Modifier');
+                                  // TODO : Modifier le mot de passe
                                 } else if (value == 'delete') {
-                                  print('Supprimer');
+                                  dbProvider.deletePassword(widget.password.id_pwd!);
                                 }
                               },
                             

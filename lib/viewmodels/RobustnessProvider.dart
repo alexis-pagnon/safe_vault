@@ -12,7 +12,7 @@ import 'DatabaseProvider.dart';
 import 'package:safe_vault/models/PasswordGenerator.dart';
 
 class RobustnessProvider with ChangeNotifier {
-  DatabaseProvider _databaseProvider;
+  final DatabaseProvider _databaseProvider;
 
   final List<int> _strongPasswords = [];
   final List<int> _weakPasswords = [];

@@ -13,8 +13,10 @@ class DatabaseProvider with ChangeNotifier {
   List<Note> _notes = [];
   int _passwordVersion = 0;
   int _noteVersion = 0;
+
   int _category = 0;
   String _query = '';
+  List<int> _idsToFilter = [];
 
 
   String get databaseName => _databaseName;
@@ -28,6 +30,8 @@ class DatabaseProvider with ChangeNotifier {
   List<Password> get categorySocialPasswords => _passwords.where((pwd) => pwd.id_category == 2).toList();
   List<Password> get categoryAppPasswords => _passwords.where((pwd) => pwd.id_category == 3).toList();
   List<Password> get categoryPaymentPasswords => _passwords.where((pwd) => pwd.id_category == 4).toList();
+
+  List<Password> get categoryFilteredPasswords => _passwords.where((pwd) => _idsToFilter.contains(pwd.id_pwd)).toList();
 
   int get passwordVersion => _passwordVersion;
   int get noteVersion => _noteVersion;
@@ -105,6 +109,13 @@ class DatabaseProvider with ChangeNotifier {
     notifyListeners();
   }
 
+
+  void setIdsToFilter(List<int> ids) {
+    _idsToFilter = ids;
+    notifyListeners();
+  }
+
+
   /// Search passwords by service or website.<br>
   List<Password> searchPasswordsInList(List<Password> passwords, String query) {
     return passwords.where((pwd) =>
@@ -123,6 +134,7 @@ class DatabaseProvider with ChangeNotifier {
   /// - 3 = Social,
   /// - 4 = App,
   /// - 5 = Payment,
+  /// - 6 = Filtered by IDs.<br>
   /// - default = All.<br>
   List<Password> filteredPasswords() {
     List<Password> result = [];
@@ -173,6 +185,14 @@ class DatabaseProvider with ChangeNotifier {
         }
         else {
           result =  categoryPaymentPasswords;
+        }
+        break;
+      case 6:
+        if(_query.isNotEmpty) {
+          result =  searchPasswordsInList(categoryFilteredPasswords, _query);
+        }
+        else {
+          result =  categoryFilteredPasswords;
         }
         break;
       default:
