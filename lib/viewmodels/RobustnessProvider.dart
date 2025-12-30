@@ -17,7 +17,7 @@ class RobustnessProvider with ChangeNotifier {
   final List<int> _strongPasswords = [];
   final List<int> _weakPasswords = [];
   final List<int> _compromisedPasswords = [];
-  final List<int> _reusedPasswords = [];
+  final List<int> _allReusedPasswords = [];
 
   final Map<String, bool> _compromisedCache = {};
   int _lastPasswordVersion = -1; // Track last password version to detect changes
@@ -35,13 +35,16 @@ class RobustnessProvider with ChangeNotifier {
 
   int get compromised => _compromised;
   int get weak => _weak;
+  /// Number of unique reused passwords (not counting duplicates)
   int get reused => _reused;
   int get strong => _strong;
   int get totalScore => _totalScore;
+
   List<int> get strongPasswords => _strongPasswords;
   List<int> get weakPasswords => _weakPasswords;
   List<int> get compromisedPasswords => _compromisedPasswords;
-  List<int> get reusedPasswords => _reusedPasswords;
+  /// List of all reused password IDs (including duplicates)
+  List<int> get allReusedPasswords => _allReusedPasswords;
 
 
   /// Handle database changes
@@ -82,7 +85,7 @@ class RobustnessProvider with ChangeNotifier {
     _strongPasswords.clear();
     _weakPasswords.clear();
     _compromisedPasswords.clear();
-    _reusedPasswords.clear();
+    _allReusedPasswords.clear();
 
   }
 
@@ -124,10 +127,12 @@ class RobustnessProvider with ChangeNotifier {
         }
 
         // Reused password check
-        if (groups[p.password]!.length > 1 && !reusedPwdFound.contains(p.password)) {
-          _reused++;
-          _reusedPasswords.add(p.id_pwd!);
-          reusedPwdFound.add(p.password);
+        if (groups[p.password]!.length > 1) {
+          _allReusedPasswords.add(p.id_pwd!);
+          if(!reusedPwdFound.contains(p.password)) {
+            reusedPwdFound.add(p.password);
+            _reused++;
+          }
         }
 
         // Compromised check

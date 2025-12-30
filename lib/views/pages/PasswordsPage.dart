@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:safe_vault/viewmodels/RobustnessProvider.dart';
 import 'package:safe_vault/views/widgets/CustomCategoryButton.dart';
 import 'package:safe_vault/views/widgets/CustomPasswordCard.dart';
 import 'package:safe_vault/views/widgets/CustomTextField.dart';
@@ -171,6 +172,47 @@ class _PasswordsPageState extends State<PasswordsPage> {
                               selectedCategoryNotifier.value = 5;
                               print("Paiements");
                               dbProvider.setCategory(5);
+                            },
+                          ),
+                          // TODO : Filtres de robustesse
+                          CustomCategoryButton(
+                            index: 6,
+                            selectedIndexNotifier: selectedCategoryNotifier,
+                            text: "Sûrs",
+                            onPressed: () {
+                              selectedCategoryNotifier.value = 6;
+                              print("Sûrs");
+                              dbProvider.setIdsToFilter(context.read<RobustnessProvider>().strongPasswords);
+                            },
+                          ),
+                          CustomCategoryButton(
+                            index: 7,
+                            selectedIndexNotifier: selectedCategoryNotifier,
+                            text: "Faibles",
+                            onPressed: () {
+                              selectedCategoryNotifier.value = 7;
+                              print("Faibles");
+                              dbProvider.setIdsToFilter(context.read<RobustnessProvider>().weakPasswords);
+                            },
+                          ),
+                          CustomCategoryButton(
+                            index: 8,
+                            selectedIndexNotifier: selectedCategoryNotifier,
+                            text: "Réutilisés",
+                            onPressed: () {
+                              selectedCategoryNotifier.value = 8;
+                              print("Réutilisés");
+                              dbProvider.setIdsToFilter(context.read<RobustnessProvider>().allReusedPasswords);
+                            },
+                          ),
+                          CustomCategoryButton(
+                            index: 9,
+                            selectedIndexNotifier: selectedCategoryNotifier,
+                            text: "Compromis",
+                            onPressed: () {
+                              selectedCategoryNotifier.value = 9;
+                              print("Compromis");
+                              dbProvider.setIdsToFilter(context.read<RobustnessProvider>().compromisedPasswords);
                             },
                           ),
 

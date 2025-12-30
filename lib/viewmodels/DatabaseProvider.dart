@@ -110,7 +110,11 @@ class DatabaseProvider with ChangeNotifier {
   }
 
 
+  /// Set the list of IDs to filter passwords.<br>
+  /// Use category 6 to apply this filter.<br>
+  /// @param ids The list of IDs to filter passwords.<br>
   void setIdsToFilter(List<int> ids) {
+    _category = 6;
     _idsToFilter = ids;
     notifyListeners();
   }
