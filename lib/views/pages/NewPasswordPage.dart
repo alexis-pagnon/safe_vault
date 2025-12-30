@@ -12,11 +12,13 @@ import '../widgets/CustomButton.dart';
 import '../widgets/CustomStrengthWidget.dart';
 
 class NewPasswordPage extends StatefulWidget {
-  final PageController pageController;
+  final PageController? pageController;
+  final Password? initialPassword;
 
   const NewPasswordPage({
     super.key,
-    required this.pageController,
+    this.pageController,
+    this.initialPassword,
   });
 
   @override
@@ -28,6 +30,25 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
 
   // Creation of a list of 4 TextEditingController for the 4 TextFields
   List<TextEditingController> controllers = List.generate(4, (index) => TextEditingController());
+
+
+  @override
+  void initState() {
+    super.initState();
+    // If an initialPassword is provided, pre-fill the TextFields
+    if (widget.initialPassword != null) {
+      controllers[0].text = widget.initialPassword!.service;
+      controllers[1].text = widget.initialPassword!.username;
+      controllers[2].text = widget.initialPassword!.website;
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        controllers[3].text = widget.initialPassword!.password;
+      });
+
+      selectedIndex.value = widget.initialPassword!.id_category - 1;
+    }
+  }
+
 
   @override
   void dispose() {
@@ -291,6 +312,7 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                           controller: controllers[3],
                         ),
 
+                        // TODO : Update case : must check the strength of the initial password
                         // Strength Widget
                         CustomStrengthWidget(controller: controllers[3]),
 
@@ -312,15 +334,31 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                   CustomButton(
                       title: "Enregistrer",
                       onPressed: () {
-                        // Insert the new password into the database
-                        dbProvider.insertPassword(Password(
-                          password: controllers[3].text,
-                          username: controllers[1].text,
-                          service: controllers[0].text,
-                          id_category: selectedIndex.value + 1,
-                          website: controllers[2].text,
-                          is_favorite: false,
-                        ));
+
+                        if(widget.initialPassword == null) {
+                          // Insert the new password into the database
+                          dbProvider.insertPassword(Password(
+                            password: controllers[3].text,
+                            username: controllers[1].text,
+                            service: controllers[0].text,
+                            id_category: selectedIndex.value + 1,
+                            website: controllers[2].text,
+                            is_favorite: false,
+                          ));
+                        }
+                        else {
+                          // Update the existing password in the database
+                          dbProvider.updatePassword(Password(
+                            id_pwd: widget.initialPassword!.id_pwd,
+                            password: controllers[3].text,
+                            username: controllers[1].text,
+                            service: controllers[0].text,
+                            id_category: selectedIndex.value + 1,
+                            website: controllers[2].text,
+                            is_favorite: widget.initialPassword!.is_favorite,
+                          ));
+                        }
+
 
                         // Clear all TextFields
                         for (var controller in controllers) {
@@ -328,7 +366,13 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                         }
 
                         // Return to the home page
-                        widget.pageController.jumpToPage(0);
+                        if(widget.pageController != null) {
+                          widget.pageController!.jumpToPage(0);
+                        }
+                        else {
+                          Navigator.pop(context);
+                        }
+
 
                       },
                   ),
