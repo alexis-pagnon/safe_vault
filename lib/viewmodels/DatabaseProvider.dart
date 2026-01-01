@@ -213,6 +213,15 @@ class DatabaseProvider with ChangeNotifier {
   }
 
 
+  /// Search notes by title.<br>
+  List<Note> searchNotes() {
+    _notes.sort((a, b) => b.date.compareTo(a.date)); // Most recent first
+
+    return _notes.where((note) =>
+    note.title.toLowerCase().contains(_query.toLowerCase())
+    ).toList();
+  }
+
 
   // ============== DATABASE INITIALIZATION ===============
 

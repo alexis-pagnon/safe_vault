@@ -5,8 +5,8 @@ import 'package:safe_vault/viewmodels/RobustnessProvider.dart';
 import 'package:safe_vault/views/widgets/CustomCategoryButton.dart';
 import 'package:safe_vault/views/widgets/CustomPasswordCard.dart';
 import 'package:safe_vault/views/widgets/CustomTextField.dart';
-import '../../models/theme/AppColors.dart';
-import '../../viewmodels/DatabaseProvider.dart';
+import 'package:safe_vault/models/theme/AppColors.dart';
+import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
 
 class PasswordsPage extends StatefulWidget {
   const PasswordsPage({super.key});
@@ -23,6 +23,9 @@ class _PasswordsPageState extends State<PasswordsPage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<DatabaseProvider>().setQuery(""); // Reset the search query when the page is opened
+    });
   }
 
   @override
@@ -173,7 +176,7 @@ class _PasswordsPageState extends State<PasswordsPage> {
                                 dbProvider.setCategory(5);
                               },
                             ),
-                            // TODO : Filtres de robustesse
+
                             CustomCategoryButton(
                               index: 6,
                               selectedIndexNotifier: selectedCategoryNotifier,
@@ -214,6 +217,7 @@ class _PasswordsPageState extends State<PasswordsPage> {
                                 dbProvider.setIdsToFilter(context.read<RobustnessProvider>().compromisedPasswords);
                               },
                             ),
+                            // TODO : Filtre de date de création pour les mdp trop vieux ?
 
                             // Spacing
                             SizedBox(width: totalWidth * 0.03),

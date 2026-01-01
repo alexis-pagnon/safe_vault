@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:safe_vault/models/SharedPreferencesRepository.dart';
 import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'package:safe_vault/viewmodels/RobustnessProvider.dart';
@@ -11,7 +12,8 @@ import 'package:safe_vault/models/theme/AppColors.dart';
 import '../../viewmodels/theme/ThemeController.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final PageController pageController;
+  const HomePage({super.key, required this.pageController});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -42,6 +44,9 @@ class _HomePageState extends State<HomePage> {
     final colors = Theme.of(context).extension<AppColors>()!;
     final totalWidth = MediaQuery.of(context).size.width;
     final totalHeight = MediaQuery.of(context).size.height;
+
+    final SharedPreferencesRepository sharedPreferences = context.read<SharedPreferencesRepository>();
+    final ThemeController themeController = context.read<ThemeController>();
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -107,7 +112,8 @@ class _HomePageState extends State<HomePage> {
                               onSelected: (String value) {
                                 if (value == 'changeTheme') {
                                   // Toggle theme
-                                  context.read<ThemeController>().toggleTheme();
+                                  themeController.toggleTheme();
+                                  sharedPreferences.setTheme(themeController.isDark ? 'dark' : 'light');
                                 }
                                 else if (value == 'notifications') {
                                   // TODO: Jsp comment on fait ici, faut en discuter
@@ -357,12 +363,12 @@ class _HomePageState extends State<HomePage> {
 
                       // Generate Password Button
                       CustomSvgButton(title: 'Générateur de mots de passe', svgPath: 'assets/svg/stars.svg', onPressed: () {
-                        // TODO : widget.pageController.jumpToPage(3); ? oui
+                        widget.pageController.jumpToPage(3);
                       }),
 
                       // Secured Notes Button
                       CustomSvgButton(title: 'Notes sécurisées', svgPath: 'assets/svg/notes.svg', onPressed: () {
-                        // TODO : widget.pageController.jumpToPage(4); ? oui
+                        widget.pageController.jumpToPage(4);
                       }),
                     ],
                   );

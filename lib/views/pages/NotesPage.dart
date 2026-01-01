@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:safe_vault/views/widgets/CustomNote.dart';
 
-import '../../models/database/Note.dart';
 import '../../models/theme/AppColors.dart';
 import '../../viewmodels/DatabaseProvider.dart';
 import '../widgets/CustomNoteCreationPopup.dart';
@@ -22,6 +21,9 @@ class _NotesPageState extends State<NotesPage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<DatabaseProvider>().setQuery(""); // Reset the search query when the page is opened
+    });
   }
 
   @override
@@ -37,11 +39,6 @@ class _NotesPageState extends State<NotesPage> {
     final totalHeight = MediaQuery.of(context).size.height;
 
     final dbProvider = Provider.of<DatabaseProvider>(context, listen: false);
-
-    // TODO: Alexis: La supprimer une fois que tu as les vrai notes
-    // Liste de notes à la main avec n'importe quoi dedans
-    final List<Note> listNotes = [Note(id_note: 0, title: "Premier titre", content: "Premier contenu", date: 1500000), Note(id_note: 1, title: "Deuxième titre", content: "Deuxième contenu", date: 1500000), Note(id_note: 2, title: "Troisième titre", content: "Troisième contenu LLLLLLLLLLLLLLLLLLLLLLLL\nLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLKLLKLLKKLKLKKLKLKLKLKKLKKKKKKKLKLKLKLKLKLKLKLKLKLKLKKLKLKLKLKLKLKLKLKLKLKLKKLKLKLKLKLKLKLLKKLKLKLKLKLKLKKLKLKLKLKLKKKKLKLLKKLKKLKKLKLKLKKLKLKLKLKKLKLKLKLLKLKLKLKLKLKLKLKLLKLKKLKKKLLKKLKLKKLKLLKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK", date: 1500000)];
-
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -90,7 +87,6 @@ class _NotesPageState extends State<NotesPage> {
                           search: true,
                           delete: true,
                           onChanged: (value) {
-                            // TODO: Alexis: faire comme pour les mdp pour que tu puisses chercher tes notes par title et si possible que par défault ce soit par plus récent en haut
                             dbProvider.setQuery(value);
                           },
                         ),
@@ -141,11 +137,9 @@ class _NotesPageState extends State<NotesPage> {
                 Consumer<DatabaseProvider>(
                   builder: (context, dbProvider, _) {
 
-                    final notes = dbProvider.notes;
+                    final notes = dbProvider.searchNotes();
 
-                    // TODO: Alexis: Enlever la liste statique afin de mettre la vraie liste des notes
-
-                    if (listNotes.isEmpty) {
+                    if (notes.isEmpty) {
                       return Text(
                         "Aucune notes trouvé.",
                         style: GoogleFonts.montserrat(
@@ -157,8 +151,7 @@ class _NotesPageState extends State<NotesPage> {
                     }
                     return Column(
                       spacing: totalHeight * 0.025,
-                      // TODO: Alexis: changer le listNotes (truc fixe pour mes tests) dans la vrai liste de notes
-                      children: listNotes.map((note) => CustomNote(
+                      children: notes.map((note) => CustomNote(
                         note: note,
                       )).toList(),
                     );

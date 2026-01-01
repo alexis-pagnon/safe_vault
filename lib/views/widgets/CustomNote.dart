@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
 import '../../models/database/Note.dart';
 import '../../models/theme/AppColors.dart';
 import 'CustomNoteCreationPopup.dart';
@@ -24,6 +26,8 @@ class CustomNote extends StatelessWidget {
     final day = date.day.toString().padLeft(2, '0');
     final month = date.month.toString().padLeft(2, '0');
     final year = date.year.toString();
+
+    final dbProvider = Provider.of<DatabaseProvider>(context, listen: false);
 
     return GestureDetector(
       onTap: () {
@@ -127,12 +131,12 @@ class CustomNote extends StatelessWidget {
                                       builder: (_) => CustomNoteCreationPopup(
                                         initialTitle: note.title,
                                         initialContent: note.content,
-                                        idNote: note.id_note,
+                                        idNote: note.id_note!,
                                         isEditing: true,
                                       ),
                                     );
                                   } else if (value == 'delete') {
-                                    // TODO: Alexis: Supprimer la note
+                                    dbProvider.deleteNote(note.id_note!);
                                   }
                                 },
 

@@ -58,7 +58,7 @@ class _RootPageState extends State<RootPage> {
           controller: pageController,
           scrollDirection: Axis.horizontal,
           children: [
-            HomePage(),
+            HomePage(pageController: pageController),
             PasswordsPage(),
             NewPasswordPage(pageController: pageController),
             GenerationPage(),

@@ -1,12 +1,12 @@
 
 class Note {
-  final int id_note;
+  final int? id_note;
   final String title;
   final String content;
   final int date;
 
   Note({
-    required this.id_note,
+    this.id_note,
     required this.title,
     required this.content,
     required this.date,

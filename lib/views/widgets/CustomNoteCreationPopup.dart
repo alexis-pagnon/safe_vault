@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:safe_vault/models/database/Note.dart';
+import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
 import '../../models/theme/AppColors.dart';
 
 class CustomNoteCreationPopup extends StatefulWidget {
@@ -69,6 +72,8 @@ class _CustomNoteCreationPopupState extends State<CustomNoteCreationPopup> {
 
     final dialogTitle = widget.isEditing ? 'Modifier la note sécurisée' : 'Nouvelle note sécurisée';
     final submitText = widget.isEditing ? 'Modifier' : 'Créer';
+
+    final dbProvider = Provider.of<DatabaseProvider>(context, listen: false);
 
     return Dialog(
       elevation: 0,
@@ -194,9 +199,19 @@ class _CustomNoteCreationPopupState extends State<CustomNoteCreationPopup> {
                           final content = contentController.text;
 
                           if(widget.isEditing) {
-                            // TODO: Alexis: Modifier la note (et pour la date l'actualiser au jour de la modification)
+                            dbProvider.updateNote(Note(
+                              id_note: widget.idNote,
+                              title: title,
+                              content: content,
+                              date: DateTime.now().millisecondsSinceEpoch,
+                            ));
                           } else {
-                            // TODO: Alexis: Créer la note
+                            dbProvider.insertNote(Note(
+                              title: title,
+                              content: content,
+                              date: DateTime.now().millisecondsSinceEpoch,
+                            ));
+
                           }
 
                           if (context.mounted) {

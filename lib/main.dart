@@ -25,13 +25,15 @@ Future<void> main() async {
   );
   const secureStorage = FlutterSecureStorage();
 
+
+
   final sharedPreferencesRepo = SharedPreferencesRepository(prefs);
   final secureStorageRepo = SecureStorageRepository(secureStorage);
 
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ThemeController()),
+        ChangeNotifierProvider(create: (_) => ThemeController(themeMode: sharedPreferencesRepo.theme)),
 
         ChangeNotifierProvider(create: (_) => DatabaseProvider()),
 

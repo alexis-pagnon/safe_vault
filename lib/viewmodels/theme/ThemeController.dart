@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'AppThemes.dart';
 
 class ThemeController extends ChangeNotifier {
-  ThemeData _theme = AppThemes.light;
+  ThemeData _theme;
+
+  ThemeController({required String themeMode}) :
+        _theme = themeMode == 'dark' ? AppThemes.dark : AppThemes.light;
 
   ThemeData get theme => _theme;
 

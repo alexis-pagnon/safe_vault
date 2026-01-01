@@ -312,7 +312,6 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                           controller: controllers[3],
                         ),
 
-                        // TODO : Update case : must check the strength of the initial password
                         // Strength Widget
                         CustomStrengthWidget(controller: controllers[3]),
 

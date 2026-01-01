@@ -124,7 +124,7 @@ class _GenerationPageState extends State<GenerationPage> {
                             title: 'Générer un mot de passe',
                             svgPath: 'assets/svg/stars.svg',
                             onPressed: () {
-                              // TODO : Slider pour la longueur ?
+                              // TODO : Adam : Slider pour la longueur du mdp ?
                               controllers[0].text = PasswordGenerator.generateRandomPassword(20, true, true, true, true);
                             },
                         ),

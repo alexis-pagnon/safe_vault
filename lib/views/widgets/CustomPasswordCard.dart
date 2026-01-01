@@ -151,7 +151,6 @@ class _CustomPasswordCardState extends State<CustomPasswordCard> {
                             
                               onSelected: (String value) {
                                 if (value == 'edit') {
-                                  // TODO : Modifier un password -> Utiliser Navigator ? Ou adapter le pageController ?
                                   Navigator.push(context, MaterialPageRoute(builder: (context) =>
                                     NewPasswordPage(initialPassword: widget.password)),
                                   );
