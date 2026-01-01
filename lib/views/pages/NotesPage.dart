@@ -10,14 +10,6 @@ class NotesPage extends StatefulWidget {
 class _NotesPageState extends State<NotesPage> {
   @override
   Widget build(BuildContext context) {
-    // final colors = Theme.of(context).extension<AppColors>()!;
-    // final totalWidth = MediaQuery.of(context).size.width;
-    // final totalHeight = MediaQuery.of(context).size.height;
-
-    return Scaffold(
-      backgroundColor: Colors.blue,
-
-      body: SizedBox(),
-    );
+    return Container();
   }
 }

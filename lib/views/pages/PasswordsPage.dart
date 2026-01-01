@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:safe_vault/views/widgets/CustomCategoryButton.dart';
 import 'package:safe_vault/views/widgets/CustomPasswordCard.dart';
 import 'package:safe_vault/views/widgets/CustomTextField.dart';
-
 import '../../models/theme/AppColors.dart';
 import '../../viewmodels/DatabaseProvider.dart';
 

@@ -1,33 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
-import 'package:safe_vault/views/widgets/CustomTextField.dart';
-import '../../models/database/Password.dart';
+import '../../models/database/Note.dart';
 import '../../models/theme/AppColors.dart';
+import 'CustomNoteCreationPopup.dart';
 
-class CustomPasswordCard extends StatefulWidget {
-  final Password password;
+class CustomNote extends StatelessWidget {
+  final Note note;
 
-  const CustomPasswordCard({
+  const CustomNote({
     super.key,
-    required this.password,
+    required this.note,
   });
-
-  @override
-  State<CustomPasswordCard> createState() => _CustomPasswordCardState();
-}
-
-class _CustomPasswordCardState extends State<CustomPasswordCard> {
-  final TextEditingController controller = TextEditingController();
-  bool test = true;
-
-  @override
-  void initState() {
-    super.initState();
-    controller.text = widget.password.password;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +19,10 @@ class _CustomPasswordCardState extends State<CustomPasswordCard> {
     final totalHeight = MediaQuery.of(context).size.height;
     final totalWidth = MediaQuery.of(context).size.width;
 
-    final dbProvider = Provider.of<DatabaseProvider>(context, listen: false);
+    final date = DateTime.fromMillisecondsSinceEpoch(note.date);
+    final day = date.day.toString().padLeft(2, '0');
+    final month = date.month.toString().padLeft(2, '0');
+    final year = date.year.toString();
 
     return Container(
       width: totalWidth * 0.85,
@@ -63,28 +50,16 @@ class _CustomPasswordCardState extends State<CustomPasswordCard> {
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: widget.password.id_category == 1
-                      ? Color(0xFF9333EA)
-                      : widget.password.id_category == 2
-                      ? Color(0xFFEA580C)
-                      : widget.password.id_category == 3
-                      ? Color(0xFF16A34A)
-                      : Color(0xFFDB2777),
+                  gradient: LinearGradient(colors: [colors.gradientButtonsStart, colors.gradientButtonsEnd]),
                 ),
 
                 height: totalHeight * 0.06,
                 width: totalHeight * 0.06,
 
                 child: Padding(
-                  padding: widget.password.id_category == 1 ? EdgeInsets.all(totalHeight * 0.011) : EdgeInsets.all(totalHeight * 0.010),
+                  padding: EdgeInsets.all(totalHeight * 0.012),
                   child: SvgPicture.asset(
-                    widget.password.id_category == 1
-                    ? 'assets/svg/internet.svg'
-                    : widget.password.id_category == 2
-                      ? 'assets/svg/social_network2.svg'
-                      : widget.password.id_category == 3
-                        ? 'assets/svg/smartphone.svg'
-                        : 'assets/svg/shopping_cart.svg',
+                    "assets/svg/lock.svg",
                     colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
 
                   ),
@@ -96,12 +71,12 @@ class _CustomPasswordCardState extends State<CustomPasswordCard> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Service + Favorite + Menu
+                    // Title + Date + Menu
                     Row(
                       children: [
-                        // Name
+                        // Title
                         Text(
-                          widget.password.service,
+                          note.title,
                           style: GoogleFonts.montserrat(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
@@ -111,25 +86,6 @@ class _CustomPasswordCardState extends State<CustomPasswordCard> {
 
                         // Spacing
                         Spacer(),
-
-                        // Favorite
-                        InkWell(
-                          child: SvgPicture.asset(
-                            widget.password.is_favorite ? "assets/svg/favorite_filled.svg" : "assets/svg/favorite.svg",
-                            colorFilter: widget.password.is_favorite
-                                ? ColorFilter.mode(Color(0xFFFB2C36), BlendMode.srcIn)
-                                : ColorFilter.mode(colors.text4, BlendMode.srcIn),
-
-                            height: totalHeight * 0.033,
-                          ),
-
-                          onTap: () {
-                            // Update favorite status
-                            dbProvider.toggleFavoriteStatus(widget.password.id_pwd!,!widget.password.is_favorite);
-                          },
-                        ),
-
-                        SizedBox(width: totalWidth * 0.01),
 
                         // Menu
                         SizedBox(
@@ -147,15 +103,25 @@ class _CustomPasswordCardState extends State<CustomPasswordCard> {
                                 colorFilter: ColorFilter.mode(colors.text4, BlendMode.srcIn),
                                 height: totalHeight * 0.033,
                               ),
-                            
+
                               onSelected: (String value) {
                                 if (value == 'edit') {
-                                  print('Modifier');
+                                  // Show the pop up to edit the note
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: true,
+                                    builder: (_) => CustomNoteCreationPopup(
+                                      initialTitle: note.title,
+                                      initialContent: note.content,
+                                      idNote: note.id_note,
+                                      isEditing: true,
+                                    ),
+                                  );
                                 } else if (value == 'delete') {
-                                  print('Supprimer');
+                                  // TODO: Alexis: Supprimer la note
                                 }
                               },
-                            
+
                               color: colors.containerBackground2,
                               offset: Offset(-2, 0),
                               menuPadding: EdgeInsets.all(0),
@@ -163,7 +129,7 @@ class _CustomPasswordCardState extends State<CustomPasswordCard> {
                               shadowColor: colors.dropShadow,
                               popUpAnimationStyle: AnimationStyle(curve: Curves.easeInOut, duration: Duration(milliseconds: 500)),
                               splashRadius: 0.1,
-                            
+
                               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                                 PopupMenuItem<String>(
                                   value: 'edit',
@@ -175,7 +141,7 @@ class _CustomPasswordCardState extends State<CustomPasswordCard> {
                                       color: colors.text3,
                                     ),
                                   ),
-                            
+
                                 ),
                                 PopupMenuItem<String>(
                                   value: 'delete',
@@ -191,14 +157,15 @@ class _CustomPasswordCardState extends State<CustomPasswordCard> {
                               ],
                             ),
                           ),
-                        )
+                        ),
 
+                        SizedBox(width: totalWidth * 0.01),
                       ],
                     ),
 
-                    // Username
+                    // Date
                     Text(
-                      widget.password.username,
+                      '$day/$month/$year',
                       style: GoogleFonts.montserrat(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
@@ -212,17 +179,19 @@ class _CustomPasswordCardState extends State<CustomPasswordCard> {
             ],
           ),
 
-          // TextField
-          CustomTextField(
-            hintText: "",
-            controller: controller,
-            editable: false,
-            eye: true,
-            copy: true,
+          // Content
+          Text(
+            note.content,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            style: GoogleFonts.montserrat(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: colors.text3,
+            ),
           ),
         ],
       ),
     );
   }
 }
-
