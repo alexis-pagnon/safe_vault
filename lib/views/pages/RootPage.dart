@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:safe_vault/viewmodels/AuthenticationProvider.dart';
 import 'package:safe_vault/views/pages/NewPasswordPage.dart';
-import '../../models/theme/AppColors.dart';
-import '../widgets/CustomNavBar.dart';
-import 'ConnexionPage.dart';
-import 'CreationPage.dart';
+import 'package:safe_vault/models/theme/AppColors.dart';
+import 'package:safe_vault/views/widgets/CustomNavBar.dart';
 import 'GenerationPage.dart';
 import 'HomePage.dart';
 import 'NotesPage.dart';
@@ -22,6 +22,31 @@ class _RootPageState extends State<RootPage> {
   final PageController pageController = PageController();
 
   @override
+  void initState() {
+    super.initState();
+    automaticLock();
+  }
+
+
+  @override
+  void dispose() {
+    pageController.dispose();
+    selectedIndex.dispose();
+    super.dispose();
+  }
+
+
+  /// Automatically lock the (close database and logout) app after 10 minutes
+  void automaticLock() {
+    Future.delayed(const Duration(minutes: 10), () {
+      if (mounted) {
+        context.read<AuthenticationProvider>().logout();
+      }
+    });
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>()!;
 
@@ -38,8 +63,6 @@ class _RootPageState extends State<RootPage> {
             NewPasswordPage(pageController: pageController),
             GenerationPage(),
             NotesPage(),
-            ConnexionPage(pageController: pageController),
-            CreationPage(pageController: pageController),
           ],
 
           onPageChanged: (int index) {

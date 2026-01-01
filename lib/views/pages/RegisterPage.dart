@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:safe_vault/models/PasswordGenerator.dart';
+import 'package:safe_vault/viewmodels/AuthenticationProvider.dart';
 import 'package:safe_vault/views/widgets/CustomStrengthWidget.dart';
 import 'package:safe_vault/views/widgets/CustomTextField.dart';
 import '../../models/theme/AppColors.dart';
@@ -11,19 +14,19 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 // TODO: Adam: Faire des animations de FadeIn pour le texte en mode Pro
 
 
-class CreationPage extends StatefulWidget {
-  final PageController pageController;
+class RegisterPage extends StatefulWidget {
+  //final PageController pageController;
 
-  const CreationPage({
+  const RegisterPage({
     super.key,
-    required this.pageController,
+    //required this.pageController,
   });
 
   @override
-  State<CreationPage> createState() => _CreationPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _CreationPageState extends State<CreationPage> with WidgetsBindingObserver {
+class _RegisterPageState extends State<RegisterPage> with WidgetsBindingObserver {
   // Creation of a list of 2 TextEditingController for the 2 TextFields
   List<TextEditingController> controllers = List.generate(2, (index) => TextEditingController());
 
@@ -80,7 +83,7 @@ class _CreationPageState extends State<CreationPage> with WidgetsBindingObserver
     final totalWidth = MediaQuery.of(context).size.width;
     final totalHeight = MediaQuery.of(context).size.height;
 
-// lib/views/pages/CreationPage.dart
+    final authenticationProvider = Provider.of<AuthenticationProvider>(context, listen: false);
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -193,14 +196,18 @@ class _CreationPageState extends State<CreationPage> with WidgetsBindingObserver
                       // Button
                       CustomButton(
                         title: "Créer mon coffre-fort",
-                        onPressed: () {
-                          // TODO: Alexis: Vérifier les requirements (j'avais la flemme jvais pas mentir)
+                        onPressed: () async {
+
                           final isPasswordsSimilar = controllers[0].text == controllers[1].text;
-                          final isPasswordRespectRequirements = false;
+                          bool isPasswordRespectRequirements = false;
+
+                          if(isPasswordsSimilar) {
+                            final Map<String,dynamic> analysis = PasswordGenerator.completePasswordStrengthAnalysis(controllers[0].text);
+                            isPasswordRespectRequirements = analysis['length'] && analysis['uppercase'] && analysis['numbers'] && analysis['specialChars'];
+                          }
 
                           if (isPasswordsSimilar && isPasswordRespectRequirements) {
-                            // Go to the Home Page
-                            widget.pageController.jumpToPage(0);
+                            await authenticationProvider.registerNewUser(controllers[0].text);
                           }
                           else {
                             final SnackBar snackBar;
@@ -216,7 +223,6 @@ class _CreationPageState extends State<CreationPage> with WidgetsBindingObserver
                                   contentType: ContentType.failure,
                                 ),
                               );
-
                             }
                             else{
                               snackBar = SnackBar(
