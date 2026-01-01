@@ -99,129 +99,129 @@ class _PasswordsPageState extends State<PasswordsPage> {
               children: [
                 // Categories
                 ValueListenableBuilder<int>(
-                  valueListenable: selectedCategoryNotifier,
-                  builder: (context, selectedIndex, child) {
+                    valueListenable: selectedCategoryNotifier,
+                    builder: (context, selectedIndex, child) {
 
-                    return SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      physics: BouncingScrollPhysics(),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        spacing: totalWidth * 0.04,
-                        children: [
-                          // Spacing
-                          SizedBox(width: totalWidth * 0.03),
+                      return SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        physics: BouncingScrollPhysics(),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          spacing: totalWidth * 0.04,
+                          children: [
+                            // Spacing
+                            SizedBox(width: totalWidth * 0.03),
 
-                          // Category Buttons
-                          CustomCategoryButton(
-                            index: 0,
-                            selectedIndexNotifier: selectedCategoryNotifier,
-                            text: "Tous",
-                            onPressed: () {
-                              selectedCategoryNotifier.value = 0;
-                              print("Tous");
-                              dbProvider.setCategory(0);
-                            },
-                          ),
-                          CustomCategoryButton(
-                            index: 1,
-                            selectedIndexNotifier: selectedCategoryNotifier,
-                            text: "Favoris",
-                            onPressed: () {
-                              selectedCategoryNotifier.value = 1;
-                              print("Favoris");
-                              dbProvider.setCategory(1);
-                            },
-                          ),
-                          CustomCategoryButton(
-                            index: 2,
-                            selectedIndexNotifier: selectedCategoryNotifier,
-                            text: "Sites Web",
-                            onPressed: () {
-                              selectedCategoryNotifier.value = 2;
-                              print("Sites Web");
-                              dbProvider.setCategory(2);
-                            },
-                          ),
-                          CustomCategoryButton(
-                            index: 3,
-                            selectedIndexNotifier: selectedCategoryNotifier,
-                            text: "Réseaux Sociaux",
-                            onPressed: () {
-                              selectedCategoryNotifier.value = 3;
-                              print("Réseaux Sociaux");
-                              dbProvider.setCategory(3);
-                            },
-                          ),
-                          CustomCategoryButton(
-                            index: 4,
-                            selectedIndexNotifier: selectedCategoryNotifier,
-                            text: "Applications",
-                            onPressed: () {
-                              selectedCategoryNotifier.value = 4;
-                              print("Applications");
-                              dbProvider.setCategory(4);
-                            },
-                          ),
-                          CustomCategoryButton(
-                            index: 5,
-                            selectedIndexNotifier: selectedCategoryNotifier,
-                            text: "Paiements",
-                            onPressed: () {
-                              selectedCategoryNotifier.value = 5;
-                              print("Paiements");
-                              dbProvider.setCategory(5);
-                            },
-                          ),
-                          // TODO : Filtres de robustesse
-                          CustomCategoryButton(
-                            index: 6,
-                            selectedIndexNotifier: selectedCategoryNotifier,
-                            text: "Sûrs",
-                            onPressed: () {
-                              selectedCategoryNotifier.value = 6;
-                              print("Sûrs");
-                              dbProvider.setIdsToFilter(context.read<RobustnessProvider>().strongPasswords);
-                            },
-                          ),
-                          CustomCategoryButton(
-                            index: 7,
-                            selectedIndexNotifier: selectedCategoryNotifier,
-                            text: "Faibles",
-                            onPressed: () {
-                              selectedCategoryNotifier.value = 7;
-                              print("Faibles");
-                              dbProvider.setIdsToFilter(context.read<RobustnessProvider>().weakPasswords);
-                            },
-                          ),
-                          CustomCategoryButton(
-                            index: 8,
-                            selectedIndexNotifier: selectedCategoryNotifier,
-                            text: "Réutilisés",
-                            onPressed: () {
-                              selectedCategoryNotifier.value = 8;
-                              print("Réutilisés");
-                              dbProvider.setIdsToFilter(context.read<RobustnessProvider>().allReusedPasswords);
-                            },
-                          ),
-                          CustomCategoryButton(
-                            index: 9,
-                            selectedIndexNotifier: selectedCategoryNotifier,
-                            text: "Compromis",
-                            onPressed: () {
-                              selectedCategoryNotifier.value = 9;
-                              print("Compromis");
-                              dbProvider.setIdsToFilter(context.read<RobustnessProvider>().compromisedPasswords);
-                            },
-                          ),
+                            // Category Buttons
+                            CustomCategoryButton(
+                              index: 0,
+                              selectedIndexNotifier: selectedCategoryNotifier,
+                              text: "Tous",
+                              onPressed: () {
+                                selectedCategoryNotifier.value = 0;
+                                print("Tous");
+                                dbProvider.setCategory(0);
+                              },
+                            ),
+                            CustomCategoryButton(
+                              index: 1,
+                              selectedIndexNotifier: selectedCategoryNotifier,
+                              text: "Favoris",
+                              onPressed: () {
+                                selectedCategoryNotifier.value = 1;
+                                print("Favoris");
+                                dbProvider.setCategory(1);
+                              },
+                            ),
+                            CustomCategoryButton(
+                              index: 2,
+                              selectedIndexNotifier: selectedCategoryNotifier,
+                              text: "Sites Web",
+                              onPressed: () {
+                                selectedCategoryNotifier.value = 2;
+                                print("Sites Web");
+                                dbProvider.setCategory(2);
+                              },
+                            ),
+                            CustomCategoryButton(
+                              index: 3,
+                              selectedIndexNotifier: selectedCategoryNotifier,
+                              text: "Réseaux Sociaux",
+                              onPressed: () {
+                                selectedCategoryNotifier.value = 3;
+                                print("Réseaux Sociaux");
+                                dbProvider.setCategory(3);
+                              },
+                            ),
+                            CustomCategoryButton(
+                              index: 4,
+                              selectedIndexNotifier: selectedCategoryNotifier,
+                              text: "Applications",
+                              onPressed: () {
+                                selectedCategoryNotifier.value = 4;
+                                print("Applications");
+                                dbProvider.setCategory(4);
+                              },
+                            ),
+                            CustomCategoryButton(
+                              index: 5,
+                              selectedIndexNotifier: selectedCategoryNotifier,
+                              text: "Paiements",
+                              onPressed: () {
+                                selectedCategoryNotifier.value = 5;
+                                print("Paiements");
+                                dbProvider.setCategory(5);
+                              },
+                            ),
+                            // TODO : Filtres de robustesse
+                            CustomCategoryButton(
+                              index: 6,
+                              selectedIndexNotifier: selectedCategoryNotifier,
+                              text: "Sûrs",
+                              onPressed: () {
+                                selectedCategoryNotifier.value = 6;
+                                print("Sûrs");
+                                dbProvider.setIdsToFilter(context.read<RobustnessProvider>().strongPasswords);
+                              },
+                            ),
+                            CustomCategoryButton(
+                              index: 7,
+                              selectedIndexNotifier: selectedCategoryNotifier,
+                              text: "Faibles",
+                              onPressed: () {
+                                selectedCategoryNotifier.value = 7;
+                                print("Faibles");
+                                dbProvider.setIdsToFilter(context.read<RobustnessProvider>().weakPasswords);
+                              },
+                            ),
+                            CustomCategoryButton(
+                              index: 8,
+                              selectedIndexNotifier: selectedCategoryNotifier,
+                              text: "Réutilisés",
+                              onPressed: () {
+                                selectedCategoryNotifier.value = 8;
+                                print("Réutilisés");
+                                dbProvider.setIdsToFilter(context.read<RobustnessProvider>().allReusedPasswords);
+                              },
+                            ),
+                            CustomCategoryButton(
+                              index: 9,
+                              selectedIndexNotifier: selectedCategoryNotifier,
+                              text: "Compromis",
+                              onPressed: () {
+                                selectedCategoryNotifier.value = 9;
+                                print("Compromis");
+                                dbProvider.setIdsToFilter(context.read<RobustnessProvider>().compromisedPasswords);
+                              },
+                            ),
 
-                          // Spacing
-                          SizedBox(width: totalWidth * 0.03),
-                        ],
+                            // Spacing
+                            SizedBox(width: totalWidth * 0.03),
+                          ],
 
-                      ),
-                    );
-                  }
+                        ),
+                      );
+                    }
                 ),
 
                 // Password Cards
@@ -231,7 +231,14 @@ class _PasswordsPageState extends State<PasswordsPage> {
                     final passwords = dbProvider.filteredPasswords();
 
                     if (passwords.isEmpty) {
-                      return Text("Aucun mot de passe trouvé.");
+                      return Text(
+                        "Aucun mot de passe trouvé.",
+                        style: GoogleFonts.montserrat(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: colors.text2,
+                        ),
+                      );
                     }
                     return Column(
                       spacing: totalHeight * 0.025,

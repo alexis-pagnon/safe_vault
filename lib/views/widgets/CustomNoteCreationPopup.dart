@@ -194,7 +194,7 @@ class _CustomNoteCreationPopupState extends State<CustomNoteCreationPopup> {
                           final content = contentController.text;
 
                           if(widget.isEditing) {
-                            // TODO: Alexis: Modifier la note
+                            // TODO: Alexis: Modifier la note (et pour la date l'actualiser au jour de la modification)
                           } else {
                             // TODO: Alexis: Créer la note
                           }

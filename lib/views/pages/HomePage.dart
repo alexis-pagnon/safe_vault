@@ -8,6 +8,8 @@ import 'package:safe_vault/views/widgets/CustomCard.dart';
 import 'package:safe_vault/views/widgets/CustomSvgButton.dart';
 import 'package:safe_vault/models/theme/AppColors.dart';
 
+import '../../viewmodels/theme/ThemeController.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -31,7 +33,7 @@ class _HomePageState extends State<HomePage> {
     } else if (score < 75) {
       return [Color(0xFFFFD739).withAlpha(76), Color(0xFFFFD739)];
     } else {
-      return [colors.greenDarker.withAlpha(76), colors.greenDarker];
+      return [Color(0xFF16A34A).withAlpha(76), Color(0xFF16A34A)];
     }
   }
 
@@ -64,6 +66,7 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     padding: EdgeInsets.fromLTRB(totalWidth * 0.02, totalHeight * 0.00, 0, totalHeight * 0.01),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         // Titles
                         Column(
@@ -82,6 +85,73 @@ class _HomePageState extends State<HomePage> {
                         ),
 
                         // Icon
+                        SizedBox(
+                          height: totalHeight * 0.05,
+                          width: totalHeight * 0.05,
+                          child: Theme(
+                            data: Theme.of(context).copyWith(
+                              splashFactory: NoSplash.splashFactory, // Remove splash effect
+                            ),
+
+                            child: PopupMenuButton<String>(
+                              padding: EdgeInsets.all(0),
+                              icon: Icon(
+                                Icons.menu_rounded,
+                                color: colors.text2,
+                              ),
+
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(colors.containerBackground1),
+                              ),
+
+                              onSelected: (String value) {
+                                if (value == 'changeTheme') {
+                                  // Toggle theme
+                                  context.read<ThemeController>().toggleTheme();
+                                }
+                                else if (value == 'notifications') {
+                                  // TODO: Jsp comment on fait ici, faut en discuter
+                                }
+                              },
+
+                              color: colors.containerBackground2,
+                              offset: Offset(0, 0),
+                              menuPadding: EdgeInsets.all(0),
+                              borderRadius: BorderRadius.circular(10),
+                              shadowColor: colors.dropShadow,
+                              popUpAnimationStyle: AnimationStyle(curve: Curves.easeInOut, duration: Duration(milliseconds: 500)),
+                              splashRadius: 0.1,
+                              elevation: 150,
+                              clipBehavior: Clip.none,
+
+                              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                                PopupMenuItem<String>(
+                                  value: 'changeTheme',
+                                  child: Text(
+                                    'Changer de thème',
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w500,
+                                      color: colors.text3,
+                                    ),
+                                  ),
+
+                                ),
+                                PopupMenuItem<String>(
+                                  value: 'notifications',
+                                  child: Text(
+                                    'Notifications',
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w500,
+                                      color: colors.text3,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -278,7 +348,7 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           // Apps
-                          CustomCard(svgPath: 'assets/svg/smartphone.svg', title: 'Applications', subtitle: '${db.categoryAppPasswords.length} mots de passe'),
+                          CustomCard(svgPath: 'assets/svg/smartphone.svg', title: 'Applications', subtitle: '${db.categoryAppPasswords.length} mots de passe', ),
 
                           // Website
                           CustomCard(svgPath: 'assets/svg/shopping_cart.svg', title: 'Paiements', subtitle: '${db.categoryPaymentPasswords.length} mots de passe'),
@@ -287,12 +357,12 @@ class _HomePageState extends State<HomePage> {
 
                       // Generate Password Button
                       CustomSvgButton(title: 'Générateur de mots de passe', svgPath: 'assets/svg/stars.svg', onPressed: () {
-                        // TODO : widget.pageController.jumpToPage(3); ?
+                        // TODO : widget.pageController.jumpToPage(3); ? oui
                       }),
 
                       // Secured Notes Button
                       CustomSvgButton(title: 'Notes sécurisées', svgPath: 'assets/svg/notes.svg', onPressed: () {
-                        // TODO : widget.pageController.jumpToPage(4); ?
+                        // TODO : widget.pageController.jumpToPage(4); ? oui
                       }),
                     ],
                   );
