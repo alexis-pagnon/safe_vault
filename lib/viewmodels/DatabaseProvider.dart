@@ -16,12 +16,14 @@ class DatabaseProvider with ChangeNotifier {
   int _category = 0;
   String _query = '';
   List<int> _idsToFilter = [];
+  int _noteCategory = 0;
 
 
   String get databaseName => _databaseName;
   bool get isOpened => _isOpened;
   List<Password> get passwords => _passwords;
   List<Note> get notes => _notes;
+
 
   List<Password> get favoritePasswords => _passwords.where((pwd) => pwd.is_favorite).toList();
 
@@ -31,6 +33,9 @@ class DatabaseProvider with ChangeNotifier {
   List<Password> get categoryPaymentPasswords => _passwords.where((pwd) => pwd.id_category == 4).toList();
 
   List<Password> get categoryFilteredPasswords => _passwords.where((pwd) => _idsToFilter.contains(pwd.id_pwd)).toList();
+
+  List<Note> get normalNotes => _notes.where((note) => note.isTemporary == false).toList();
+  List<Note> get temporaryNotes => _notes.where((note) => note.isTemporary == true).toList();
 
   int get passwordVersion => _passwordVersion;
   int get noteVersion => _noteVersion;
@@ -43,7 +48,11 @@ class DatabaseProvider with ChangeNotifier {
     _isOpened = true;
     notifyListeners();
     await loadPasswords();
-    await loadNotes();
+
+    // Delete temporary notes older than 7 days
+    int dateMinus7Days = DateTime.now().subtract(const Duration(days: 7)).millisecondsSinceEpoch;
+    await deleteTemporaryNotes(dateMinus7Days);
+    // No need to loadNotes here since it will be done by deleteTemporaryNotes
   }
 
 
@@ -95,6 +104,7 @@ class DatabaseProvider with ChangeNotifier {
     _notes = await retrieveNotes();
     _noteVersion++;
     notifyListeners();
+    print("Note version: $_noteVersion");
   }
 
 
@@ -103,8 +113,21 @@ class DatabaseProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void setNoteCategory(int category) {
+    _noteCategory = category;
+    notifyListeners();
+  }
+
   void setQuery(String query) {
     _query = query;
+    notifyListeners();
+  }
+
+  void resetFilters() {
+    _category = 0;
+    _noteCategory = 0;
+    _query = '';
+    _idsToFilter = [];
     notifyListeners();
   }
 
@@ -213,13 +236,33 @@ class DatabaseProvider with ChangeNotifier {
   }
 
 
-  /// Search notes by title.<br>
+  /// Search notes.<br>
+  /// Returns the filtered list of notes.<br>
+  /// Filters are based on noteCategory (0= Normal, 1= Temporary) and query.<br>
   List<Note> searchNotes() {
-    _notes.sort((a, b) => b.date.compareTo(a.date)); // Most recent first
 
-    return _notes.where((note) =>
-    note.title.toLowerCase().contains(_query.toLowerCase())
-    ).toList();
+    List<Note> filteredNotes = [];
+    if(_noteCategory == 0) {
+      filteredNotes = normalNotes;
+    }
+    else if(_noteCategory == 1) {
+      filteredNotes = temporaryNotes;
+    }
+    else {
+      filteredNotes = normalNotes;
+    }
+
+    filteredNotes.sort((a, b) => b.date.compareTo(a.date)); // Most recent first
+
+    if(_query.isEmpty) {
+      return filteredNotes;
+    }
+    else {
+      return filteredNotes.where((note) =>
+      note.title.toLowerCase().contains(_query.toLowerCase())
+      ).toList();
+    }
+
   }
 
 

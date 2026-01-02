@@ -34,6 +34,25 @@ class _CustomTextFieldState extends State<CustomTextField> {
   bool eyeState = false;
 
   @override
+  void initState() {
+    super.initState();
+    // Listener instead of default onChanged in order to have it work with controller changes (clear)
+    widget.controller.addListener(_onChanged);
+  }
+
+  void _onChanged() {
+    if(widget.onChanged != null) {
+      widget.onChanged!(widget.controller.text);
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_onChanged);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>()!;
     final totalWidth = MediaQuery.of(context).size.width;
@@ -44,7 +63,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       autocorrect: !widget.eye,
       readOnly: !widget.editable,
       controller: widget.controller,
-      onChanged: widget.onChanged,
+
 
       style: GoogleFonts.montserrat(
         fontSize: 14,

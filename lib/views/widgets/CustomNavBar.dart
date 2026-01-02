@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:safe_vault/viewmodels/PageNavigatorProvider.dart';
 import '../../models/theme/AppColors.dart';
 
 class CustomNavBar extends StatefulWidget {
-  final PageController pageController;
-  final ValueNotifier<int> selectedIndexNotifier;
 
   const CustomNavBar({
     super.key,
-    required this.pageController,
-    required this.selectedIndexNotifier,
   });
 
   @override
   State<CustomNavBar> createState() => _CustomNavBarState();
 }
+
 
 class _CustomNavBarState extends State<CustomNavBar> {
   int selectedIndex = 0;
@@ -21,24 +20,27 @@ class _CustomNavBarState extends State<CustomNavBar> {
   @override
   void initState() {
     super.initState();
-    widget.selectedIndexNotifier.addListener(_updateState);
   }
 
   @override
   void dispose() {
-    widget.selectedIndexNotifier.removeListener(_updateState);
     super.dispose();
   }
 
-  void _updateState() {
-    setState(() {});
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    selectedIndex = context.watch<PageNavigatorProvider>().currentPage;
   }
+
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>()!;
     final totalHeight = MediaQuery.of(context).size.height;
-    selectedIndex = widget.selectedIndexNotifier.value;
+
+    final navigator = Provider.of<PageNavigatorProvider>(context, listen: false);
 
 
     return Container(
@@ -71,38 +73,26 @@ class _CustomNavBarState extends State<CustomNavBar> {
                 children: [
                   InkWell(
                     onTap: () {
-                      setState(() {
-                        selectedIndex = 0;
-                        widget.pageController.jumpToPage(0);
-                      });
+                      navigator.jumpToPage(0);
                     },
                     child: _navItem(Icons.home_rounded, selectedIndex == 0, context)
                   ),
                   InkWell(
                       onTap: () {
-                        setState(() {
-                          selectedIndex = 1;
-                          widget.pageController.jumpToPage(1);
-                        });
+                        navigator.jumpToPage(1);
                       },
                       child: _navItem(Icons.lock, selectedIndex == 1, context)
                   ),
                   SizedBox(width: 60),
                   InkWell(
                       onTap: () {
-                        setState(() {
-                          selectedIndex = 3;
-                          widget.pageController.jumpToPage(3);
-                        });
+                        navigator.jumpToPage(3);
                       },
                       child: _navItem(Icons.auto_awesome_rounded, selectedIndex == 3, context)
                   ),
                   InkWell(
                       onTap: () {
-                        setState(() {
-                          selectedIndex = 4;
-                          widget.pageController.jumpToPage(4);
-                        });
+                        navigator.jumpToPage(4);
                       },
                       child: _navItem(Icons.article_rounded, selectedIndex == 4, context)
                   ),
@@ -119,10 +109,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
             child: Center(
               child: InkWell(
                 onTap: () {
-                  setState(() {
-                    selectedIndex = 2;
-                    widget.pageController.jumpToPage(2);
-                  });
+                  navigator.jumpToPage(2);
                 },
 
                 child: Container(

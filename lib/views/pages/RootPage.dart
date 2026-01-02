@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:safe_vault/viewmodels/AuthenticationProvider.dart';
+import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
+import 'package:safe_vault/viewmodels/PageNavigatorProvider.dart';
 import 'package:safe_vault/views/pages/NewPasswordPage.dart';
 import 'package:safe_vault/models/theme/AppColors.dart';
 import 'package:safe_vault/views/widgets/CustomNavBar.dart';
@@ -18,8 +20,6 @@ class RootPage extends StatefulWidget {
 }
 
 class _RootPageState extends State<RootPage> {
-  final ValueNotifier<int> selectedIndex = ValueNotifier<int>(0);
-  final PageController pageController = PageController();
 
   @override
   void initState() {
@@ -27,11 +27,8 @@ class _RootPageState extends State<RootPage> {
     automaticLock();
   }
 
-
   @override
   void dispose() {
-    pageController.dispose();
-    selectedIndex.dispose();
     super.dispose();
   }
 
@@ -40,6 +37,8 @@ class _RootPageState extends State<RootPage> {
   void automaticLock() {
     Future.delayed(const Duration(minutes: 10), () {
       if (mounted) {
+        context.read<PageNavigatorProvider>().reset();
+        context.read<DatabaseProvider>().resetFilters();
         context.read<AuthenticationProvider>().logout();
       }
     });
@@ -49,27 +48,24 @@ class _RootPageState extends State<RootPage> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>()!;
+    final navigator = context.read<PageNavigatorProvider>();
 
     return SafeArea(
       child: Scaffold(
         backgroundColor: colors.background,
-        bottomNavigationBar: CustomNavBar(pageController: pageController, selectedIndexNotifier: selectedIndex,),
+        bottomNavigationBar: CustomNavBar(),
         body: PageView(
-          controller: pageController,
           scrollDirection: Axis.horizontal,
+          controller: navigator.pageController,
+          onPageChanged: navigator.onPageChanged,
+
           children: [
-            HomePage(pageController: pageController),
+            HomePage(),
             PasswordsPage(),
-            NewPasswordPage(pageController: pageController),
+            NewPasswordPage(),
             GenerationPage(),
             NotesPage(),
           ],
-
-          onPageChanged: (int index) {
-            setState(() {
-              selectedIndex.value = index;
-            });
-          },
         ),
       ),
     );

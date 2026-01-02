@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:safe_vault/viewmodels/PageNavigatorProvider.dart';
 import 'package:safe_vault/viewmodels/RobustnessProvider.dart';
 import 'package:safe_vault/models/SharedPreferencesRepository.dart';
 import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
@@ -36,6 +37,8 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => ThemeController(themeMode: sharedPreferencesRepo.theme)),
 
         ChangeNotifierProvider(create: (_) => DatabaseProvider()),
+
+        ChangeNotifierProvider(create: (_) => PageNavigatorProvider()),
 
         Provider.value(value: sharedPreferencesRepo),
         Provider.value(value: secureStorageRepo),

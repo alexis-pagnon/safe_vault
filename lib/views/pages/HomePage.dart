@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:safe_vault/models/SharedPreferencesRepository.dart';
 import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
+import 'package:safe_vault/viewmodels/PageNavigatorProvider.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'package:safe_vault/viewmodels/RobustnessProvider.dart';
 import 'package:safe_vault/views/widgets/CustomCard.dart';
@@ -12,11 +13,9 @@ import 'package:safe_vault/models/theme/AppColors.dart';
 import '../../viewmodels/theme/ThemeController.dart';
 
 class HomePage extends StatefulWidget {
-  final PageController pageController;
 
   const HomePage({
       super.key,
-      required this.pageController
   });
 
   @override
@@ -376,12 +375,12 @@ class _HomePageState extends State<HomePage> {
 
                       // Generate Password Button
                       CustomSvgButton(title: 'Générateur de mots de passe', svgPath: 'assets/svg/stars.svg', onPressed: () {
-                        widget.pageController.jumpToPage(3);
+                        Provider.of<PageNavigatorProvider>(context, listen: false).jumpToPage(3);
                       }),
 
                       // Secured Notes Button
                       CustomSvgButton(title: 'Notes sécurisées', svgPath: 'assets/svg/notes.svg', onPressed: () {
-                        widget.pageController.jumpToPage(4);
+                        Provider.of<PageNavigatorProvider>(context, listen: false).jumpToPage(4);
                       }),
                     ],
                   );

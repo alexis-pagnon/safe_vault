@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:safe_vault/viewmodels/PageNavigatorProvider.dart';
 import 'package:safe_vault/viewmodels/RobustnessProvider.dart';
 import 'package:safe_vault/views/widgets/CustomCategoryButton.dart';
 import 'package:safe_vault/views/widgets/CustomPasswordCard.dart';
@@ -9,6 +10,7 @@ import 'package:safe_vault/models/theme/AppColors.dart';
 import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
 
 class PasswordsPage extends StatefulWidget {
+
   const PasswordsPage({super.key});
 
   @override
@@ -17,15 +19,11 @@ class PasswordsPage extends StatefulWidget {
 
 class _PasswordsPageState extends State<PasswordsPage> {
   final TextEditingController controller = TextEditingController();
-  final ValueNotifier<int> selectedCategoryNotifier = ValueNotifier<int>(0);
 
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<DatabaseProvider>().setQuery(""); // Reset the search query when the page is opened
-    });
   }
 
   @override
@@ -42,7 +40,6 @@ class _PasswordsPageState extends State<PasswordsPage> {
     final totalHeight = MediaQuery.of(context).size.height;
 
     final dbProvider = Provider.of<DatabaseProvider>(context, listen: false);
-
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -101,9 +98,8 @@ class _PasswordsPageState extends State<PasswordsPage> {
               spacing: totalHeight * 0.022,
               children: [
                 // Categories
-                ValueListenableBuilder<int>(
-                    valueListenable: selectedCategoryNotifier,
-                    builder: (context, selectedIndex, child) {
+                Consumer<PageNavigatorProvider>(
+                  builder: (context, pageNavigator, _) {
 
                       return SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
@@ -118,102 +114,92 @@ class _PasswordsPageState extends State<PasswordsPage> {
                             // Category Buttons
                             CustomCategoryButton(
                               index: 0,
-                              selectedIndexNotifier: selectedCategoryNotifier,
+                              selectedIndex: pageNavigator.filterPassword,
                               text: "Tous",
                               onPressed: () {
-                                selectedCategoryNotifier.value = 0;
-                                print("Tous");
+                                pageNavigator.updateFilterPassword(0);
                                 dbProvider.setCategory(0);
                               },
                             ),
                             CustomCategoryButton(
                               index: 1,
-                              selectedIndexNotifier: selectedCategoryNotifier,
+                              selectedIndex: pageNavigator.filterPassword,
                               text: "Favoris",
                               onPressed: () {
-                                selectedCategoryNotifier.value = 1;
-                                print("Favoris");
+                                pageNavigator.updateFilterPassword(1);
                                 dbProvider.setCategory(1);
                               },
                             ),
                             CustomCategoryButton(
                               index: 2,
-                              selectedIndexNotifier: selectedCategoryNotifier,
+                              selectedIndex: pageNavigator.filterPassword,
                               text: "Sites Web",
                               onPressed: () {
-                                selectedCategoryNotifier.value = 2;
-                                print("Sites Web");
+                                pageNavigator.updateFilterPassword(2);
                                 dbProvider.setCategory(2);
                               },
                             ),
                             CustomCategoryButton(
                               index: 3,
-                              selectedIndexNotifier: selectedCategoryNotifier,
+                              selectedIndex: pageNavigator.filterPassword,
                               text: "Réseaux Sociaux",
                               onPressed: () {
-                                selectedCategoryNotifier.value = 3;
-                                print("Réseaux Sociaux");
+                                pageNavigator.updateFilterPassword(3);
                                 dbProvider.setCategory(3);
                               },
                             ),
                             CustomCategoryButton(
                               index: 4,
-                              selectedIndexNotifier: selectedCategoryNotifier,
+                              selectedIndex: pageNavigator.filterPassword,
                               text: "Applications",
                               onPressed: () {
-                                selectedCategoryNotifier.value = 4;
-                                print("Applications");
+                                pageNavigator.updateFilterPassword(4);
                                 dbProvider.setCategory(4);
                               },
                             ),
                             CustomCategoryButton(
                               index: 5,
-                              selectedIndexNotifier: selectedCategoryNotifier,
+                              selectedIndex: pageNavigator.filterPassword,
                               text: "Paiements",
                               onPressed: () {
-                                selectedCategoryNotifier.value = 5;
-                                print("Paiements");
+                                pageNavigator.updateFilterPassword(5);
                                 dbProvider.setCategory(5);
                               },
                             ),
 
                             CustomCategoryButton(
                               index: 6,
-                              selectedIndexNotifier: selectedCategoryNotifier,
+                              selectedIndex: pageNavigator.filterPassword,
                               text: "Sûrs",
                               onPressed: () {
-                                selectedCategoryNotifier.value = 6;
-                                print("Sûrs");
+                                pageNavigator.updateFilterPassword(6);
                                 dbProvider.setIdsToFilter(context.read<RobustnessProvider>().strongPasswords);
                               },
                             ),
                             CustomCategoryButton(
                               index: 7,
-                              selectedIndexNotifier: selectedCategoryNotifier,
+                              selectedIndex: pageNavigator.filterPassword,
                               text: "Faibles",
                               onPressed: () {
-                                selectedCategoryNotifier.value = 7;
-                                print("Faibles");
+                                pageNavigator.updateFilterPassword(7);
                                 dbProvider.setIdsToFilter(context.read<RobustnessProvider>().weakPasswords);
                               },
                             ),
                             CustomCategoryButton(
                               index: 8,
-                              selectedIndexNotifier: selectedCategoryNotifier,
+                              selectedIndex: pageNavigator.filterPassword,
                               text: "Réutilisés",
                               onPressed: () {
-                                selectedCategoryNotifier.value = 8;
-                                print("Réutilisés");
+                                pageNavigator.updateFilterPassword(8);
                                 dbProvider.setIdsToFilter(context.read<RobustnessProvider>().allReusedPasswords);
                               },
                             ),
                             CustomCategoryButton(
                               index: 9,
-                              selectedIndexNotifier: selectedCategoryNotifier,
+                              selectedIndex: pageNavigator.filterPassword,
                               text: "Compromis",
                               onPressed: () {
-                                selectedCategoryNotifier.value = 9;
-                                print("Compromis");
+                                pageNavigator.updateFilterPassword(9);
                                 dbProvider.setIdsToFilter(context.read<RobustnessProvider>().compromisedPasswords);
                               },
                             ),
