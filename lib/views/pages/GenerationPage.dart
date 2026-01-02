@@ -19,6 +19,7 @@ class GenerationPage extends StatefulWidget {
 class _GenerationPageState extends State<GenerationPage> {
   // Creation of a list of 2 TextEditingController for the 2 TextFields
   List<TextEditingController> controllers = List.generate(2, (index) => TextEditingController());
+  int passwordLength = 20;
 
   @override
   void dispose() {
@@ -34,6 +35,8 @@ class _GenerationPageState extends State<GenerationPage> {
     final colors = Theme.of(context).extension<AppColors>()!;
     final totalWidth = MediaQuery.of(context).size.width;
     final totalHeight = MediaQuery.of(context).size.height;
+
+
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -119,13 +122,37 @@ class _GenerationPageState extends State<GenerationPage> {
                           editable: false,
                         ),
 
+                        // Slider
+                        SliderTheme(
+                          data: SliderTheme.of(context).copyWith(
+                            showValueIndicator: ShowValueIndicator.onDrag,
+                            activeTrackColor: colors.gradientButtonsStart,
+                            valueIndicatorColor: colors.gradientButtonsStart,
+                            overlayColor: Colors.transparent,
+                            thumbColor: colors.gradientButtonsStart,
+                            valueIndicatorTextStyle: GoogleFonts.montserrat(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              color: colors.text1,
+                            ),
+                          ),
+                          child: Slider(
+                            min: 12,
+                            max: 40,
+                            value: passwordLength.toDouble(),
+                            label: passwordLength.toString(),
+                            onChanged: (value) {
+                              setState(() => passwordLength = value.round());
+                            },
+                          ),
+                        ),
+
                         // Generate Password Button
                         CustomSvgButton(
                             title: 'Générer un mot de passe',
                             svgPath: 'assets/svg/stars.svg',
                             onPressed: () {
-                              // TODO : Adam : Slider pour la longueur du mdp ?
-                              controllers[0].text = PasswordGenerator.generateRandomPassword(20, true, true, true, true);
+                              controllers[0].text = PasswordGenerator.generateRandomPassword(passwordLength, true, true, true, true);
                             },
                         ),
                       ],
