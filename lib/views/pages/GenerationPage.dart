@@ -130,7 +130,6 @@ class _GenerationPageState extends State<GenerationPage> {
                             valueIndicatorColor: colors.gradientButtonsStart,
                             overlayColor: Colors.transparent,
                             thumbColor: colors.gradientButtonsStart,
-
                             valueIndicatorTextStyle: GoogleFonts.montserrat(
                               fontSize: 15,
                               fontWeight: FontWeight.w600,
@@ -140,9 +139,8 @@ class _GenerationPageState extends State<GenerationPage> {
                           child: Slider(
                             min: 12,
                             max: 40,
-
                             value: passwordLength.toDouble(),
-                            label: passwordLength.toString(), // texte affiché dans la bulle
+                            label: passwordLength.toString(),
                             onChanged: (value) {
                               setState(() => passwordLength = value.round());
                             },
