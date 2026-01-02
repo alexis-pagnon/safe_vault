@@ -5,6 +5,7 @@ import 'package:safe_vault/views/widgets/CustomNote.dart';
 
 import '../../models/theme/AppColors.dart';
 import '../../viewmodels/DatabaseProvider.dart';
+import '../widgets/CustomCategoryButton.dart';
 import '../widgets/CustomNoteCreationPopup.dart';
 import '../widgets/CustomTextField.dart';
 
@@ -17,6 +18,7 @@ class NotesPage extends StatefulWidget {
 
 class _NotesPageState extends State<NotesPage> {
   final controller = TextEditingController();
+  final ValueNotifier<int> selectedCategoryNotifier = ValueNotifier<int>(0);
 
   @override
   void initState() {
@@ -133,6 +135,50 @@ class _NotesPageState extends State<NotesPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               spacing: totalHeight * 0.022,
               children: [
+                // Categories
+                ValueListenableBuilder<int>(
+                    valueListenable: selectedCategoryNotifier,
+                    builder: (context, selectedIndex, child) {
+
+                      return SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        physics: BouncingScrollPhysics(),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          spacing: totalWidth * 0.04,
+                          children: [
+                            // Spacing
+                            SizedBox(width: totalWidth * 0.03),
+
+                            // Category Buttons
+                            CustomCategoryButton(
+                              index: 0,
+                              selectedIndexNotifier: selectedCategoryNotifier,
+                              text: "Notes",
+                              onPressed: () {
+                                selectedCategoryNotifier.value = 0;
+                                // TODO: Alexis: gère tes trucs ici
+                              },
+                            ),
+                            CustomCategoryButton(
+                              index: 1,
+                              selectedIndexNotifier: selectedCategoryNotifier,
+                              text: "Notes Temporaires",
+                              onPressed: () {
+                                selectedCategoryNotifier.value = 1;
+                                // TODO: Alexis: ici aussi mdr
+                              },
+                            ),
+
+                            // Spacing
+                            SizedBox(width: totalWidth * 0.03),
+                          ],
+
+                        ),
+                      );
+                    }
+                ),
+
                 // Note Cards
                 Consumer<DatabaseProvider>(
                   builder: (context, dbProvider, _) {
