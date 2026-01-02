@@ -25,6 +25,10 @@ class _NotesPageState extends State<NotesPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<DatabaseProvider>().setQuery(""); // Reset the search query when the page is opened
+
+      /// Delete temporary notes older than 7 days
+      int dateMinus7Days = DateTime.now().subtract(const Duration(days: 7)).millisecondsSinceEpoch;
+      context.read<DatabaseProvider>().deleteTemporaryNotes(dateMinus7Days);
     });
   }
 

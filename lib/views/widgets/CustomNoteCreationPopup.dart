@@ -204,12 +204,14 @@ class _CustomNoteCreationPopupState extends State<CustomNoteCreationPopup> {
                               title: title,
                               content: content,
                               date: DateTime.now().millisecondsSinceEpoch,
+                              isTemporary: false,
                             ));
                           } else {
                             dbProvider.insertNote(Note(
                               title: title,
                               content: content,
                               date: DateTime.now().millisecondsSinceEpoch,
+                              isTemporary: false,
                             ));
 
                           }

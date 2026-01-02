@@ -264,7 +264,8 @@ class DatabaseProvider with ChangeNotifier {
         id_note INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT NOT NULL,
         content TEXT NOT NULL,
-        date INTEGER NOT NULL
+        date INTEGER NOT NULL,
+        is_temporary INTEGER NOT NULL
       );
     ''');
 
@@ -451,6 +452,22 @@ class DatabaseProvider with ChangeNotifier {
       'Note',
       where: 'id_note = ?',
       whereArgs: [id],
+    );
+    await loadNotes(); // refresh data
+    return result;
+  }
+
+
+  /// Delete all temporary notes that precede a given date (in milliseconds since epoch) from the database.<br>
+  /// @param dateLimit The date limit in milliseconds since epoch.<br>
+  Future<int> deleteTemporaryNotes(int dateLimit) async {
+    if(_db == null) {
+      throw Exception("Database is not initialized");
+    }
+    final result = await _db!.delete(
+      'Note',
+      where: 'is_temporary = ? AND date < ?',
+      whereArgs: [1, dateLimit],
     );
     await loadNotes(); // refresh data
     return result;
