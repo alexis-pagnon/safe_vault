@@ -51,6 +51,9 @@ class _HomePageState extends State<HomePage> {
     final SharedPreferencesRepository sharedPreferences = context.read<SharedPreferencesRepository>();
     final ThemeController themeController = context.read<ThemeController>();
 
+    final pageNavigator = Provider.of<PageNavigatorProvider>(context, listen: false);
+    final dbProvider = Provider.of<DatabaseProvider>(context, listen: false);
+
     return Scaffold(
       backgroundColor: colors.background,
       body: SingleChildScrollView(
@@ -349,12 +352,16 @@ class _HomePageState extends State<HomePage> {
                           // Website
                           CustomCard(svgPath: 'assets/svg/internet.svg', title: 'Sites Web', subtitle: '${db.categoryWebPasswords.length} mots de passe',
                             onPressed: () {
-
+                              pageNavigator.updateFilterPassword(2);
+                              dbProvider.setCategory(2);
+                              pageNavigator.jumpToPage(1);
                           },),
 
                           // Website
                           CustomCard(svgPath: 'assets/svg/social_network.svg', title: 'Réseaux Sociaux', subtitle: '${db.categorySocialPasswords.length} mots de passe', onPressed: () {
-
+                            pageNavigator.updateFilterPassword(3);
+                            dbProvider.setCategory(3);
+                            pageNavigator.jumpToPage(1);
                           },),
                         ],
                       ),
@@ -363,24 +370,28 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           // Apps
                           CustomCard(svgPath: 'assets/svg/smartphone.svg', title: 'Applications', subtitle: '${db.categoryAppPasswords.length} mots de passe', onPressed: () {
-
+                            pageNavigator.updateFilterPassword(4);
+                            dbProvider.setCategory(4);
+                            pageNavigator.jumpToPage(1);
                           },),
 
                           // Website
                           CustomCard(svgPath: 'assets/svg/shopping_cart.svg', title: 'Paiements', subtitle: '${db.categoryPaymentPasswords.length} mots de passe', onPressed: () {
-
+                            pageNavigator.updateFilterPassword(5);
+                            dbProvider.setCategory(5);
+                            pageNavigator.jumpToPage(1);
                           },),
                         ],
                       ),
 
                       // Generate Password Button
                       CustomSvgButton(title: 'Générateur de mots de passe', svgPath: 'assets/svg/stars.svg', onPressed: () {
-                        Provider.of<PageNavigatorProvider>(context, listen: false).jumpToPage(3);
+                        pageNavigator.jumpToPage(3);
                       }),
 
                       // Secured Notes Button
                       CustomSvgButton(title: 'Notes sécurisées', svgPath: 'assets/svg/notes.svg', onPressed: () {
-                        Provider.of<PageNavigatorProvider>(context, listen: false).jumpToPage(4);
+                        pageNavigator.jumpToPage(4);
                       }),
                     ],
                   );
