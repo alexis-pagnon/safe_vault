@@ -205,7 +205,7 @@ class RobustnessProvider with ChangeNotifier {
 
     }
     catch (e) {
-      throw Exception('Failed to check compromised password');
+      throw Exception('Failed to check compromised password: $e');
     }
     return false;
   }
