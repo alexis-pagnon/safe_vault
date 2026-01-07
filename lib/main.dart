@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:no_screenshot/no_screenshot.dart';
 import 'package:safe_vault/viewmodels/PageNavigatorProvider.dart';
 import 'package:safe_vault/viewmodels/RobustnessProvider.dart';
 import 'package:safe_vault/models/SharedPreferencesRepository.dart';
@@ -80,8 +81,25 @@ class AppRoot extends StatelessWidget {
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final _noScreenshot = NoScreenshot.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    try {
+      _noScreenshot.screenshotOff();
+    } catch (e) {
+      print("Error disabling screenshot: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
