@@ -53,7 +53,19 @@ class PageNavigatorProvider extends ChangeNotifier {
     jumpToPage(2);
   }
 
-
+  /// Update the filter for passwords and notify listeners.<br>
+  /// @param filterIndex The index of the filter to apply.
+  /// Filters :
+  /// - 0 = All,
+  /// - 1 = Favorites,
+  /// - 2 = Web,
+  /// - 3 = Social,
+  /// - 4 = App,
+  /// - 5 = Payment,
+  /// - 6 = Strong,
+  /// - 7 = Weak,
+  /// - 8 = Reused,
+  /// - 9 = Compromised
   void updateFilterPassword(int filterIndex) {
     _filterPassword = filterIndex;
     notifyListeners();

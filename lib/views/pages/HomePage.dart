@@ -233,43 +233,62 @@ class _HomePageState extends State<HomePage> {
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
                                   // Compromised
-                                  Container(
-                                    height: totalHeight * 0.095,
-                                    width: totalWidth * 0.33,
-                                    decoration: BoxDecoration(color: colors.pinkLight, borderRadius: BorderRadius.circular(20)),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "${robustnessProvider.compromised}",
-                                          style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500, color: colors.pinkDarker),
-                                        ),
-                                        Text(
-                                          "Compromis",
-                                          style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w400, color: colors.text5),
-                                        ),
-                                      ],
+                                  GestureDetector(
+                                    behavior: HitTestBehavior.opaque,
+                                    onTap: () {
+                                      // Navigate to compromised passwords page
+                                      pageNavigator.updateFilterPassword(9);
+                                      dbProvider.setCategory(6);
+                                      dbProvider.setIdsToFilter(robustnessProvider.compromisedPasswords);
+                                      pageNavigator.jumpToPage(1);
+                                    },
+                                    child: Container(
+                                      height: totalHeight * 0.095,
+                                      width: totalWidth * 0.33,
+                                      decoration: BoxDecoration(color: colors.pinkLight, borderRadius: BorderRadius.circular(20)),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "${robustnessProvider.compromised}",
+                                            style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500, color: colors.pinkDarker),
+                                          ),
+                                          Text(
+                                            "Compromis",
+                                            style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w400, color: colors.text5),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
 
                                   // Weak
-                                  Container(
-                                    height: totalHeight * 0.095,
-                                    width: totalWidth * 0.33,
-                                    decoration: BoxDecoration(color: colors.purpleLight, borderRadius: BorderRadius.circular(20)),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "${robustnessProvider.weak}",
-                                          style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500, color: colors.purpleDarker),
-                                        ),
+                                  GestureDetector(
+                                    behavior: HitTestBehavior.opaque,
+                                    onTap: () {
+                                      pageNavigator.updateFilterPassword(7);
+                                      dbProvider.setCategory(6);
+                                      dbProvider.setIdsToFilter(robustnessProvider.weakPasswords);
+                                      pageNavigator.jumpToPage(1);
+                                    },
+                                    child: Container(
+                                      height: totalHeight * 0.095,
+                                      width: totalWidth * 0.33,
+                                      decoration: BoxDecoration(color: colors.purpleLight, borderRadius: BorderRadius.circular(20)),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "${robustnessProvider.weak}",
+                                            style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500, color: colors.purpleDarker),
+                                          ),
 
-                                        Text(
-                                          "Faibles",
-                                          style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w400, color: colors.text5),
-                                        ),
-                                      ],
+                                          Text(
+                                            "Faibles",
+                                            style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w400, color: colors.text5),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -278,44 +297,62 @@ class _HomePageState extends State<HomePage> {
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
                                   // Reused
-                                  Container(
-                                    height: totalHeight * 0.095,
-                                    width: totalWidth * 0.33,
-                                    decoration: BoxDecoration(color: colors.orangeLight, borderRadius: BorderRadius.circular(20)),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "${robustnessProvider.reused}",
-                                          style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500, color: colors.orangeDarker),
-                                        ),
+                                  GestureDetector(
+                                    behavior: HitTestBehavior.opaque,
+                                    onTap: () {
+                                      pageNavigator.updateFilterPassword(8);
+                                      dbProvider.setCategory(6);
+                                      dbProvider.setIdsToFilter(robustnessProvider.allReusedPasswords);
+                                      pageNavigator.jumpToPage(1);
+                                    },
+                                    child: Container(
+                                      height: totalHeight * 0.095,
+                                      width: totalWidth * 0.33,
+                                      decoration: BoxDecoration(color: colors.orangeLight, borderRadius: BorderRadius.circular(20)),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "${robustnessProvider.reused}",
+                                            style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500, color: colors.orangeDarker),
+                                          ),
 
-                                        Text(
-                                          "Réutilisés",
-                                          style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w400, color: colors.text5),
-                                        ),
-                                      ],
+                                          Text(
+                                            "Réutilisés",
+                                            style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w400, color: colors.text5),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
 
                                   // Safe
-                                  Container(
-                                    height: totalHeight * 0.095,
-                                    width: totalWidth * 0.33,
-                                    decoration: BoxDecoration(color: colors.greenLight, borderRadius: BorderRadius.circular(20)),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "${robustnessProvider.strong}",
-                                          style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500, color: colors.greenDarker),
-                                        ),
+                                  GestureDetector(
+                                    behavior: HitTestBehavior.opaque,
+                                    onTap: () {
+                                      pageNavigator.updateFilterPassword(6);
+                                      dbProvider.setCategory(6);
+                                      dbProvider.setIdsToFilter(robustnessProvider.strongPasswords);
+                                      pageNavigator.jumpToPage(1);
+                                    },
+                                    child: Container(
+                                      height: totalHeight * 0.095,
+                                      width: totalWidth * 0.33,
+                                      decoration: BoxDecoration(color: colors.greenLight, borderRadius: BorderRadius.circular(20)),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "${robustnessProvider.strong}",
+                                            style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500, color: colors.greenDarker),
+                                          ),
 
-                                        Text(
-                                          "Sûrs",
-                                          style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w400, color: colors.text5),
-                                        ),
-                                      ],
+                                          Text(
+                                            "Sûrs",
+                                            style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w400, color: colors.text5),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],

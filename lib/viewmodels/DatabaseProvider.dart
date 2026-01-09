@@ -154,7 +154,7 @@ class DatabaseProvider with ChangeNotifier {
   /// Apply filter (and query) to passwords.<br>
   /// Returns the filtered list of passwords.<br>
   /// Filters : 
-  /// - 0= All,
+  /// - 0 = All,
   /// - 1 = Favorites,
   /// - 2 = Web,
   /// - 3 = Social,

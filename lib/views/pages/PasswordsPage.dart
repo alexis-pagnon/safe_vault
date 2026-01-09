@@ -19,6 +19,9 @@ class PasswordsPage extends StatefulWidget {
 
 class _PasswordsPageState extends State<PasswordsPage> {
   final TextEditingController controller = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  final GlobalKey _scrollKey = GlobalKey();
+  final List<GlobalKey> _cardKeys = List.generate(10, (_) => GlobalKey());
 
 
   @override
@@ -31,6 +34,51 @@ class _PasswordsPageState extends State<PasswordsPage> {
     controller.dispose();
     super.dispose();
   }
+
+
+  /// Get the offset of the card at [index] relative to the scroll view.<br>
+  /// @param index The index of the card.<br>
+  /// @return The offset of the card.
+  double _getCardOffset(int index) {
+    // Get the RenderBox of the selected card and the scroll view.
+    final RenderBox cardBox = _cardKeys[index].currentContext!.findRenderObject() as RenderBox;
+    final RenderBox scrollBox = _scrollKey.currentContext!.findRenderObject() as RenderBox;
+
+    // Calculate the position of the card relative to the scroll view.
+    final cardPosition = cardBox.localToGlobal(Offset.zero, ancestor: scrollBox);
+
+    return _scrollController.offset + cardPosition.dx;
+  }
+
+
+  /// Scroll the scroll view to center the card at [index].<br>
+  /// @param index The index of the card to center.
+  void _scrollToSelected(int index) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_scrollController.hasClients) return;
+      // Get the RenderBox of the scroll view.
+      final RenderBox scrollBox = _scrollKey.currentContext!.findRenderObject() as RenderBox;
+      // Get the width of the scroll view.
+      final double viewportWidth = scrollBox.size.width;
+      // Get the offset of the selected card.
+      final double targetOffset = _getCardOffset(index);
+      // Calculate the desired offset to center the card :
+      // desiredOffset = targetOffset - (half of scroll box displayed) + (half of card width to center)
+      final double desiredOffset = targetOffset - (viewportWidth / 2) + (_cardKeys[index].currentContext!.size!.width / 2);
+
+      // The desired offset need to stay between the min and the max of the scroll.
+      final double minOffset = _scrollController.position.minScrollExtent;
+      final double maxOffset = _scrollController.position.maxScrollExtent;
+      final double clampedOffset = desiredOffset.clamp(minOffset, maxOffset);
+
+      _scrollController.animateTo(
+        clampedOffset,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeIn,
+      );
+    });
+  }
+
 
 
   @override
@@ -101,7 +149,11 @@ class _PasswordsPageState extends State<PasswordsPage> {
                 Consumer<PageNavigatorProvider>(
                   builder: (context, pageNavigator, _) {
 
+                    _scrollToSelected(pageNavigator.filterPassword);
+
                       return SingleChildScrollView(
+                        key: _scrollKey,
+                        controller: _scrollController,
                         scrollDirection: Axis.horizontal,
                         physics: BouncingScrollPhysics(),
                         child: Row(
@@ -113,6 +165,7 @@ class _PasswordsPageState extends State<PasswordsPage> {
 
                             // Category Buttons
                             CustomCategoryButton(
+                              key: _cardKeys[0],
                               index: 0,
                               selectedIndex: pageNavigator.filterPassword,
                               text: "Tous",
@@ -122,6 +175,7 @@ class _PasswordsPageState extends State<PasswordsPage> {
                               },
                             ),
                             CustomCategoryButton(
+                              key: _cardKeys[1],
                               index: 1,
                               selectedIndex: pageNavigator.filterPassword,
                               text: "Favoris",
@@ -131,6 +185,7 @@ class _PasswordsPageState extends State<PasswordsPage> {
                               },
                             ),
                             CustomCategoryButton(
+                              key: _cardKeys[2],
                               index: 2,
                               selectedIndex: pageNavigator.filterPassword,
                               text: "Sites Web",
@@ -140,6 +195,7 @@ class _PasswordsPageState extends State<PasswordsPage> {
                               },
                             ),
                             CustomCategoryButton(
+                              key: _cardKeys[3],
                               index: 3,
                               selectedIndex: pageNavigator.filterPassword,
                               text: "Réseaux Sociaux",
@@ -149,6 +205,7 @@ class _PasswordsPageState extends State<PasswordsPage> {
                               },
                             ),
                             CustomCategoryButton(
+                              key: _cardKeys[4],
                               index: 4,
                               selectedIndex: pageNavigator.filterPassword,
                               text: "Applications",
@@ -158,6 +215,7 @@ class _PasswordsPageState extends State<PasswordsPage> {
                               },
                             ),
                             CustomCategoryButton(
+                              key: _cardKeys[5],
                               index: 5,
                               selectedIndex: pageNavigator.filterPassword,
                               text: "Paiements",
@@ -168,6 +226,7 @@ class _PasswordsPageState extends State<PasswordsPage> {
                             ),
 
                             CustomCategoryButton(
+                              key: _cardKeys[6],
                               index: 6,
                               selectedIndex: pageNavigator.filterPassword,
                               text: "Sûrs",
@@ -177,6 +236,7 @@ class _PasswordsPageState extends State<PasswordsPage> {
                               },
                             ),
                             CustomCategoryButton(
+                              key: _cardKeys[7],
                               index: 7,
                               selectedIndex: pageNavigator.filterPassword,
                               text: "Faibles",
@@ -186,6 +246,7 @@ class _PasswordsPageState extends State<PasswordsPage> {
                               },
                             ),
                             CustomCategoryButton(
+                              key: _cardKeys[8],
                               index: 8,
                               selectedIndex: pageNavigator.filterPassword,
                               text: "Réutilisés",
@@ -195,6 +256,7 @@ class _PasswordsPageState extends State<PasswordsPage> {
                               },
                             ),
                             CustomCategoryButton(
+                              key: _cardKeys[9],
                               index: 9,
                               selectedIndex: pageNavigator.filterPassword,
                               text: "Compromis",
