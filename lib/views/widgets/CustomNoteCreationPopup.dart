@@ -9,6 +9,7 @@ class CustomNoteCreationPopup extends StatefulWidget {
   final String initialTitle;
   final String initialContent;
   final int idNote;
+  final bool initialIsTemporary;
   final bool isEditing;
 
   const CustomNoteCreationPopup({
@@ -16,6 +17,7 @@ class CustomNoteCreationPopup extends StatefulWidget {
     this.initialTitle = "",
     this.initialContent = "",
     this.idNote = -1,
+    this.initialIsTemporary = false,
     this.isEditing = false,
   });
 
@@ -204,14 +206,14 @@ class _CustomNoteCreationPopupState extends State<CustomNoteCreationPopup> {
                               title: title,
                               content: content,
                               date: DateTime.now().millisecondsSinceEpoch,
-                              isTemporary: false,
+                              isTemporary: widget.initialIsTemporary, // TODO remettre valeur de base, ou laisser possibilité de modifier cette valeur ?
                             ));
                           } else {
                             dbProvider.insertNote(Note(
                               title: title,
                               content: content,
                               date: DateTime.now().millisecondsSinceEpoch,
-                              isTemporary: false,
+                              isTemporary: true,
                             ));
 
                           }

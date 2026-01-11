@@ -18,6 +18,7 @@ class RobustnessProvider with ChangeNotifier {
   final List<int> _weakPasswords = [];
   final List<int> _compromisedPasswords = [];
   final List<int> _allReusedPasswords = [];
+  final List<int> _oldPasswords = [];
 
   final Map<String, bool> _compromisedCache = {};
   int _lastPasswordVersion = -1; // Track last password version to detect changes
@@ -27,6 +28,8 @@ class RobustnessProvider with ChangeNotifier {
   int _reused = 0;
   int _strong = 0;
   int _totalScore = 0;
+
+  final int _daysOldThreshold = 180; // days to consider a password old (6 months)
 
   RobustnessProvider(this._databaseProvider) {
     _databaseProvider.addListener(_onDatabaseChanged);
@@ -45,6 +48,7 @@ class RobustnessProvider with ChangeNotifier {
   List<int> get compromisedPasswords => _compromisedPasswords;
   /// List of all reused password IDs (including duplicates)
   List<int> get allReusedPasswords => _allReusedPasswords;
+  List<int> get oldPasswords => _oldPasswords;
 
 
   /// Handle database changes
@@ -53,6 +57,7 @@ class RobustnessProvider with ChangeNotifier {
     final version = _databaseProvider.passwordVersion;
     if (version == _lastPasswordVersion) return;
     _lastPasswordVersion = version;
+    checkOldPasswords();
     analyzeAllPwdRobustness();
   }
 
@@ -61,6 +66,7 @@ class RobustnessProvider with ChangeNotifier {
     if (_databaseProvider.isOpened &&
         _lastPasswordVersion != _databaseProvider.passwordVersion) {
       _lastPasswordVersion = _databaseProvider.passwordVersion;
+      checkOldPasswords();
       analyzeAllPwdRobustness();
     }
   }
@@ -163,6 +169,39 @@ class RobustnessProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+
+
+  /// Check for old passwords.<br>
+  /// Passwords older than [_daysOldThreshold] days are considered old
+  Future<void> checkOldPasswords() async {
+    if(!_databaseProvider.isOpened) {
+      print("Error: Database is not opened");
+      return;
+    }
+
+    try {
+      final passwords = _databaseProvider.passwords;
+      int oldDateTreshold = DateTime.now().subtract(Duration(days: _daysOldThreshold)).millisecondsSinceEpoch;
+
+      for (final p in passwords) {
+        // Old password check
+        if(p.last_update < oldDateTreshold) {
+          if(!_oldPasswords.contains(p.id_pwd!)) {
+            _oldPasswords.add(p.id_pwd!);
+          }
+        }
+        else if(_oldPasswords.contains(p.id_pwd!)) {
+          print("Password ID ${p.id_pwd} is no longer old, removing from old list.");
+          _oldPasswords.remove(p.id_pwd!);
+        }
+      }
+    }
+    catch (e) {
+      print("Error: $e");
+    }
+    notifyListeners();
+  }
+
 
 
   /// Check if a password is compromised with caching

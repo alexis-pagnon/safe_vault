@@ -21,7 +21,7 @@ class _PasswordsPageState extends State<PasswordsPage> {
   final TextEditingController controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _scrollKey = GlobalKey();
-  final List<GlobalKey> _cardKeys = List.generate(10, (_) => GlobalKey());
+  final List<GlobalKey> _cardKeys = List.generate(11, (_) => GlobalKey());
 
 
   @override
@@ -265,7 +265,18 @@ class _PasswordsPageState extends State<PasswordsPage> {
                                 dbProvider.setIdsToFilter(context.read<RobustnessProvider>().compromisedPasswords);
                               },
                             ),
-                            // TODO : Filtre de date de création pour les mdp trop vieux ?
+                            CustomCategoryButton(
+                              key: _cardKeys[10],
+                              index: 10,
+                              selectedIndex: pageNavigator.filterPassword,
+                              text: "Anciens",
+                              onPressed: () {
+                                pageNavigator.updateFilterPassword(10);
+                                dbProvider.setIdsToFilter(context.read<RobustnessProvider>().oldPasswords);
+                              },
+                            ),
+
+
 
                             // Spacing
                             SizedBox(width: totalWidth * 0.03),

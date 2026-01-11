@@ -297,6 +297,7 @@ class DatabaseProvider with ChangeNotifier {
         service TEXT NOT NULL,
         website TEXT,
         is_favorite INTEGER NOT NULL,
+        last_update INTEGER NOT NULL,
         id_category INTEGER,
         FOREIGN KEY (id_category) REFERENCES Category (id_category) ON DELETE CASCADE
       );

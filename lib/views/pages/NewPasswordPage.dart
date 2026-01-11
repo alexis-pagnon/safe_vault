@@ -363,10 +363,12 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                             id_category: selectedIndex.value + 1,
                             website: controllers[2].text,
                             is_favorite: false,
+                            last_update: DateTime.now().millisecondsSinceEpoch,
                           ));
                         }
                         else {
                           // Update the existing password in the database
+                          print((initialPassword!.password != controllers[3].text) ? "password has changed" : "password has not changed");
                           dbProvider.updatePassword(Password(
                             id_pwd: initialPassword!.id_pwd,
                             password: controllers[3].text,
@@ -375,6 +377,7 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                             id_category: selectedIndex.value + 1,
                             website: controllers[2].text,
                             is_favorite: initialPassword!.is_favorite,
+                            last_update: (initialPassword!.password != controllers[3].text) ? DateTime.now().millisecondsSinceEpoch : initialPassword!.last_update, // Update last_update only if the password has changed
                           ));
                         }
 

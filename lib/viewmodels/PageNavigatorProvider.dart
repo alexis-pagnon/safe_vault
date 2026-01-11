@@ -65,7 +65,8 @@ class PageNavigatorProvider extends ChangeNotifier {
   /// - 6 = Strong,
   /// - 7 = Weak,
   /// - 8 = Reused,
-  /// - 9 = Compromised
+  /// - 9 = Compromised,
+  /// - 10 = Old (> 180 days)
   void updateFilterPassword(int filterIndex) {
     _filterPassword = filterIndex;
     notifyListeners();
