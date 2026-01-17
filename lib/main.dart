@@ -22,7 +22,7 @@ Future<void> main() async {
 
   final prefs = await SharedPreferencesWithCache.create(
     cacheOptions: const SharedPreferencesWithCacheOptions(
-      allowList: {'first_time', 'hashed_password', 'theme'},
+      allowList: {'first_time', 'hashed_password', 'theme', 'previous_old_passwords', 'previous_compromised_passwords'},
     ),
   );
   const secureStorage = FlutterSecureStorage();

@@ -14,6 +14,8 @@ import 'package:safe_vault/models/PasswordGenerator.dart';
 class RobustnessProvider with ChangeNotifier {
   final DatabaseProvider _databaseProvider;
 
+  bool _initialized = false;
+
   final List<int> _strongPasswords = [];
   final List<int> _weakPasswords = [];
   final List<int> _compromisedPasswords = [];
@@ -36,6 +38,7 @@ class RobustnessProvider with ChangeNotifier {
     _tryInitialAnalysis();
   }
 
+  bool get initialized => _initialized;
   int get compromised => _compromised;
   int get weak => _weak;
   /// Number of unique reused passwords (not counting duplicates)
@@ -50,6 +53,14 @@ class RobustnessProvider with ChangeNotifier {
   List<int> get allReusedPasswords => _allReusedPasswords;
   List<int> get oldPasswords => _oldPasswords;
 
+  List<int> getNewOldPasswords(List<int> previousOldPasswords) {
+    return _oldPasswords.where((id) => !previousOldPasswords.contains(id)).toList();
+  }
+
+  List<int> getNewCompromisedPasswords(List<int> previousCompromisedPasswords) {
+    return _compromisedPasswords.where((id) => !previousCompromisedPasswords.contains(id)).toList();
+  }
+
 
   /// Handle database changes
   void _onDatabaseChanged() {
@@ -62,12 +73,14 @@ class RobustnessProvider with ChangeNotifier {
   }
 
   /// Try initial analysis if database is already opened
-  void _tryInitialAnalysis() {
+  Future<void> _tryInitialAnalysis() async {
     if (_databaseProvider.isOpened &&
         _lastPasswordVersion != _databaseProvider.passwordVersion) {
       _lastPasswordVersion = _databaseProvider.passwordVersion;
-      checkOldPasswords();
-      analyzeAllPwdRobustness();
+      await checkOldPasswords();
+      await analyzeAllPwdRobustness();
+      _initialized = true;
+      notifyListeners();
     }
   }
 
@@ -181,6 +194,7 @@ class RobustnessProvider with ChangeNotifier {
 
     try {
       final passwords = _databaseProvider.passwords;
+      // TODO : Echanger ici Duration(days: _daysOldThreshold) avec Duration(seconds: 10) pour debugging
       int oldDateTreshold = DateTime.now().subtract(Duration(days: _daysOldThreshold)).millisecondsSinceEpoch;
 
       for (final p in passwords) {
