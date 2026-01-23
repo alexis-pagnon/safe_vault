@@ -134,6 +134,8 @@ class _CustomNoteCreationPopupState extends State<CustomNoteCreationPopup> {
               ),
             ),
 
+            // TODO : Adam : Switch pour choisir si la note est temporaire ou non
+
             // Second Text Field
             SizedBox(
               height: totalHeight * 0.25,
