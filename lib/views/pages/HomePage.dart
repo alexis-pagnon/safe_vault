@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:safe_vault/models/SharedPreferencesRepository.dart';
 import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'package:safe_vault/viewmodels/RobustnessProvider.dart';
 import 'package:safe_vault/views/widgets/CustomCard.dart';
 import 'package:safe_vault/views/widgets/CustomSvgButton.dart';
 import 'package:safe_vault/models/theme/AppColors.dart';
-
-import '../../viewmodels/theme/ThemeController.dart';
+import '../widgets/CustomThemeSwitcher.dart';
 
 class HomePage extends StatefulWidget {
   final PageController pageController;
@@ -48,9 +46,6 @@ class _HomePageState extends State<HomePage> {
     final colors = Theme.of(context).extension<AppColors>()!;
     final totalWidth = MediaQuery.of(context).size.width;
     final totalHeight = MediaQuery.of(context).size.height;
-
-    final SharedPreferencesRepository sharedPreferences = context.read<SharedPreferencesRepository>();
-    final ThemeController themeController = context.read<ThemeController>();
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -94,74 +89,7 @@ class _HomePageState extends State<HomePage> {
                         ),
 
                         // Icon
-                        SizedBox(
-                          height: totalHeight * 0.05,
-                          width: totalHeight * 0.05,
-                          child: Theme(
-                            data: Theme.of(context).copyWith(
-                              splashFactory: NoSplash.splashFactory, // Remove splash effect
-                            ),
-
-                            child: PopupMenuButton<String>(
-                              padding: EdgeInsets.all(0),
-                              icon: Icon(
-                                Icons.menu_rounded,
-                                color: colors.text2,
-                              ),
-
-                              style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(colors.containerBackground1),
-                              ),
-
-                              onSelected: (String value) {
-                                if (value == 'changeTheme') {
-                                  // Toggle theme
-                                  themeController.toggleTheme();
-                                  sharedPreferences.setTheme(themeController.isDark ? 'dark' : 'light');
-                                }
-                                else if (value == 'notifications') {
-                                  // TODO: Jsp comment on fait ici, faut en discuter
-                                }
-                              },
-
-                              color: colors.containerBackground2,
-                              offset: Offset(0, 0),
-                              menuPadding: EdgeInsets.all(0),
-                              borderRadius: BorderRadius.circular(10),
-                              shadowColor: colors.dropShadow,
-                              popUpAnimationStyle: AnimationStyle(curve: Curves.easeInOut, duration: Duration(milliseconds: 500)),
-                              splashRadius: 0.1,
-                              elevation: 150,
-                              clipBehavior: Clip.none,
-
-                              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                                PopupMenuItem<String>(
-                                  value: 'changeTheme',
-                                  child: Text(
-                                    'Changer de thème',
-                                    style: GoogleFonts.montserrat(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500,
-                                      color: colors.text3,
-                                    ),
-                                  ),
-
-                                ),
-                                PopupMenuItem<String>(
-                                  value: 'notifications',
-                                  child: Text(
-                                    'Notifications',
-                                    style: GoogleFonts.montserrat(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500,
-                                      color: colors.text3,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                        CustomThemeSwitcher(),
                       ],
                     ),
                   ),
@@ -177,9 +105,6 @@ class _HomePageState extends State<HomePage> {
 
                           // Update the gradient based on the score
                           currentGradient = _getGradientForScore(robustnessProvider.totalScore, colors);
-
-                          print("score: ${robustnessProvider.totalScore}");
-                          print("gradient: $currentGradient");
 
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.start,
