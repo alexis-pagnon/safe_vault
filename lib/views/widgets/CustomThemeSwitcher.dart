@@ -31,8 +31,8 @@ class _CustomThemeSwitcherState extends State<CustomThemeSwitcher>
     );
 
     _rotation = Tween<double>(
-      begin: 0.0,
-      end: 0.5, // 180deg
+      begin: 0.5, // 180deg
+      end: 0.0,
     ).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
@@ -59,7 +59,6 @@ class _CustomThemeSwitcherState extends State<CustomThemeSwitcher>
         isDark = startIsDark;
       });
 
-      // If app starts in light mode, keep the controller at the end state so the icon isn't rotated incorrectly.
       _controller.value = startIsDark ? 0.0 : 1.0;
     });
 
@@ -137,7 +136,8 @@ class _CustomThemeSwitcherState extends State<CustomThemeSwitcher>
           child: FadeTransition(
             opacity: _opacity,
             child: Icon(
-              isDark ? Icons.dark_mode : Icons.light_mode,
+              // Inverted icons: dark -> sun, light -> moon.
+              isDark ? Icons.light_mode : Icons.dark_mode,
               size: totalHeight * 0.04,
             ),
           ),
