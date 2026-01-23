@@ -7,6 +7,7 @@ class Password {
   final String website;
   final bool is_favorite;
   final int id_category;
+  final int last_update;
 
   Password({
     this.id_pwd,
@@ -16,6 +17,7 @@ class Password {
     String? website,
     bool? is_favorite,
     required this.id_category,
+    required this.last_update,
   }) : this.website = website ?? '',
        this.is_favorite = is_favorite ?? false;
 
@@ -28,6 +30,7 @@ class Password {
       'website': website,
       'is_favorite': is_favorite ? 1 : 0,
       'id_category': id_category,
+      'last_update': last_update,
     };
   }
 
@@ -38,11 +41,12 @@ class Password {
         service = data["service"],
         website = data["website"] ?? '',
         is_favorite = data["is_favorite"] == 1,
-        id_category = data["id_category"];
+        id_category = data["id_category"],
+        last_update = data["last_update"];
 
 
   @override
   String toString() {
-    return 'Password{id_pwd_password: $id_pwd, password: $password, username: $username, service: $service, website: $website, is_favorite: $is_favorite, id_category: $id_category}';
+    return 'Password{id_pwd_password: $id_pwd, password: $password, username: $username, service: $service, website: $website, is_favorite: $is_favorite, id_category: $id_category, last_update: $last_update}';
   }
 }

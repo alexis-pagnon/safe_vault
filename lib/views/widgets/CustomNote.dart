@@ -132,6 +132,7 @@ class CustomNote extends StatelessWidget {
                                         initialTitle: note.title,
                                         initialContent: note.content,
                                         idNote: note.id_note!,
+                                        initialIsTemporary: note.isTemporary,
                                         isEditing: true,
                                       ),
                                     );

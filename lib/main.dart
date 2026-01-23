@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:no_screenshot/no_screenshot.dart';
+import 'package:safe_vault/viewmodels/PageNavigatorProvider.dart';
 import 'package:safe_vault/viewmodels/RobustnessProvider.dart';
 import 'package:safe_vault/models/SharedPreferencesRepository.dart';
 import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
@@ -20,7 +22,7 @@ Future<void> main() async {
 
   final prefs = await SharedPreferencesWithCache.create(
     cacheOptions: const SharedPreferencesWithCacheOptions(
-      allowList: {'first_time', 'hashed_password', 'theme'},
+      allowList: {'first_time', 'hashed_password', 'theme', 'previous_old_passwords', 'previous_compromised_passwords'},
     ),
   );
   const secureStorage = FlutterSecureStorage();
@@ -36,6 +38,8 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => ThemeController(themeMode: sharedPreferencesRepo.theme)),
 
         ChangeNotifierProvider(create: (_) => DatabaseProvider()),
+
+        ChangeNotifierProvider(create: (_) => PageNavigatorProvider()),
 
         Provider.value(value: sharedPreferencesRepo),
         Provider.value(value: secureStorageRepo),
@@ -77,8 +81,25 @@ class AppRoot extends StatelessWidget {
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final _noScreenshot = NoScreenshot.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    try {
+      _noScreenshot.screenshotOff();
+    } catch (e) {
+      print("Error disabling screenshot: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

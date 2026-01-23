@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:safe_vault/models/PasswordGenerator.dart';
+import 'package:safe_vault/viewmodels/PageNavigatorProvider.dart';
 import 'package:safe_vault/views/widgets/CustomLittleCard.dart';
 import 'package:safe_vault/views/widgets/CustomSvgButton.dart';
 import 'package:safe_vault/views/widgets/CustomTextField.dart';
@@ -12,13 +13,9 @@ import '../widgets/CustomButton.dart';
 import '../widgets/CustomStrengthWidget.dart';
 
 class NewPasswordPage extends StatefulWidget {
-  final PageController? pageController;
-  final Password? initialPassword;
 
   const NewPasswordPage({
     super.key,
-    this.pageController,
-    this.initialPassword,
   });
 
   @override
@@ -28,6 +25,8 @@ class NewPasswordPage extends StatefulWidget {
 class _NewPasswordPageState extends State<NewPasswordPage> {
   final ValueNotifier<int> selectedIndex = ValueNotifier<int>(0);
 
+  Password? initialPassword;
+
   // Creation of a list of 4 TextEditingController for the 4 TextFields
   List<TextEditingController> controllers = List.generate(4, (index) => TextEditingController());
 
@@ -35,18 +34,6 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
   @override
   void initState() {
     super.initState();
-    // If an initialPassword is provided, pre-fill the TextFields
-    if (widget.initialPassword != null) {
-      controllers[0].text = widget.initialPassword!.service;
-      controllers[1].text = widget.initialPassword!.username;
-      controllers[2].text = widget.initialPassword!.website;
-
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        controllers[3].text = widget.initialPassword!.password;
-      });
-
-      selectedIndex.value = widget.initialPassword!.id_category - 1;
-    }
   }
 
 
@@ -58,6 +45,39 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
     }
     selectedIndex.dispose();
     super.dispose();
+  }
+
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+
+    // If we are in update mode, fill the TextFields with the password data
+    final password = context.watch<PageNavigatorProvider>().passwordToUpdate;
+
+    if (password != null) {
+      controllers[0].text = password.service;
+      controllers[1].text = password.username;
+      controllers[2].text = password.website;
+      // addPostFrameCallback -> force update the password strength widget
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        controllers[3].text = password.password;
+      });
+
+      selectedIndex.value = password.id_category - 1;
+
+      initialPassword = password;
+
+    } else {
+      controllers[0].clear();
+      controllers[1].clear();
+      controllers[2].clear();
+      controllers[3].clear();
+      selectedIndex.value = 0;
+
+      initialPassword = null;
+    }
   }
 
   @override
@@ -334,7 +354,7 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                       title: "Enregistrer",
                       onPressed: () {
 
-                        if(widget.initialPassword == null) {
+                        if(initialPassword == null) {
                           // Insert the new password into the database
                           dbProvider.insertPassword(Password(
                             password: controllers[3].text,
@@ -343,18 +363,21 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                             id_category: selectedIndex.value + 1,
                             website: controllers[2].text,
                             is_favorite: false,
+                            last_update: DateTime.now().millisecondsSinceEpoch,
                           ));
                         }
                         else {
                           // Update the existing password in the database
+                          print((initialPassword!.password != controllers[3].text) ? "password has changed" : "password has not changed");
                           dbProvider.updatePassword(Password(
-                            id_pwd: widget.initialPassword!.id_pwd,
+                            id_pwd: initialPassword!.id_pwd,
                             password: controllers[3].text,
                             username: controllers[1].text,
                             service: controllers[0].text,
                             id_category: selectedIndex.value + 1,
                             website: controllers[2].text,
-                            is_favorite: widget.initialPassword!.is_favorite,
+                            is_favorite: initialPassword!.is_favorite,
+                            last_update: (initialPassword!.password != controllers[3].text) ? DateTime.now().millisecondsSinceEpoch : initialPassword!.last_update, // Update last_update only if the password has changed
                           ));
                         }
 
@@ -365,12 +388,8 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                         }
 
                         // Return to the home page
-                        if(widget.pageController != null) {
-                          widget.pageController!.jumpToPage(0);
-                        }
-                        else {
-                          Navigator.pop(context);
-                        }
+                        Provider.of<PageNavigatorProvider>(context, listen: false).jumpToPage(1);
+
                       },
                   ),
                 ],

@@ -14,10 +14,13 @@ import 'package:safe_vault/models/PasswordGenerator.dart';
 class RobustnessProvider with ChangeNotifier {
   final DatabaseProvider _databaseProvider;
 
+  bool _initialized = false;
+
   final List<int> _strongPasswords = [];
   final List<int> _weakPasswords = [];
   final List<int> _compromisedPasswords = [];
   final List<int> _allReusedPasswords = [];
+  final List<int> _oldPasswords = [];
 
   final Map<String, bool> _compromisedCache = {};
   int _lastPasswordVersion = -1; // Track last password version to detect changes
@@ -28,11 +31,14 @@ class RobustnessProvider with ChangeNotifier {
   int _strong = 0;
   int _totalScore = 0;
 
+  final int _daysOldThreshold = 180; // days to consider a password old (6 months)
+
   RobustnessProvider(this._databaseProvider) {
     _databaseProvider.addListener(_onDatabaseChanged);
     _tryInitialAnalysis();
   }
 
+  bool get initialized => _initialized;
   int get compromised => _compromised;
   int get weak => _weak;
   /// Number of unique reused passwords (not counting duplicates)
@@ -45,6 +51,15 @@ class RobustnessProvider with ChangeNotifier {
   List<int> get compromisedPasswords => _compromisedPasswords;
   /// List of all reused password IDs (including duplicates)
   List<int> get allReusedPasswords => _allReusedPasswords;
+  List<int> get oldPasswords => _oldPasswords;
+
+  List<int> getNewOldPasswords(List<int> previousOldPasswords) {
+    return _oldPasswords.where((id) => !previousOldPasswords.contains(id)).toList();
+  }
+
+  List<int> getNewCompromisedPasswords(List<int> previousCompromisedPasswords) {
+    return _compromisedPasswords.where((id) => !previousCompromisedPasswords.contains(id)).toList();
+  }
 
 
   /// Handle database changes
@@ -53,15 +68,19 @@ class RobustnessProvider with ChangeNotifier {
     final version = _databaseProvider.passwordVersion;
     if (version == _lastPasswordVersion) return;
     _lastPasswordVersion = version;
+    checkOldPasswords();
     analyzeAllPwdRobustness();
   }
 
   /// Try initial analysis if database is already opened
-  void _tryInitialAnalysis() {
+  Future<void> _tryInitialAnalysis() async {
     if (_databaseProvider.isOpened &&
         _lastPasswordVersion != _databaseProvider.passwordVersion) {
       _lastPasswordVersion = _databaseProvider.passwordVersion;
-      analyzeAllPwdRobustness();
+      await checkOldPasswords();
+      await analyzeAllPwdRobustness();
+      _initialized = true;
+      notifyListeners();
     }
   }
 
@@ -165,6 +184,40 @@ class RobustnessProvider with ChangeNotifier {
   }
 
 
+  /// Check for old passwords.<br>
+  /// Passwords older than [_daysOldThreshold] days are considered old
+  Future<void> checkOldPasswords() async {
+    if(!_databaseProvider.isOpened) {
+      print("Error: Database is not opened");
+      return;
+    }
+
+    try {
+      final passwords = _databaseProvider.passwords;
+      // TODO : Echanger ici Duration(days: _daysOldThreshold) avec Duration(seconds: 10) pour debugging
+      int oldDateTreshold = DateTime.now().subtract(Duration(days: _daysOldThreshold)).millisecondsSinceEpoch;
+
+      for (final p in passwords) {
+        // Old password check
+        if(p.last_update < oldDateTreshold) {
+          if(!_oldPasswords.contains(p.id_pwd!)) {
+            _oldPasswords.add(p.id_pwd!);
+          }
+        }
+        else if(_oldPasswords.contains(p.id_pwd!)) {
+          print("Password ID ${p.id_pwd} is no longer old, removing from old list.");
+          _oldPasswords.remove(p.id_pwd!);
+        }
+      }
+    }
+    catch (e) {
+      print("Error: $e");
+    }
+    notifyListeners();
+  }
+
+
+
   /// Check if a password is compromised with caching
   Future<bool> isCompromisedCached(String password) async {
     if (_compromisedCache.containsKey(password)) {
@@ -205,7 +258,7 @@ class RobustnessProvider with ChangeNotifier {
 
     }
     catch (e) {
-      throw Exception('Failed to check compromised password');
+      throw Exception('Failed to check compromised password: $e');
     }
     return false;
   }

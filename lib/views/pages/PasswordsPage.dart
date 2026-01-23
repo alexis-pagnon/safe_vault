@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:safe_vault/viewmodels/PageNavigatorProvider.dart';
 import 'package:safe_vault/viewmodels/RobustnessProvider.dart';
 import 'package:safe_vault/views/widgets/CustomCategoryButton.dart';
 import 'package:safe_vault/views/widgets/CustomPasswordCard.dart';
@@ -9,6 +10,7 @@ import 'package:safe_vault/models/theme/AppColors.dart';
 import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
 
 class PasswordsPage extends StatefulWidget {
+
   const PasswordsPage({super.key});
 
   @override
@@ -17,15 +19,14 @@ class PasswordsPage extends StatefulWidget {
 
 class _PasswordsPageState extends State<PasswordsPage> {
   final TextEditingController controller = TextEditingController();
-  final ValueNotifier<int> selectedCategoryNotifier = ValueNotifier<int>(0);
+  final ScrollController _scrollController = ScrollController();
+  final GlobalKey _scrollKey = GlobalKey();
+  final List<GlobalKey> _cardKeys = List.generate(11, (_) => GlobalKey());
 
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<DatabaseProvider>().setQuery(""); // Reset the search query when the page is opened
-    });
   }
 
   @override
@@ -35,6 +36,51 @@ class _PasswordsPageState extends State<PasswordsPage> {
   }
 
 
+  /// Get the offset of the card at [index] relative to the scroll view.<br>
+  /// @param index The index of the card.<br>
+  /// @return The offset of the card.
+  double _getCardOffset(int index) {
+    // Get the RenderBox of the selected card and the scroll view.
+    final RenderBox cardBox = _cardKeys[index].currentContext!.findRenderObject() as RenderBox;
+    final RenderBox scrollBox = _scrollKey.currentContext!.findRenderObject() as RenderBox;
+
+    // Calculate the position of the card relative to the scroll view.
+    final cardPosition = cardBox.localToGlobal(Offset.zero, ancestor: scrollBox);
+
+    return _scrollController.offset + cardPosition.dx;
+  }
+
+
+  /// Scroll the scroll view to center the card at [index].<br>
+  /// @param index The index of the card to center.
+  void _scrollToSelected(int index) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_scrollController.hasClients) return;
+      // Get the RenderBox of the scroll view.
+      final RenderBox scrollBox = _scrollKey.currentContext!.findRenderObject() as RenderBox;
+      // Get the width of the scroll view.
+      final double viewportWidth = scrollBox.size.width;
+      // Get the offset of the selected card.
+      final double targetOffset = _getCardOffset(index);
+      // Calculate the desired offset to center the card :
+      // desiredOffset = targetOffset - (half of scroll box displayed) + (half of card width to center)
+      final double desiredOffset = targetOffset - (viewportWidth / 2) + (_cardKeys[index].currentContext!.size!.width / 2);
+
+      // The desired offset need to stay between the min and the max of the scroll.
+      final double minOffset = _scrollController.position.minScrollExtent;
+      final double maxOffset = _scrollController.position.maxScrollExtent;
+      final double clampedOffset = desiredOffset.clamp(minOffset, maxOffset);
+
+      _scrollController.animateTo(
+        clampedOffset,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeIn,
+      );
+    });
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>()!;
@@ -42,7 +88,6 @@ class _PasswordsPageState extends State<PasswordsPage> {
     final totalHeight = MediaQuery.of(context).size.height;
 
     final dbProvider = Provider.of<DatabaseProvider>(context, listen: false);
-
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -101,11 +146,14 @@ class _PasswordsPageState extends State<PasswordsPage> {
               spacing: totalHeight * 0.022,
               children: [
                 // Categories
-                ValueListenableBuilder<int>(
-                    valueListenable: selectedCategoryNotifier,
-                    builder: (context, selectedIndex, child) {
+                Consumer<PageNavigatorProvider>(
+                  builder: (context, pageNavigator, _) {
+
+                    _scrollToSelected(pageNavigator.filterPassword);
 
                       return SingleChildScrollView(
+                        key: _scrollKey,
+                        controller: _scrollController,
                         scrollDirection: Axis.horizontal,
                         physics: BouncingScrollPhysics(),
                         child: Row(
@@ -117,107 +165,118 @@ class _PasswordsPageState extends State<PasswordsPage> {
 
                             // Category Buttons
                             CustomCategoryButton(
+                              key: _cardKeys[0],
                               index: 0,
-                              selectedIndexNotifier: selectedCategoryNotifier,
+                              selectedIndex: pageNavigator.filterPassword,
                               text: "Tous",
                               onPressed: () {
-                                selectedCategoryNotifier.value = 0;
-                                print("Tous");
+                                pageNavigator.updateFilterPassword(0);
                                 dbProvider.setCategory(0);
                               },
                             ),
                             CustomCategoryButton(
+                              key: _cardKeys[1],
                               index: 1,
-                              selectedIndexNotifier: selectedCategoryNotifier,
+                              selectedIndex: pageNavigator.filterPassword,
                               text: "Favoris",
                               onPressed: () {
-                                selectedCategoryNotifier.value = 1;
-                                print("Favoris");
+                                pageNavigator.updateFilterPassword(1);
                                 dbProvider.setCategory(1);
                               },
                             ),
                             CustomCategoryButton(
+                              key: _cardKeys[2],
                               index: 2,
-                              selectedIndexNotifier: selectedCategoryNotifier,
+                              selectedIndex: pageNavigator.filterPassword,
                               text: "Sites Web",
                               onPressed: () {
-                                selectedCategoryNotifier.value = 2;
-                                print("Sites Web");
+                                pageNavigator.updateFilterPassword(2);
                                 dbProvider.setCategory(2);
                               },
                             ),
                             CustomCategoryButton(
+                              key: _cardKeys[3],
                               index: 3,
-                              selectedIndexNotifier: selectedCategoryNotifier,
+                              selectedIndex: pageNavigator.filterPassword,
                               text: "Réseaux Sociaux",
                               onPressed: () {
-                                selectedCategoryNotifier.value = 3;
-                                print("Réseaux Sociaux");
+                                pageNavigator.updateFilterPassword(3);
                                 dbProvider.setCategory(3);
                               },
                             ),
                             CustomCategoryButton(
+                              key: _cardKeys[4],
                               index: 4,
-                              selectedIndexNotifier: selectedCategoryNotifier,
+                              selectedIndex: pageNavigator.filterPassword,
                               text: "Applications",
                               onPressed: () {
-                                selectedCategoryNotifier.value = 4;
-                                print("Applications");
+                                pageNavigator.updateFilterPassword(4);
                                 dbProvider.setCategory(4);
                               },
                             ),
                             CustomCategoryButton(
+                              key: _cardKeys[5],
                               index: 5,
-                              selectedIndexNotifier: selectedCategoryNotifier,
+                              selectedIndex: pageNavigator.filterPassword,
                               text: "Paiements",
                               onPressed: () {
-                                selectedCategoryNotifier.value = 5;
-                                print("Paiements");
+                                pageNavigator.updateFilterPassword(5);
                                 dbProvider.setCategory(5);
                               },
                             ),
 
                             CustomCategoryButton(
+                              key: _cardKeys[6],
                               index: 6,
-                              selectedIndexNotifier: selectedCategoryNotifier,
+                              selectedIndex: pageNavigator.filterPassword,
                               text: "Sûrs",
                               onPressed: () {
-                                selectedCategoryNotifier.value = 6;
-                                print("Sûrs");
+                                pageNavigator.updateFilterPassword(6);
                                 dbProvider.setIdsToFilter(context.read<RobustnessProvider>().strongPasswords);
                               },
                             ),
                             CustomCategoryButton(
+                              key: _cardKeys[7],
                               index: 7,
-                              selectedIndexNotifier: selectedCategoryNotifier,
+                              selectedIndex: pageNavigator.filterPassword,
                               text: "Faibles",
                               onPressed: () {
-                                selectedCategoryNotifier.value = 7;
-                                print("Faibles");
+                                pageNavigator.updateFilterPassword(7);
                                 dbProvider.setIdsToFilter(context.read<RobustnessProvider>().weakPasswords);
                               },
                             ),
                             CustomCategoryButton(
+                              key: _cardKeys[8],
                               index: 8,
-                              selectedIndexNotifier: selectedCategoryNotifier,
+                              selectedIndex: pageNavigator.filterPassword,
                               text: "Réutilisés",
                               onPressed: () {
-                                selectedCategoryNotifier.value = 8;
-                                print("Réutilisés");
+                                pageNavigator.updateFilterPassword(8);
                                 dbProvider.setIdsToFilter(context.read<RobustnessProvider>().allReusedPasswords);
                               },
                             ),
                             CustomCategoryButton(
+                              key: _cardKeys[9],
                               index: 9,
-                              selectedIndexNotifier: selectedCategoryNotifier,
+                              selectedIndex: pageNavigator.filterPassword,
                               text: "Compromis",
                               onPressed: () {
-                                selectedCategoryNotifier.value = 9;
-                                print("Compromis");
+                                pageNavigator.updateFilterPassword(9);
                                 dbProvider.setIdsToFilter(context.read<RobustnessProvider>().compromisedPasswords);
                               },
                             ),
-                            // TODO : Filtre de date de création pour les mdp trop vieux ?
+                            CustomCategoryButton(
+                              key: _cardKeys[10],
+                              index: 10,
+                              selectedIndex: pageNavigator.filterPassword,
+                              text: "Anciens",
+                              onPressed: () {
+                                pageNavigator.updateFilterPassword(10);
+                                dbProvider.setIdsToFilter(context.read<RobustnessProvider>().oldPasswords);
+                              },
+                            ),
+
+
 
                             // Spacing
                             SizedBox(width: totalWidth * 0.03),

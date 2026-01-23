@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:safe_vault/viewmodels/PageNavigatorProvider.dart';
 import 'package:safe_vault/views/widgets/CustomNote.dart';
 
 import '../../models/theme/AppColors.dart';
@@ -18,14 +19,11 @@ class NotesPage extends StatefulWidget {
 
 class _NotesPageState extends State<NotesPage> {
   final controller = TextEditingController();
-  final ValueNotifier<int> selectedCategoryNotifier = ValueNotifier<int>(0);
+
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<DatabaseProvider>().setQuery(""); // Reset the search query when the page is opened
-    });
   }
 
   @override
@@ -33,6 +31,8 @@ class _NotesPageState extends State<NotesPage> {
     controller.dispose();
     super.dispose();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -136,9 +136,8 @@ class _NotesPageState extends State<NotesPage> {
               spacing: totalHeight * 0.022,
               children: [
                 // Categories
-                ValueListenableBuilder<int>(
-                    valueListenable: selectedCategoryNotifier,
-                    builder: (context, selectedIndex, child) {
+                Consumer<PageNavigatorProvider>(
+                    builder: (context, pageNavigator, _) {
 
                       return SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
@@ -153,20 +152,20 @@ class _NotesPageState extends State<NotesPage> {
                             // Category Buttons
                             CustomCategoryButton(
                               index: 0,
-                              selectedIndexNotifier: selectedCategoryNotifier,
+                              selectedIndex: pageNavigator.filterNote,
                               text: "Notes",
                               onPressed: () {
-                                selectedCategoryNotifier.value = 0;
-                                // TODO: Alexis: gère tes trucs ici
+                                pageNavigator.updateFilterNote(0);
+                                dbProvider.setNoteCategory(0);
                               },
                             ),
                             CustomCategoryButton(
                               index: 1,
-                              selectedIndexNotifier: selectedCategoryNotifier,
+                              selectedIndex: pageNavigator.filterNote,
                               text: "Notes Temporaires",
                               onPressed: () {
-                                selectedCategoryNotifier.value = 1;
-                                // TODO: Alexis: ici aussi mdr
+                                pageNavigator.updateFilterNote(1);
+                                dbProvider.setNoteCategory(1);
                               },
                             ),
 

@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
-import 'package:safe_vault/views/pages/NewPasswordPage.dart';
+import 'package:safe_vault/viewmodels/PageNavigatorProvider.dart';
 import 'package:safe_vault/views/widgets/CustomTextField.dart';
 import '../../models/database/Password.dart';
 import '../../models/theme/AppColors.dart';
@@ -151,9 +151,9 @@ class _CustomPasswordCardState extends State<CustomPasswordCard> {
                             
                               onSelected: (String value) {
                                 if (value == 'edit') {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                                    NewPasswordPage(initialPassword: widget.password)),
-                                  );
+
+                                  Provider.of<PageNavigatorProvider>(context, listen: false).jumpToUpdatePassword(widget.password);
+
                                 } else if (value == 'delete') {
                                   dbProvider.deletePassword(widget.password.id_pwd!);
                                 }
