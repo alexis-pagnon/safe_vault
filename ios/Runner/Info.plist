@@ -45,5 +45,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>keychain-access-groups</key>
+    <array>
+      <string>$(AppIdentifierPrefix)fr.insa.safe_vault</string>
+    </array>
 </dict>
 </plist>
