@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:safe_vault/models/database/Note.dart';
 import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
+import 'package:safe_vault/views/widgets/CustomToggleSwitch.dart';
 import '../../models/theme/AppColors.dart';
 
 class CustomNoteCreationPopup extends StatefulWidget {
@@ -29,12 +30,14 @@ class _CustomNoteCreationPopupState extends State<CustomNoteCreationPopup> {
   late final TextEditingController titleController;
   late final TextEditingController contentController;
   bool _isFormValid = false;
+  bool _isTemporary = false;
 
   @override
   void initState() {
     super.initState();
     titleController = TextEditingController(text: widget.initialTitle);
     contentController = TextEditingController(text: widget.initialContent);
+    _isTemporary = widget.initialIsTemporary;
 
     _recomputeFormValidity();
     titleController.addListener(_recomputeFormValidity);
@@ -47,7 +50,8 @@ class _CustomNoteCreationPopupState extends State<CustomNoteCreationPopup> {
 
     if(widget.isEditing && isValid){
       isValid = titleController.text.trim() != widget.initialTitle.trim() ||
-            contentController.text.trim() != widget.initialContent.trim() ;
+            contentController.text.trim() != widget.initialContent.trim() ||
+            _isTemporary != widget.initialIsTemporary;
     }
 
     if (_isFormValid != isValid) {
@@ -134,11 +138,9 @@ class _CustomNoteCreationPopupState extends State<CustomNoteCreationPopup> {
               ),
             ),
 
-            // TODO : Adam : Switch pour choisir si la note est temporaire ou non
-
             // Second Text Field
             SizedBox(
-              height: totalHeight * 0.25,
+              height: totalHeight * 0.20,
               child: TextField(
                 controller: contentController,
                 maxLines: null,
@@ -164,6 +166,37 @@ class _CustomNoteCreationPopupState extends State<CustomNoteCreationPopup> {
                   color: colors.text3,
                 ),
               ),
+            ),
+
+            // Temporary Note Toggle + Title
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Title
+                Text(
+                  'Note temporaire',
+                  style: GoogleFonts.montserrat(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: colors.text3,
+                  ),
+                ),
+
+                // Toggle Switch
+                CustomToggleSwitch(
+                  initialValue: widget.initialIsTemporary ? 1 : 0,
+                  thumbColor: [Color(0xFFCC3C3C), Color(0xFF5C9828)],
+                  circleColor:[Color(0xFFFF4B4B), Color(0xFF77C433)],
+                  svgColor: [Colors.white, Colors.white],
+                  icons: [Icons.close_rounded, Icons.check_rounded],
+                  onToggle: () {
+                    setState(() {
+                      _isTemporary = !_isTemporary;
+                      _recomputeFormValidity();
+                    });
+                  },
+                ),
+              ],
             ),
 
             // Buttons
@@ -201,6 +234,7 @@ class _CustomNoteCreationPopupState extends State<CustomNoteCreationPopup> {
                         ? () async {
                           final title = titleController.text;
                           final content = contentController.text;
+                          print("isTemporary: $_isTemporary");
 
                           if(widget.isEditing) {
                             dbProvider.updateNote(Note(
@@ -208,14 +242,14 @@ class _CustomNoteCreationPopupState extends State<CustomNoteCreationPopup> {
                               title: title,
                               content: content,
                               date: DateTime.now().millisecondsSinceEpoch,
-                              isTemporary: widget.initialIsTemporary, // TODO remettre valeur de base, ou laisser possibilité de modifier cette valeur ?
+                              isTemporary: _isTemporary,
                             ));
                           } else {
                             dbProvider.insertNote(Note(
                               title: title,
                               content: content,
                               date: DateTime.now().millisecondsSinceEpoch,
-                              isTemporary: true,
+                              isTemporary: _isTemporary,
                             ));
 
                           }

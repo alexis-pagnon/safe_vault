@@ -23,7 +23,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<Color> currentGradient = [];
   double globalOpacity = 0;
-  double globalPosition = -10;
 
   @override
   void initState() {
@@ -31,7 +30,6 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         globalOpacity = 1;
-        globalPosition = 0;
       });
     });
   }

@@ -143,8 +143,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
 Widget _navItem(IconData icon, bool active, BuildContext context) {
   final colors = Theme.of(context).extension<AppColors>()!;
 
-  return AnimatedContainer(
-    duration: const Duration(milliseconds: 200),
+  return Container(
     padding: EdgeInsets.all(12),
     decoration: BoxDecoration(
       gradient: LinearGradient(
