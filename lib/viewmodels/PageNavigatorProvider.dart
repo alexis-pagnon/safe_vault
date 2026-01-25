@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:safe_vault/models/database/Password.dart';
 
@@ -20,11 +19,18 @@ class PageNavigatorProvider extends ChangeNotifier {
   /// Navigate to a specific page in the PageView.<br>
   /// @param pageIndex The index of the page to navigate to.
   void jumpToPage(int pageIndex) {
-    _pageController.animateToPage(
-      pageIndex,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
+    // Navigate to the specified page
+    _pageController.jumpToPage(pageIndex);
+
+    // Update current page index
+    _currentPage = pageIndex;
+
+    // Leaving the modification of a password -> wipe sensitive state
+    if (pageIndex != 2) {
+      _passwordToUpdate = null;
+    }
+
+    notifyListeners();
   }
 
 

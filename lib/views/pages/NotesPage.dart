@@ -19,11 +19,17 @@ class NotesPage extends StatefulWidget {
 
 class _NotesPageState extends State<NotesPage> {
   final controller = TextEditingController();
+  double opacity = 0;
 
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        opacity = 1;
+      });
+    });
   }
 
   @override
@@ -172,7 +178,6 @@ class _NotesPageState extends State<NotesPage> {
                             // Spacing
                             SizedBox(width: totalWidth * 0.03),
                           ],
-
                         ),
                       );
                     }
@@ -196,9 +201,20 @@ class _NotesPageState extends State<NotesPage> {
                     }
                     return Column(
                       spacing: totalHeight * 0.025,
-                      children: notes.map((note) => CustomNote(
-                        note: note,
-                      )).toList(),
+                      children: notes.asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final note = entry.value;
+                        final position = index + 1;
+
+                        return AnimatedOpacity(
+                          duration: Duration(milliseconds: 400 + position * 100),
+                          curve: Curves.easeInOut,
+                          opacity: opacity,
+                          child: CustomNote(
+                            note: note,
+                          ),
+                        );
+                      }).toList(),
                     );
                   },
                 ),

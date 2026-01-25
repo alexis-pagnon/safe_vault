@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:safe_vault/models/SharedPreferencesRepository.dart';
 import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
 import 'package:safe_vault/viewmodels/PageNavigatorProvider.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
@@ -9,8 +8,7 @@ import 'package:safe_vault/viewmodels/RobustnessProvider.dart';
 import 'package:safe_vault/views/widgets/CustomCard.dart';
 import 'package:safe_vault/views/widgets/CustomSvgButton.dart';
 import 'package:safe_vault/models/theme/AppColors.dart';
-
-import '../../viewmodels/theme/ThemeController.dart';
+import '../widgets/CustomThemeSwitcher.dart';
 
 class HomePage extends StatefulWidget {
 
@@ -24,10 +22,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<Color> currentGradient = [];
+  double globalOpacity = 0;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        globalOpacity = 1;
+      });
+    });
   }
 
   List<Color> _getGradientForScore(int score, AppColors colors) {
@@ -47,9 +51,6 @@ class _HomePageState extends State<HomePage> {
     final colors = Theme.of(context).extension<AppColors>()!;
     final totalWidth = MediaQuery.of(context).size.width;
     final totalHeight = MediaQuery.of(context).size.height;
-
-    final SharedPreferencesRepository sharedPreferences = context.read<SharedPreferencesRepository>();
-    final ThemeController themeController = context.read<ThemeController>();
 
     final pageNavigator = Provider.of<PageNavigatorProvider>(context, listen: false);
     final dbProvider = Provider.of<DatabaseProvider>(context, listen: false);
@@ -96,74 +97,7 @@ class _HomePageState extends State<HomePage> {
                         ),
 
                         // Icon
-                        SizedBox(
-                          height: totalHeight * 0.05,
-                          width: totalHeight * 0.05,
-                          child: Theme(
-                            data: Theme.of(context).copyWith(
-                              splashFactory: NoSplash.splashFactory, // Remove splash effect
-                            ),
-
-                            child: PopupMenuButton<String>(
-                              padding: EdgeInsets.all(0),
-                              icon: Icon(
-                                Icons.menu_rounded,
-                                color: colors.text2,
-                              ),
-
-                              style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(colors.containerBackground1),
-                              ),
-
-                              onSelected: (String value) {
-                                if (value == 'changeTheme') {
-                                  // Toggle theme
-                                  themeController.toggleTheme();
-                                  sharedPreferences.setTheme(themeController.isDark ? 'dark' : 'light');
-                                }
-                                else if (value == 'notifications') {
-                                  // TODO: Jsp comment on fait ici, faut en discuter
-                                }
-                              },
-
-                              color: colors.containerBackground2,
-                              offset: Offset(0, 0),
-                              menuPadding: EdgeInsets.all(0),
-                              borderRadius: BorderRadius.circular(10),
-                              shadowColor: colors.dropShadow,
-                              popUpAnimationStyle: AnimationStyle(curve: Curves.easeInOut, duration: Duration(milliseconds: 500)),
-                              splashRadius: 0.1,
-                              elevation: 150,
-                              clipBehavior: Clip.none,
-
-                              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                                PopupMenuItem<String>(
-                                  value: 'changeTheme',
-                                  child: Text(
-                                    'Changer de thème',
-                                    style: GoogleFonts.montserrat(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500,
-                                      color: colors.text3,
-                                    ),
-                                  ),
-
-                                ),
-                                PopupMenuItem<String>(
-                                  value: 'notifications',
-                                  child: Text(
-                                    'Notifications',
-                                    style: GoogleFonts.montserrat(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500,
-                                      color: colors.text3,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                        CustomThemeSwitcher(),
                       ],
                     ),
                   ),
@@ -179,9 +113,6 @@ class _HomePageState extends State<HomePage> {
 
                           // Update the gradient based on the score
                           currentGradient = _getGradientForScore(robustnessProvider.totalScore, colors);
-
-                          print("score: ${robustnessProvider.totalScore}");
-                          print("gradient: $currentGradient");
 
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -233,61 +164,71 @@ class _HomePageState extends State<HomePage> {
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
                                   // Compromised
-                                  GestureDetector(
-                                    behavior: HitTestBehavior.opaque,
-                                    onTap: () {
-                                      // Navigate to compromised passwords page
-                                      pageNavigator.updateFilterPassword(9);
-                                      dbProvider.setCategory(6);
-                                      dbProvider.setIdsToFilter(robustnessProvider.compromisedPasswords);
-                                      pageNavigator.jumpToPage(1);
-                                    },
-                                    child: Container(
-                                      height: totalHeight * 0.095,
-                                      width: totalWidth * 0.33,
-                                      decoration: BoxDecoration(color: colors.pinkLight, borderRadius: BorderRadius.circular(20)),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "${robustnessProvider.compromised}",
-                                            style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500, color: colors.pinkDarker),
-                                          ),
-                                          Text(
-                                            "Compromis",
-                                            style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w400, color: colors.text5),
-                                          ),
-                                        ],
+                                  AnimatedOpacity(
+                                    opacity: globalOpacity,
+                                    curve: Curves.easeIn,
+                                    duration: const Duration(milliseconds: 300),
+                                    child: GestureDetector(
+                                      behavior: HitTestBehavior.opaque,
+                                      onTap: () {
+                                        // Navigate to compromised passwords page
+                                        pageNavigator.updateFilterPassword(9);
+                                        dbProvider.setCategory(6);
+                                        dbProvider.setIdsToFilter(robustnessProvider.compromisedPasswords);
+                                        pageNavigator.jumpToPage(1);
+                                      },
+                                      child: Container(
+                                        height: totalHeight * 0.095,
+                                        width: totalWidth * 0.33,
+                                        decoration: BoxDecoration(color: colors.pinkLight, borderRadius: BorderRadius.circular(20)),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "${robustnessProvider.compromised}",
+                                              style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500, color: colors.pinkDarker),
+                                            ),
+                                            Text(
+                                              "Compromis",
+                                              style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w400, color: colors.text5),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
 
                                   // Weak
-                                  GestureDetector(
-                                    behavior: HitTestBehavior.opaque,
-                                    onTap: () {
-                                      pageNavigator.updateFilterPassword(7);
-                                      dbProvider.setCategory(6);
-                                      dbProvider.setIdsToFilter(robustnessProvider.weakPasswords);
-                                      pageNavigator.jumpToPage(1);
-                                    },
-                                    child: Container(
-                                      height: totalHeight * 0.095,
-                                      width: totalWidth * 0.33,
-                                      decoration: BoxDecoration(color: colors.purpleLight, borderRadius: BorderRadius.circular(20)),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "${robustnessProvider.weak}",
-                                            style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500, color: colors.purpleDarker),
-                                          ),
+                                  AnimatedOpacity(
+                                    opacity: globalOpacity,
+                                    curve: Curves.easeIn,
+                                    duration: const Duration(milliseconds: 400),
+                                    child: GestureDetector(
+                                      behavior: HitTestBehavior.opaque,
+                                      onTap: () {
+                                        pageNavigator.updateFilterPassword(7);
+                                        dbProvider.setCategory(6);
+                                        dbProvider.setIdsToFilter(robustnessProvider.weakPasswords);
+                                        pageNavigator.jumpToPage(1);
+                                      },
+                                      child: Container(
+                                        height: totalHeight * 0.095,
+                                        width: totalWidth * 0.33,
+                                        decoration: BoxDecoration(color: colors.purpleLight, borderRadius: BorderRadius.circular(20)),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "${robustnessProvider.weak}",
+                                              style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500, color: colors.purpleDarker),
+                                            ),
 
-                                          Text(
-                                            "Faibles",
-                                            style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w400, color: colors.text5),
-                                          ),
-                                        ],
+                                            Text(
+                                              "Faibles",
+                                              style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w400, color: colors.text5),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -297,61 +238,71 @@ class _HomePageState extends State<HomePage> {
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
                                   // Reused
-                                  GestureDetector(
-                                    behavior: HitTestBehavior.opaque,
-                                    onTap: () {
-                                      pageNavigator.updateFilterPassword(8);
-                                      dbProvider.setCategory(6);
-                                      dbProvider.setIdsToFilter(robustnessProvider.allReusedPasswords);
-                                      pageNavigator.jumpToPage(1);
-                                    },
-                                    child: Container(
-                                      height: totalHeight * 0.095,
-                                      width: totalWidth * 0.33,
-                                      decoration: BoxDecoration(color: colors.orangeLight, borderRadius: BorderRadius.circular(20)),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "${robustnessProvider.reused}",
-                                            style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500, color: colors.orangeDarker),
-                                          ),
+                                  AnimatedOpacity(
+                                    opacity: globalOpacity,
+                                    curve: Curves.easeIn,
+                                    duration: const Duration(milliseconds: 500),
+                                    child: GestureDetector(
+                                      behavior: HitTestBehavior.opaque,
+                                      onTap: () {
+                                        pageNavigator.updateFilterPassword(8);
+                                        dbProvider.setCategory(6);
+                                        dbProvider.setIdsToFilter(robustnessProvider.allReusedPasswords);
+                                        pageNavigator.jumpToPage(1);
+                                      },
+                                      child: Container(
+                                        height: totalHeight * 0.095,
+                                        width: totalWidth * 0.33,
+                                        decoration: BoxDecoration(color: colors.orangeLight, borderRadius: BorderRadius.circular(20)),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "${robustnessProvider.reused}",
+                                              style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500, color: colors.orangeDarker),
+                                            ),
 
-                                          Text(
-                                            "Réutilisés",
-                                            style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w400, color: colors.text5),
-                                          ),
-                                        ],
+                                            Text(
+                                              "Réutilisés",
+                                              style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w400, color: colors.text5),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
 
                                   // Safe
-                                  GestureDetector(
-                                    behavior: HitTestBehavior.opaque,
-                                    onTap: () {
-                                      pageNavigator.updateFilterPassword(6);
-                                      dbProvider.setCategory(6);
-                                      dbProvider.setIdsToFilter(robustnessProvider.strongPasswords);
-                                      pageNavigator.jumpToPage(1);
-                                    },
-                                    child: Container(
-                                      height: totalHeight * 0.095,
-                                      width: totalWidth * 0.33,
-                                      decoration: BoxDecoration(color: colors.greenLight, borderRadius: BorderRadius.circular(20)),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "${robustnessProvider.strong}",
-                                            style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500, color: colors.greenDarker),
-                                          ),
+                                  AnimatedOpacity(
+                                    opacity: globalOpacity,
+                                    curve: Curves.easeIn,
+                                    duration: const Duration(milliseconds: 600),
+                                    child: GestureDetector(
+                                      behavior: HitTestBehavior.opaque,
+                                      onTap: () {
+                                        pageNavigator.updateFilterPassword(6);
+                                        dbProvider.setCategory(6);
+                                        dbProvider.setIdsToFilter(robustnessProvider.strongPasswords);
+                                        pageNavigator.jumpToPage(1);
+                                      },
+                                      child: Container(
+                                        height: totalHeight * 0.095,
+                                        width: totalWidth * 0.33,
+                                        decoration: BoxDecoration(color: colors.greenLight, borderRadius: BorderRadius.circular(20)),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "${robustnessProvider.strong}",
+                                              style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500, color: colors.greenDarker),
+                                            ),
 
-                                          Text(
-                                            "Sûrs",
-                                            style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w400, color: colors.text5),
-                                          ),
-                                        ],
+                                            Text(
+                                              "Sûrs",
+                                              style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w400, color: colors.text5),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -387,49 +338,79 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           // Website
-                          CustomCard(svgPath: 'assets/svg/internet.svg', title: 'Sites Web', subtitle: '${db.categoryWebPasswords.length} mots de passe',
-                            onPressed: () {
-                              pageNavigator.updateFilterPassword(2);
-                              dbProvider.setCategory(2);
-                              pageNavigator.jumpToPage(1);
-                          },),
+                          AnimatedOpacity(
+                            opacity: globalOpacity,
+                            curve: Curves.easeIn,
+                            duration: const Duration(milliseconds: 800),
+                            child: CustomCard(svgPath: 'assets/svg/internet.svg', title: 'Sites Web', subtitle: '${db.categoryWebPasswords.length} mots de passe',
+                              onPressed: () {
+                                pageNavigator.updateFilterPassword(2);
+                                dbProvider.setCategory(2);
+                                pageNavigator.jumpToPage(1);
+                            },),
+                          ),
 
                           // Website
-                          CustomCard(svgPath: 'assets/svg/social_network.svg', title: 'Réseaux Sociaux', subtitle: '${db.categorySocialPasswords.length} mots de passe', onPressed: () {
-                            pageNavigator.updateFilterPassword(3);
-                            dbProvider.setCategory(3);
-                            pageNavigator.jumpToPage(1);
-                          },),
+                          AnimatedOpacity(
+                            opacity: globalOpacity,
+                            curve: Curves.easeIn,
+                            duration: const Duration(milliseconds: 900),
+                            child: CustomCard(svgPath: 'assets/svg/social_network.svg', title: 'Réseaux Sociaux', subtitle: '${db.categorySocialPasswords.length} mots de passe', onPressed: () {
+                              pageNavigator.updateFilterPassword(3);
+                              dbProvider.setCategory(3);
+                              pageNavigator.jumpToPage(1);
+                            },),
+                          ),
                         ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           // Apps
-                          CustomCard(svgPath: 'assets/svg/smartphone.svg', title: 'Applications', subtitle: '${db.categoryAppPasswords.length} mots de passe', onPressed: () {
-                            pageNavigator.updateFilterPassword(4);
-                            dbProvider.setCategory(4);
-                            pageNavigator.jumpToPage(1);
-                          },),
+                          AnimatedOpacity(
+                            opacity: globalOpacity,
+                            curve: Curves.easeIn,
+                            duration: const Duration(milliseconds: 1000),
+                            child: CustomCard(svgPath: 'assets/svg/smartphone.svg', title: 'Applications', subtitle: '${db.categoryAppPasswords.length} mots de passe', onPressed: () {
+                              pageNavigator.updateFilterPassword(4);
+                              dbProvider.setCategory(4);
+                              pageNavigator.jumpToPage(1);
+                            },),
+                          ),
 
                           // Website
-                          CustomCard(svgPath: 'assets/svg/shopping_cart.svg', title: 'Paiements', subtitle: '${db.categoryPaymentPasswords.length} mots de passe', onPressed: () {
-                            pageNavigator.updateFilterPassword(5);
-                            dbProvider.setCategory(5);
-                            pageNavigator.jumpToPage(1);
-                          },),
+                          AnimatedOpacity(
+                            opacity: globalOpacity,
+                            curve: Curves.easeIn,
+                            duration: const Duration(milliseconds: 1100),
+                            child: CustomCard(svgPath: 'assets/svg/shopping_cart.svg', title: 'Paiements', subtitle: '${db.categoryPaymentPasswords.length} mots de passe', onPressed: () {
+                              pageNavigator.updateFilterPassword(5);
+                              dbProvider.setCategory(5);
+                              pageNavigator.jumpToPage(1);
+                            },),
+                          ),
                         ],
                       ),
 
                       // Generate Password Button
-                      CustomSvgButton(title: 'Générateur de mots de passe', svgPath: 'assets/svg/stars.svg', onPressed: () {
-                        pageNavigator.jumpToPage(3);
-                      }),
+                      AnimatedOpacity(
+                        opacity: globalOpacity,
+                        curve: Curves.easeIn,
+                        duration: const Duration(milliseconds: 1200),
+                        child: CustomSvgButton(title: 'Générateur de mots de passe', svgPath: 'assets/svg/stars.svg', onPressed: () {
+                          pageNavigator.jumpToPage(3);
+                        }),
+                      ),
 
                       // Secured Notes Button
-                      CustomSvgButton(title: 'Notes sécurisées', svgPath: 'assets/svg/notes.svg', onPressed: () {
-                        pageNavigator.jumpToPage(4);
-                      }),
+                      AnimatedOpacity(
+                        opacity: globalOpacity,
+                        curve: Curves.easeIn,
+                        duration: const Duration(milliseconds: 1200),
+                        child: CustomSvgButton(title: 'Notes sécurisées', svgPath: 'assets/svg/notes.svg', onPressed: () {
+                          pageNavigator.jumpToPage(4);
+                        }),
+                      ),
                     ],
                   );
                 },

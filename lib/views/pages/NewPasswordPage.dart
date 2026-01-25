@@ -30,6 +30,9 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
   // Creation of a list of 4 TextEditingController for the 4 TextFields
   List<TextEditingController> controllers = List.generate(4, (index) => TextEditingController());
 
+  // Permet d’éviter de réinitialiser les champs à chaque appel de didChangeDependencies
+  Password? _lastPasswordToUpdate;
+
 
   @override
   void initState() {
@@ -52,10 +55,14 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
+    // Get the password to update from the PageNavigatorProvider
+    final password = context.read<PageNavigatorProvider>().passwordToUpdate;
+
+    // If the password is the same as the last one, do nothing
+    if (identical(password, _lastPasswordToUpdate)) return;
+    _lastPasswordToUpdate = password;
 
     // If we are in update mode, fill the TextFields with the password data
-    final password = context.watch<PageNavigatorProvider>().passwordToUpdate;
-
     if (password != null) {
       controllers[0].text = password.service;
       controllers[1].text = password.username;

@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>safe_vault</string>
+	<string>SafeVault</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -45,7 +45,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
-	<key>keychain-access-groups</key>
+	<key>UIStatusBarHidden</key>
+    <false/>
+    <key>keychain-access-groups</key>
     <array>
       <string>$(AppIdentifierPrefix)fr.insa.safe_vault</string>
     </array>
