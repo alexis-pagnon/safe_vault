@@ -23,10 +23,17 @@ class _PasswordsPageState extends State<PasswordsPage> {
   final GlobalKey _scrollKey = GlobalKey();
   final List<GlobalKey> _cardKeys = List.generate(11, (_) => GlobalKey());
 
+  double opacity = 0;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      setState(() {
+        opacity = 1;
+      });
+    });
   }
 
   @override
@@ -305,9 +312,18 @@ class _PasswordsPageState extends State<PasswordsPage> {
                     }
                     return Column(
                       spacing: totalHeight * 0.025,
-                      children: passwords.map((pwd) => CustomPasswordCard(
-                        password: pwd,
-                      )).toList(),
+                      children: passwords.asMap().entries.map((entry) {
+                        int index = entry.key + 1;
+                        var pwd = entry.value;
+
+                        return AnimatedOpacity(
+                          opacity: opacity,
+                          duration: Duration(milliseconds: 400 + index * 100),
+                          child: CustomPasswordCard(
+                            password: pwd,
+                          ),
+                        );
+                      }).toList(),
                     );
                   },
                 ),
