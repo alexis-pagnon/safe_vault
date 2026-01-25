@@ -116,7 +116,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
             if(widget.eye)
               InkWell(
                   onTap: () {
-                    print("TESTTTTTTTTTTTTTT");
                     setState(() {
                       eyeState = !eyeState;
                     });

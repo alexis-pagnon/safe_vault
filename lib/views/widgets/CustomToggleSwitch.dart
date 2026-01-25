@@ -29,7 +29,6 @@ class _CustomToggleSwitchState extends State<CustomToggleSwitch> {
   void initState() {
     super.initState();
     value = widget.initialValue;
-    print("initial value: $value");
   }
 
   @override

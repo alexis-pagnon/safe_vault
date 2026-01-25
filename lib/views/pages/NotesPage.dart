@@ -207,7 +207,7 @@ class _NotesPageState extends State<NotesPage> {
                         final position = index + 1;
 
                         return AnimatedOpacity(
-                          duration: Duration(milliseconds: 300 + position * 100),
+                          duration: Duration(milliseconds: 600 + position * 100),
                           curve: Curves.easeInOut,
                           opacity: opacity,
                           child: CustomNote(
