@@ -10,9 +10,7 @@ import '../../models/theme/AppColors.dart';
 import '../widgets/CustomButton.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
-
 // TODO: Adam: Faire des animations de FadeIn pour le texte en mode Pro
-
 
 class RegisterPage extends StatefulWidget {
   //final PageController pageController;
@@ -76,7 +74,6 @@ class _RegisterPageState extends State<RegisterPage> with WidgetsBindingObserver
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>()!;
@@ -87,169 +84,147 @@ class _RegisterPageState extends State<RegisterPage> with WidgetsBindingObserver
 
     return Scaffold(
       backgroundColor: colors.background,
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: totalWidth * 0.04),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    spacing: totalHeight * 0.035,
-                    children: <Widget>[
-                      // First Part
-                      if(!_hasKeyboard)
-                        Column(
-                          spacing: totalHeight * 0.015,
-                          children: [
-                            // Logo
-                            Container(
-                              height: totalWidth * 0.2,
-                              width: totalWidth * 0.2,
-                              padding: EdgeInsets.all(totalWidth * 0.05),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [colors.gradientButtonsStart, colors.gradientButtonsEnd],
-                                  begin: AlignmentGeometry.centerLeft,
-                                  end: AlignmentGeometry.centerRight,
+      body: Stack(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: totalWidth * 0.04),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        spacing: totalHeight * 0.035,
+                        children: <Widget>[
+                          // First Part
+                          if (!_hasKeyboard)
+                            Column(
+                              spacing: totalHeight * 0.015,
+                              children: [
+                                // Logo
+                                Container(
+                                  height: totalWidth * 0.2,
+                                  width: totalWidth * 0.2,
+                                  padding: EdgeInsets.all(totalWidth * 0.05),
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(colors: [colors.gradientButtonsStart, colors.gradientButtonsEnd], begin: AlignmentGeometry.centerLeft, end: AlignmentGeometry.centerRight),
+                                    borderRadius: BorderRadius.all(Radius.circular(totalWidth * 0.06)),
+                                  ),
+                                  child: SvgPicture.asset('assets/svg/lock.svg', colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn)),
                                 ),
-                                borderRadius: BorderRadius.all(Radius.circular(totalWidth * 0.06)),
-                              ),
-                              child: SvgPicture.asset(
-                                'assets/svg/lock.svg',
-                                colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                              ),
+
+                                // Title
+                                Text(
+                                  "Créer un mot de passe maître",
+                                  style: GoogleFonts.montserrat(color: colors.text2, fontSize: 15, fontWeight: FontWeight.w500),
+                                ),
+
+                                // Subtitle
+                                Text(
+                                  "Ce mot de passe protégera toutes\nvos données",
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.montserrat(color: colors.text2, fontSize: 15, fontWeight: FontWeight.w500),
+                                ),
+                              ],
                             ),
 
-                            // Title
-                            Text(
-                              "Créer un mot de passe maître",
-                              style: GoogleFonts.montserrat(
-                                color: colors.text2,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                              ),
+                          // TextFields + Strength Widget
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.all(totalWidth * 0.04),
+                            decoration: BoxDecoration(
+                              color: colors.containerBackground1,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [BoxShadow(color: colors.dropShadow, blurRadius: 6, offset: Offset(0, 5))],
                             ),
 
-                            // Subtitle
-                            Text(
-                              "Ce mot de passe protégera toutes\nvos données",
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.montserrat(
-                                color: colors.text2,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              spacing: totalHeight * 0.02,
+                              children: [
+                                // First One
+                                CustomTextField(controller: controllers[0], hintText: "Mot de passe maître", eye: true, delete: true),
 
-                      // TextFields + Strength Widget
-                      Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.all(totalWidth * 0.04),
-                        decoration: BoxDecoration(
-                          color: colors.containerBackground1,
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: colors.dropShadow,
-                              blurRadius: 6,
-                              offset: Offset(0, 5),
-                            ),
-                          ],
-                        ),
+                                // Second One
+                                CustomTextField(controller: controllers[1], hintText: "Confirmer le mot de passe", eye: true, delete: true),
 
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          spacing: totalHeight * 0.02,
-                          children: [
-                            // First One
-                            CustomTextField(
-                              controller: controllers[0],
-                              hintText: "Mot de passe maître",
-                              eye: true,
-                              delete: true,
+                                // Strength Widget
+                                CustomStrengthWidget(controller: controllers[0], obligation: true),
+                              ],
                             ),
+                          ),
 
-                            // Second One
-                            CustomTextField(
-                              controller: controllers[1],
-                              hintText: "Confirmer le mot de passe",
-                              eye: true,
-                              delete: true,
-                            ),
+                          // Button
+                          CustomButton(
+                            title: "Créer mon coffre-fort",
+                            onPressed: () async {
+                              final isPasswordsSimilar = controllers[0].text == controllers[1].text;
+                              bool isPasswordRespectRequirements = false;
 
-                            // Strength Widget
-                            CustomStrengthWidget(
-                              controller: controllers[0],
-                              obligation: true,
-                            ),
-                          ],
-                        ),
+                              if (isPasswordsSimilar) {
+                                final Map<String, dynamic> analysis = PasswordGenerator.completePasswordStrengthAnalysis(controllers[0].text);
+                                isPasswordRespectRequirements = analysis['length'] && analysis['uppercase'] && analysis['numbers'] && analysis['specialChars'];
+                              }
+
+                              if (isPasswordsSimilar && isPasswordRespectRequirements) {
+                                await authenticationProvider.registerNewUser(controllers[0].text);
+                              } else {
+                                final SnackBar snackBar;
+                                if (!isPasswordsSimilar) {
+                                  snackBar = SnackBar(
+                                    elevation: 0,
+                                    behavior: SnackBarBehavior.floating,
+                                    backgroundColor: Colors.transparent,
+
+                                    content: AwesomeSnackbarContent(title: 'Erreur', message: 'Vos mots de passe ne correspondent pas.', contentType: ContentType.failure),
+                                  );
+                                } else {
+                                  snackBar = SnackBar(
+                                    elevation: 0,
+                                    behavior: SnackBarBehavior.floating,
+                                    backgroundColor: Colors.transparent,
+
+                                    content: AwesomeSnackbarContent(title: 'Erreur', message: 'Votre mot de passe ne respecte pas les critères de sécurité.', contentType: ContentType.failure),
+                                  );
+                                }
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  snackBar,
+                                  snackBarAnimationStyle: AnimationStyle(curve: Curves.easeIn, duration: Duration(milliseconds: 100)),
+                                );
+                              }
+                            },
+                          ),
+                        ],
                       ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
 
-                      // Button
-                      CustomButton(
-                        title: "Créer mon coffre-fort",
-                        onPressed: () async {
+          // Loading Indicator
+          Consumer<AuthenticationProvider>(
+            builder: (context, authProvider, _) {
+              if (!authProvider.isLoading) return SizedBox.shrink();
 
-                          final isPasswordsSimilar = controllers[0].text == controllers[1].text;
-                          bool isPasswordRespectRequirements = false;
-
-                          if(isPasswordsSimilar) {
-                            final Map<String,dynamic> analysis = PasswordGenerator.completePasswordStrengthAnalysis(controllers[0].text);
-                            isPasswordRespectRequirements = analysis['length'] && analysis['uppercase'] && analysis['numbers'] && analysis['specialChars'];
-                          }
-
-                          if (isPasswordsSimilar && isPasswordRespectRequirements) {
-                            await authenticationProvider.registerNewUser(controllers[0].text);
-                          }
-                          else {
-                            final SnackBar snackBar;
-                            if(!isPasswordsSimilar){
-                              snackBar = SnackBar(
-                                elevation: 0,
-                                behavior: SnackBarBehavior.floating,
-                                backgroundColor: Colors.transparent,
-
-                                content: AwesomeSnackbarContent(
-                                  title: 'Erreur',
-                                  message: 'Vos mots de passe ne correspondent pas.',
-                                  contentType: ContentType.failure,
-                                ),
-                              );
-                            }
-                            else{
-                              snackBar = SnackBar(
-                                elevation: 0,
-                                behavior: SnackBarBehavior.floating,
-                                backgroundColor: Colors.transparent,
-
-                                content: AwesomeSnackbarContent(
-                                  title: 'Erreur',
-                                  message: 'Votre mot de passe ne respecte pas les critères de sécurité.',
-                                  contentType: ContentType.failure,
-                                ),
-                              );
-                            }
-
-                            ScaffoldMessenger.of(context).showSnackBar(snackBar, snackBarAnimationStyle: AnimationStyle(curve: Curves.easeIn, duration: Duration(milliseconds: 100)));
-                          }
-                        },
-                      ),
-
-                    ],
+              return Positioned.fill(
+                child: AbsorbPointer(
+                  absorbing: true,
+                  child: Container(
+                    color: Colors.black.withValues(alpha: 0.3),
+                    child: Center(child: CircularProgressIndicator(color: colors.text2)),
                   ),
                 ),
-              ),
-            );
-          },
-        ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

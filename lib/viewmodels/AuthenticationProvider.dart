@@ -13,11 +13,13 @@ class AuthenticationProvider extends ChangeNotifier {
   final DatabaseProvider _databaseProvider;
   final SharedPreferencesRepository _sharedPreferencesRepository;
   final SecureStorageRepository _secureStorage;
+  bool _isLoading = false;
 
   bool _canUseBiometrics = false;
 
   bool get isAuthenticated => _isAuthenticated;
   bool get canUseBiometrics => _canUseBiometrics;
+  bool get isLoading => _isLoading;
 
 
   AuthenticationProvider({
@@ -36,6 +38,7 @@ class AuthenticationProvider extends ChangeNotifier {
   /// Logout the user
   void logout() async {
     _isAuthenticated = false;
+    _isLoading = false;
     await  _databaseProvider.closeDatabase();
     notifyListeners();
   }
@@ -45,6 +48,8 @@ class AuthenticationProvider extends ChangeNotifier {
   /// Create a derived key and store it securely.<br>
   /// Init the database, secured by the new key.<br>
   Future<void> registerNewUser(String masterPassword) async {
+    _isLoading = true;
+    notifyListeners();
 
     final passwordHash = KeyGenerator.hashPassword(masterPassword);
     await _sharedPreferencesRepository.setHashedPassword(passwordHash);
@@ -58,6 +63,7 @@ class AuthenticationProvider extends ChangeNotifier {
     await _sharedPreferencesRepository.setFirstTime(false);
 
     _isAuthenticated = true;
+    _isLoading = false;
     notifyListeners();
 
   }
@@ -65,21 +71,29 @@ class AuthenticationProvider extends ChangeNotifier {
 
   /// Authenticate the user
   Future<void> authenticate(String masterPassword) async {
+    _isLoading = true;
+    notifyListeners();
+
     final passwordHash = KeyGenerator.hashPassword(masterPassword);
     final String savedHash = _sharedPreferencesRepository.hashedPassword ?? '';
 
     if (passwordHash != savedHash) {
+      _isLoading = false;
+      notifyListeners();
       throw Exception('Invalid master password');
     }
     else {
       final dbKey = await _secureStorage.readDbKey();
 
       if(dbKey == null) {
+        _isLoading = false;
+        notifyListeners();
         throw Exception('Database key not found');
       }
       else {
         await _databaseProvider.init(dbKey);
         _isAuthenticated = true;
+        _isLoading = false;
         notifyListeners();
       }
     }
@@ -102,6 +116,9 @@ class AuthenticationProvider extends ChangeNotifier {
 
   /// Authenticate using biometrics
   Future<void> authenticateWithBiometrics() async {
+    _isLoading = true;
+    notifyListeners();
+
     final localAuth = LocalAuthentication();
     final canCheckBiometrics = await localAuth.canCheckBiometrics;
     final isDeviceSupported = await localAuth.isDeviceSupported();
@@ -120,16 +137,21 @@ class AuthenticationProvider extends ChangeNotifier {
         final dbKey = await _secureStorage.readDbKey();
 
         if(dbKey == null) {
+          _isLoading = false;
+          notifyListeners();
           throw Exception('Database key not found');
         }
         else {
           await _databaseProvider.init(dbKey);
           _isAuthenticated = true;
+          _isLoading = false;
           notifyListeners();
         }
       }
     } catch (e) {
       print('Error checking biometrics: $e');
+      _isLoading = false;
+      notifyListeners();
     }
 
   }
