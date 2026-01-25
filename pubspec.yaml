@@ -25,7 +25,6 @@ dependencies:
   sleek_circular_slider: ^2.1.0
   awesome_snackbar_content: ^0.1.8
   no_screenshot: ^0.3.1
-  flutter_native_splash: ^2.4.7
 
 
 dev_dependencies:
@@ -39,18 +38,3 @@ flutter:
   assets:
     - assets/
     - assets/svg/
-
-flutter_native_splash:
-  color: "#ffffff"
-  color_dark: "#171717"
-  android: true
-  ios: true
-  web: false
-
-  android_12:
-    color: "#ffffff"
-    color_dark: "#171717"
-    icon_background_color: "#171717"
-    android: true
-    ios: true
-    web: false
