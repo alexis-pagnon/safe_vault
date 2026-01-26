@@ -316,6 +316,7 @@ class _PasswordsPageState extends State<PasswordsPage> {
                         var pwd = entry.value;
 
                         return AnimatedOpacity(
+                          key: ValueKey(pwd.id_pwd),
                           opacity: opacity,
                           duration: Duration(milliseconds: 400 + index * 100),
                           child: CustomPasswordCard(
