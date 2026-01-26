@@ -21,7 +21,6 @@ dependencies:
   shared_preferences: ^2.5.3
   sqflite_sqlcipher: ^3.4.0
   flutter_svg: ^2.2.3
-  google_fonts: ^6.3.2
   sleek_circular_slider: ^2.1.0
   awesome_snackbar_content: ^0.1.8
   no_screenshot: ^0.3.1
@@ -38,3 +37,15 @@ flutter:
   assets:
     - assets/
     - assets/svg/
+
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Montserrat-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Montserrat-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Montserrat-Bold.ttf
+          weight: 700

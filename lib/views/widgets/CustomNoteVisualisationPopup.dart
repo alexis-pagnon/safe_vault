@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../models/theme/AppColors.dart';
 
 class CustomNoteVisualisationPopup extends StatelessWidget {
@@ -53,7 +52,7 @@ class CustomNoteVisualisationPopup extends StatelessWidget {
                 Text(
                   title,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.montserrat(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                     color: colors.text3,
@@ -80,7 +79,7 @@ class CustomNoteVisualisationPopup extends StatelessWidget {
             Text(
               "Créée le $date",
               textAlign: TextAlign.center,
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: colors.text4,
@@ -105,7 +104,7 @@ class CustomNoteVisualisationPopup extends StatelessWidget {
                   child: Text(
                     content,
                     textAlign: TextAlign.start,
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: colors.text3,
@@ -128,7 +127,7 @@ class CustomNoteVisualisationPopup extends StatelessWidget {
                 child: Center(
                   child: Text(
                     'Fermer',
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: colors.text1,

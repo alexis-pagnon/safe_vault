@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../models/theme/AppColors.dart';
 
 class CustomCard extends StatelessWidget {
@@ -52,7 +51,7 @@ class CustomCard extends StatelessWidget {
             ),
             Text(
               title,
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
                 color: colors.text3,
@@ -60,7 +59,7 @@ class CustomCard extends StatelessWidget {
             ),
             Text(
               subtitle,
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
                 color: colors.text3,

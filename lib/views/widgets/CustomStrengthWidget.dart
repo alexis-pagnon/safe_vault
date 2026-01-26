@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:safe_vault/models/PasswordGenerator.dart';
 import '../../models/theme/AppColors.dart';
 
@@ -96,6 +95,7 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
     if(widget.controller.text.isEmpty) {
       return SizedBox.shrink();
     }
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
 
@@ -108,7 +108,7 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
             // Title
             Text(
               "Force du mot de passe",
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
                 color: colors.text3,
@@ -120,7 +120,7 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
             // Indicator Title
             Text(
               currentStrength,
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
                 color: currentColor,
@@ -156,7 +156,7 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
               // Title
               Text(
                 widget.obligation ? "Critères requis :" : "Recommandations :",
-                style: GoogleFonts.montserrat(
+                style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
                   color: colors.text2,
@@ -175,7 +175,7 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
 
                   Text(
                     "Au moins 12 caractères",
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
                       color: colors.text2,
@@ -196,7 +196,7 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
 
                   Text(
                     "Ajouter des majuscules",
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
                       color: colors.text2,
@@ -217,7 +217,7 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
 
                   Text(
                     "Ajouter des chiffres",
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
                       color: colors.text2,
@@ -238,7 +238,7 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
 
                   Text(
                     "Ajoutez des symboles",
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
                       color: colors.text2,

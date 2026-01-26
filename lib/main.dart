@@ -7,7 +7,6 @@ import 'package:safe_vault/models/SharedPreferencesRepository.dart';
 import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
 import 'package:safe_vault/viewmodels/AuthenticationProvider.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/services.dart';
 import 'package:safe_vault/viewmodels/theme/ThemeController.dart';
 import 'package:safe_vault/views/pages/ConnexionPage.dart';
 import 'package:safe_vault/views/pages/RegisterPage.dart';
@@ -18,16 +17,19 @@ import 'models/authentication/SecureStorageRepository.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
   final prefs = await SharedPreferencesWithCache.create(
     cacheOptions: const SharedPreferencesWithCacheOptions(
-      allowList: {'first_time', 'hashed_password', 'theme', 'previous_old_passwords', 'previous_compromised_passwords'},
+      allowList: {
+        'first_time',
+        'hashed_password',
+        'theme',
+        'previous_old_passwords',
+        'previous_compromised_passwords'
+      },
     ),
   );
   const secureStorage = FlutterSecureStorage();
-
-
 
   final sharedPreferencesRepo = SharedPreferencesRepository(prefs);
   final secureStorageRepo = SecureStorageRepository(secureStorage);
@@ -35,7 +37,8 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ThemeController(themeMode: sharedPreferencesRepo.theme)),
+        ChangeNotifierProvider(
+            create: (_) => ThemeController(themeMode: sharedPreferencesRepo.theme)),
 
         ChangeNotifierProvider(create: (_) => DatabaseProvider()),
 
@@ -63,21 +66,18 @@ Future<void> main() async {
   );
 }
 
-
 class AppRoot extends StatelessWidget {
   const AppRoot({super.key});
 
   @override
   Widget build(BuildContext context) {
-
     final theme = context.watch<ThemeController>().theme;
 
     return MaterialApp(
         title: 'SafeVault',
         theme: theme,
         debugShowCheckedModeBanner: false,
-        home: const MyApp()
-    );
+        home: const MyApp());
   }
 }
 
@@ -112,7 +112,6 @@ class _MyAppState extends State<MyApp> {
           } else {
             return const ConnexionPage();
           }
-          // return const TestPage2();  // Test the registration / authentication
         }
 
 
@@ -132,4 +131,3 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-

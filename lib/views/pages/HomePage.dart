@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
 import 'package:safe_vault/viewmodels/PageNavigatorProvider.dart';
@@ -87,11 +86,11 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             Text(
                               "Bonjour  👋",
-                              style: GoogleFonts.montserrat(fontSize: 15, fontWeight: FontWeight.w400, color: colors.text1),
+                              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: colors.text1),
                             ),
                             Text(
                               "Mon Coffre-Fort",
-                              style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w500, color: colors.text1),
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: colors.text1),
                             ),
                           ],
                         ),
@@ -124,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                                 padding: const EdgeInsets.only(left: 8.0),
                                 child: Text(
                                   "Santé des mots de passe",
-                                  style: GoogleFonts.montserrat(fontSize: 15, fontWeight: FontWeight.w500, color: colors.text2),
+                                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: colors.text2),
                                 ),
                               ),
 
@@ -135,7 +134,7 @@ class _HomePageState extends State<HomePage> {
                                     appearance: CircularSliderAppearance(
                                       customWidths: CustomSliderWidths(progressBarWidth: 10, trackWidth: 8),
                                       infoProperties: InfoProperties(
-                                        mainLabelStyle: GoogleFonts.montserrat(fontSize: 30, fontWeight: FontWeight.w500, color: currentGradient.last),
+                                        mainLabelStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.w500, color: currentGradient.last),
 
                                         modifier: (double value) {
                                           return '${value.toInt()}';
@@ -186,11 +185,11 @@ class _HomePageState extends State<HomePage> {
                                           children: [
                                             Text(
                                               "${robustnessProvider.compromised}",
-                                              style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500, color: colors.pinkDarker),
+                                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: colors.pinkDarker),
                                             ),
                                             Text(
                                               "Compromis",
-                                              style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w400, color: colors.text5),
+                                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: colors.text5),
                                             ),
                                           ],
                                         ),
@@ -220,12 +219,12 @@ class _HomePageState extends State<HomePage> {
                                           children: [
                                             Text(
                                               "${robustnessProvider.weak}",
-                                              style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500, color: colors.purpleDarker),
+                                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: colors.purpleDarker),
                                             ),
 
                                             Text(
                                               "Faibles",
-                                              style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w400, color: colors.text5),
+                                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: colors.text5),
                                             ),
                                           ],
                                         ),
@@ -259,12 +258,12 @@ class _HomePageState extends State<HomePage> {
                                           children: [
                                             Text(
                                               "${robustnessProvider.reused}",
-                                              style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500, color: colors.orangeDarker),
+                                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: colors.orangeDarker),
                                             ),
 
                                             Text(
                                               "Réutilisés",
-                                              style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w400, color: colors.text5),
+                                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: colors.text5),
                                             ),
                                           ],
                                         ),
@@ -294,12 +293,12 @@ class _HomePageState extends State<HomePage> {
                                           children: [
                                             Text(
                                               "${robustnessProvider.strong}",
-                                              style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500, color: colors.greenDarker),
+                                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: colors.greenDarker),
                                             ),
 
                                             Text(
                                               "Sûrs",
-                                              style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w400, color: colors.text5),
+                                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: colors.text5),
                                             ),
                                           ],
                                         ),
@@ -330,7 +329,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Text(
                         "Catégories",
-                        style: GoogleFonts.montserrat(fontSize: 15, fontWeight: FontWeight.w500, color: colors.text2),
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: colors.text2),
                       ),
 
                       // Categories

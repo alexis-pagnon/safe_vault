@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../models/theme/AppColors.dart';
 
 class CustomLittleCard extends StatefulWidget {
@@ -65,8 +64,8 @@ class _CustomLittleCardState extends State<CustomLittleCard> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  colors.gradientButtonsStart.withOpacity(0.1),
-                  colors.gradientButtonsEnd.withOpacity(0.1),
+                  colors.gradientButtonsStart.withValues(alpha: 0.1),
+                  colors.gradientButtonsEnd.withValues(alpha: 0.1),
                 ],
               )
             : LinearGradient(
@@ -89,7 +88,7 @@ class _CustomLittleCardState extends State<CustomLittleCard> {
             ),
             Text(
               widget.title,
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
                 color: colors.text3,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../models/theme/AppColors.dart';
 
 class CustomButton extends StatelessWidget {
@@ -33,7 +32,8 @@ class CustomButton extends StatelessWidget {
         child: Center(
           child: Text(
             title,
-            style: GoogleFonts.montserrat(
+            style: const TextStyle(
+              fontFamily: 'Montserrat',
               fontSize: 15,
               fontWeight: FontWeight.w500,
               color: Colors.white,

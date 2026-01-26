@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:safe_vault/models/database/Note.dart';
 import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
@@ -108,7 +107,7 @@ class _CustomNoteCreationPopupState extends State<CustomNoteCreationPopup> {
             Text(
               dialogTitle,
               textAlign: TextAlign.center,
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: colors.text3,
@@ -131,7 +130,7 @@ class _CustomNoteCreationPopupState extends State<CustomNoteCreationPopup> {
                   borderSide: BorderSide(color: colors.gradientButtonsStart, width: 1.5),
                 ),
               ),
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: colors.text3,
@@ -160,7 +159,7 @@ class _CustomNoteCreationPopupState extends State<CustomNoteCreationPopup> {
                     borderSide: BorderSide(color: colors.gradientButtonsStart, width: 1.5),
                   ),
                 ),
-                style: GoogleFonts.montserrat(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: colors.text3,
@@ -175,7 +174,7 @@ class _CustomNoteCreationPopupState extends State<CustomNoteCreationPopup> {
                 // Title
                 Text(
                   'Note temporaire',
-                  style: GoogleFonts.montserrat(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                     color: colors.text3,
@@ -216,7 +215,7 @@ class _CustomNoteCreationPopupState extends State<CustomNoteCreationPopup> {
                       child: Center(
                         child: Text(
                           'Annuler',
-                          style: GoogleFonts.montserrat(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: colors.text3,
@@ -272,7 +271,7 @@ class _CustomNoteCreationPopupState extends State<CustomNoteCreationPopup> {
                       child: Center(
                         child: Text(
                           submitText,
-                          style: GoogleFonts.montserrat(
+                          style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: Colors.white,
