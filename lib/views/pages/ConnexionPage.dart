@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:safe_vault/viewmodels/AuthenticationProvider.dart';
 import 'package:safe_vault/views/widgets/CustomTextField.dart';
@@ -81,7 +80,7 @@ class _ConnexionPageState extends State<ConnexionPage> {
                 // Title
                 Text(
                   "Bienvenue",
-                  style: GoogleFonts.montserrat(
+                  style: TextStyle(
                     color: colors.text2,
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
@@ -91,7 +90,7 @@ class _ConnexionPageState extends State<ConnexionPage> {
                 // Subtitle
                 Text(
                   "Entrez votre mot de passe maître",
-                  style: GoogleFonts.montserrat(
+                  style: TextStyle(
                     color: colors.text2,
                     fontSize: 15,
                     fontWeight: FontWeight.w500,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../models/theme/AppColors.dart';
 
 class CustomTextField extends StatefulWidget {
@@ -65,7 +64,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
       controller: widget.controller,
 
 
-      style: GoogleFonts.montserrat(
+      style: TextStyle(
+        fontFamily: 'Montserrat',
         fontSize: 14,
         fontWeight: FontWeight.w500,
         color: colors.text3,
@@ -90,7 +90,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
         ),
 
         hintText: widget.hintText,
-        hintStyle: GoogleFonts.montserrat(
+        hintStyle: TextStyle(
+          fontFamily: 'Montserrat',
           fontSize: 14,
           fontWeight: FontWeight.w500,
           color: colors.hintText,

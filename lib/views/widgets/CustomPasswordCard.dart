@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
 import 'package:safe_vault/viewmodels/PageNavigatorProvider.dart';
@@ -103,7 +102,7 @@ class _CustomPasswordCardState extends State<CustomPasswordCard> {
                         // Name
                         Text(
                           widget.password.service,
-                          style: GoogleFonts.montserrat(
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                             color: colors.text3,
@@ -172,7 +171,7 @@ class _CustomPasswordCardState extends State<CustomPasswordCard> {
                                   value: 'edit',
                                   child: Text(
                                     'Modifier',
-                                    style: GoogleFonts.montserrat(
+                                    style: TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w500,
                                       color: colors.text3,
@@ -184,7 +183,7 @@ class _CustomPasswordCardState extends State<CustomPasswordCard> {
                                   value: 'delete',
                                   child: Text(
                                     'Supprimer',
-                                    style: GoogleFonts.montserrat(
+                                    style: TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w500,
                                       color: colors.text3,
@@ -202,7 +201,7 @@ class _CustomPasswordCardState extends State<CustomPasswordCard> {
                     // Username
                     Text(
                       widget.password.username,
-                      style: GoogleFonts.montserrat(
+                      style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                         color: colors.text4,
@@ -228,4 +227,3 @@ class _CustomPasswordCardState extends State<CustomPasswordCard> {
     );
   }
 }
-

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
 import '../../models/database/Note.dart';
@@ -95,7 +94,7 @@ class CustomNote extends StatelessWidget {
                           // Title
                           Text(
                             note.title,
-                            style: GoogleFonts.montserrat(
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                               color: colors.text3,
@@ -154,7 +153,7 @@ class CustomNote extends StatelessWidget {
                                     value: 'edit',
                                     child: Text(
                                       'Modifier',
-                                      style: GoogleFonts.montserrat(
+                                      style: TextStyle(
                                         fontSize: 13,
                                         fontWeight: FontWeight.w500,
                                         color: colors.text3,
@@ -166,7 +165,7 @@ class CustomNote extends StatelessWidget {
                                     value: 'delete',
                                     child: Text(
                                       'Supprimer',
-                                      style: GoogleFonts.montserrat(
+                                      style: TextStyle(
                                         fontSize: 13,
                                         fontWeight: FontWeight.w500,
                                         color: colors.text3,
@@ -185,7 +184,7 @@ class CustomNote extends StatelessWidget {
                       // Date
                       Text(
                         '$day/$month/$year',
-                        style: GoogleFonts.montserrat(
+                        style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                           color: colors.text4,
@@ -203,7 +202,7 @@ class CustomNote extends StatelessWidget {
               note.content,
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
                 color: colors.text3,

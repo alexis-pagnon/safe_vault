@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:safe_vault/models/PasswordGenerator.dart';
 import 'package:safe_vault/viewmodels/AuthenticationProvider.dart';
@@ -127,7 +126,7 @@ class _RegisterPageState extends State<RegisterPage> with WidgetsBindingObserver
                             // Title
                             Text(
                               "Créer un mot de passe maître",
-                              style: GoogleFonts.montserrat(
+                              style: TextStyle(
                                 color: colors.text2,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
@@ -138,7 +137,7 @@ class _RegisterPageState extends State<RegisterPage> with WidgetsBindingObserver
                             Text(
                               "Ce mot de passe protégera toutes\nvos données",
                               textAlign: TextAlign.center,
-                              style: GoogleFonts.montserrat(
+                              style: TextStyle(
                                 color: colors.text2,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,

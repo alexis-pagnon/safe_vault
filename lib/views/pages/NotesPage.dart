@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:safe_vault/viewmodels/PageNavigatorProvider.dart';
 import 'package:safe_vault/views/widgets/CustomNote.dart';
@@ -76,7 +75,7 @@ class _NotesPageState extends State<NotesPage> {
                   // Title
                   Text(
                     "Notes sécurisées",
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                       color: colors.text1,
@@ -192,7 +191,7 @@ class _NotesPageState extends State<NotesPage> {
                     if (notes.isEmpty) {
                       return Text(
                         "Aucune notes trouvé.",
-                        style: GoogleFonts.montserrat(
+                        style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
                           color: colors.text2,

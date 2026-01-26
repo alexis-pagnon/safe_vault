@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:safe_vault/models/PasswordGenerator.dart';
 import 'package:safe_vault/viewmodels/PageNavigatorProvider.dart';
@@ -120,7 +119,7 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
               child: Center(
                   child: Text(
                     "Nouveau mot de passe",
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                       color: colors.text1,
@@ -163,7 +162,7 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                           padding: EdgeInsets.only(left: totalWidth * 0.01),
                           child: Text(
                             "Catégories",
-                            style: GoogleFonts.montserrat(
+                            style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
                               color: colors.text2,
@@ -243,7 +242,7 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                           padding: EdgeInsets.only(left: totalWidth * 0.01),
                           child: Text(
                             "Nom du service",
-                            style: GoogleFonts.montserrat(
+                            style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
                               color: colors.text2,
@@ -262,7 +261,7 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                           padding: EdgeInsets.only(left: totalWidth * 0.01),
                           child: Text(
                             "Identifiant / Email",
-                            style: GoogleFonts.montserrat(
+                            style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
                               color: colors.text2,
@@ -281,7 +280,7 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                           padding: EdgeInsets.only(left: totalWidth * 0.01),
                           child: Text(
                             "Site web (optionnel)",
-                            style: GoogleFonts.montserrat(
+                            style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
                               color: colors.text2,
@@ -324,7 +323,7 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                           padding: EdgeInsets.only(left: totalWidth * 0.01),
                           child: Text(
                             "Mot de passe",
-                            style: GoogleFonts.montserrat(
+                            style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
                               color: colors.text2,

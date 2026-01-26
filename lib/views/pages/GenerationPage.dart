@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:safe_vault/models/PasswordGenerator.dart';
 import 'package:safe_vault/views/widgets/CustomSvgButton.dart';
 import 'package:safe_vault/views/widgets/CustomTextField.dart';
@@ -62,7 +61,7 @@ class _GenerationPageState extends State<GenerationPage> {
               child: Center(
                   child: Text(
                     "Générateur & Vérificateur",
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                       color: colors.text1,
@@ -105,7 +104,7 @@ class _GenerationPageState extends State<GenerationPage> {
                           padding: EdgeInsets.only(left: totalWidth * 0.01),
                           child: Text(
                             "Générateur de mot de passe",
-                            style: GoogleFonts.montserrat(
+                            style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
                               color: colors.text2,
@@ -130,7 +129,7 @@ class _GenerationPageState extends State<GenerationPage> {
                             valueIndicatorColor: colors.gradientButtonsStart,
                             overlayColor: Colors.transparent,
                             thumbColor: colors.gradientButtonsStart,
-                            valueIndicatorTextStyle: GoogleFonts.montserrat(
+                            valueIndicatorTextStyle: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w600,
                               color: colors.text1,
@@ -185,7 +184,7 @@ class _GenerationPageState extends State<GenerationPage> {
                           padding: EdgeInsets.only(left: totalWidth * 0.01),
                           child: Text(
                             "Vérificateur de mot de passe",
-                            style: GoogleFonts.montserrat(
+                            style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
                               color: colors.text2,

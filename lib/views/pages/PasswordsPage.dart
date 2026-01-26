@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:safe_vault/viewmodels/PageNavigatorProvider.dart';
 import 'package:safe_vault/viewmodels/RobustnessProvider.dart';
@@ -124,7 +123,7 @@ class _PasswordsPageState extends State<PasswordsPage> {
                   // Title
                   Text(
                     "Mes mots de passe",
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                       color: colors.text1,
@@ -303,7 +302,7 @@ class _PasswordsPageState extends State<PasswordsPage> {
                     if (passwords.isEmpty) {
                       return Text(
                         "Aucun mot de passe trouvé.",
-                        style: GoogleFonts.montserrat(
+                        style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
                           color: colors.text2,
