@@ -2,17 +2,22 @@ import 'package:flutter/material.dart';
 import 'AppThemes.dart';
 
 class ThemeController extends ChangeNotifier {
-  ThemeData _theme;
+  late ThemeData _theme;
+  bool _isDark = false;
 
-  ThemeController({required String themeMode}) :
-        _theme = themeMode == 'dark' ? AppThemes.dark : AppThemes.light;
+  ThemeController({required String themeMode}) {
+    _theme = themeMode == 'dark' ? AppThemes.dark : AppThemes.light;
+    _isDark = themeMode == 'dark';
+  }
+
 
   ThemeData get theme => _theme;
 
-  bool get isDark => _theme.brightness == Brightness.dark;
+  bool get isDark => _isDark;
 
   void toggleTheme() {
     _theme = isDark ? AppThemes.light : AppThemes.dark;
+    _isDark = !isDark;
     notifyListeners();
   }
 }

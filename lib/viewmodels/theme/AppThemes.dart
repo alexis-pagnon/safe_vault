@@ -3,7 +3,7 @@ import 'package:safe_vault/models/theme/AppColors.dart';
 
 class AppThemes {
   static final ThemeData light = ThemeData(
-    brightness: Brightness.light,
+    brightness: Brightness.dark,
     fontFamily: "Montserrat",
     useMaterial3: true,
     extensions: [
