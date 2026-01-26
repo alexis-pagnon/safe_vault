@@ -69,34 +69,23 @@ class _RootPageState extends State<RootPage> {
     final colors = Theme.of(context).extension<AppColors>()!;
     final navigator = context.read<PageNavigatorProvider>();
 
-    return Scaffold(
-      backgroundColor: colors.background,
-      bottomNavigationBar: const CustomNavBar(),
-      body: Column(
-        children: [
-          // Status bar color
-          Container(
-            height: MediaQuery.of(context).padding.top,
-            width: double.infinity,
-            color: colors.gradientTopStart,
-          ),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: colors.background,
+        bottomNavigationBar: CustomNavBar(),
+        body: PageView(
+          scrollDirection: Axis.horizontal,
+          controller: navigator.pageController,
+          onPageChanged: navigator.onPageChanged,
 
-          // Rest of the app
-          Expanded(
-            child: PageView(
-              scrollDirection: Axis.horizontal,
-              controller: navigator.pageController,
-              onPageChanged: navigator.onPageChanged,
-              children: [
-                HomePage(),
-                PasswordsPage(),
-                NewPasswordPage(),
-                GenerationPage(),
-                NotesPage(),
-              ],
-            ),
-          ),
-        ],
+          children: [
+            HomePage(),
+            PasswordsPage(),
+            NewPasswordPage(),
+            GenerationPage(),
+            NotesPage(),
+          ],
+        ),
       ),
     );
   }
@@ -112,15 +101,13 @@ class _RootPageState extends State<RootPage> {
     if (newOld.isNotEmpty) {
       (newOld.length == 1)
           ? showSnackBar("Vous avez 1 nouveau mot de passe trop vieux.")
-          : showSnackBar(
-              "Vous avez ${newOld.length} nouveaux mots de passe trop vieux.");
+          : showSnackBar("Vous avez ${newOld.length} nouveaux mots de passe trop vieux.");
     }
 
     if (newCompromised.isNotEmpty) {
       (newCompromised.length == 1)
           ? showSnackBar("Vous avez 1 nouveau mot de passe compromis.")
-          : showSnackBar(
-              "Vous avez ${newCompromised.length} nouveaux mots de passe compromis.");
+          : showSnackBar("Vous avez ${newCompromised.length} nouveaux mots de passe compromis.");
     }
 
     prefs.setPreviousOldPassword(robustness.oldPasswords);

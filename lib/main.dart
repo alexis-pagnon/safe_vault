@@ -12,16 +12,11 @@ import 'package:safe_vault/views/pages/ConnexionPage.dart';
 import 'package:safe_vault/views/pages/RegisterPage.dart';
 import 'package:safe_vault/views/pages/RootPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/services.dart';
 import 'models/authentication/SecureStorageRepository.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await SystemChrome.setEnabledSystemUIMode(
-    SystemUiMode.manual,
-    overlays: [SystemUiOverlay.top],
-  );
 
   final prefs = await SharedPreferencesWithCache.create(
     cacheOptions: const SharedPreferencesWithCacheOptions(
@@ -112,15 +107,27 @@ class _MyAppState extends State<MyApp> {
       builder: (_, auth, _) {
         // Check if the user is authenticated
         if (!auth.isAuthenticated) {
-          if (context.watch<SharedPreferencesRepository>().firstTime) {
+          if(context.watch<SharedPreferencesRepository>().firstTime) {
             return const RegisterPage();
-          } else {
+          }
+          else {
             return const ConnexionPage();
           }
-          // return const TestPage2();  // Test the registration / authentication
         }
 
-        return const RootPage();
+
+        return Consumer<DatabaseProvider>(
+          builder: (_, db, _) {
+            // User is authenticated, check if the database is opened
+            if (!db.isOpened) {
+              return const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              );
+            }
+            // User is authenticated + database is opened -> navigate to the root page
+            return const RootPage();
+          },
+        );
       },
     );
   }
