@@ -53,15 +53,12 @@ flutter:
 
 flutter_native_splash:
   color: "#ffffff"
-  color_dark: "#171717"
   android: true
   ios: true
   web: false
 
   android_12:
     color: "#ffffff"
-    color_dark: "#171717"
-    icon_background_color: "#171717"
     android: true
     ios: true
     web: false

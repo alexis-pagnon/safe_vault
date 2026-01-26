@@ -139,7 +139,7 @@ class _CustomThemeSwitcherState extends State<CustomThemeSwitcher>
               // Inverted icons: dark -> sun, light -> moon.
               isDark ? Icons.light_mode : Icons.dark_mode,
               size: totalHeight * 0.04,
-              color: isDark ? Color(0xFFEFEFEF) : Color(0xFF242424),
+              color: isDark ? Color(0xFFFFFFFF) : Color(0xFF242424),
             ),
           ),
         ),
