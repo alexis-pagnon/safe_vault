@@ -194,7 +194,6 @@ class RobustnessProvider with ChangeNotifier {
 
     try {
       final passwords = _databaseProvider.passwords;
-      // TODO : Echanger ici Duration(days: _daysOldThreshold) avec Duration(seconds: 10) pour debugging
       int oldDateTreshold = DateTime.now().subtract(Duration(days: _daysOldThreshold)).millisecondsSinceEpoch;
 
       for (final p in passwords) {

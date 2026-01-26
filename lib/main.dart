@@ -109,8 +109,7 @@ class _MyAppState extends State<MyApp> {
         if (!auth.isAuthenticated) {
           if(context.watch<SharedPreferencesRepository>().firstTime) {
             return const RegisterPage();
-          }
-          else {
+          } else {
             return const ConnexionPage();
           }
           // return const TestPage2();  // Test the registration / authentication

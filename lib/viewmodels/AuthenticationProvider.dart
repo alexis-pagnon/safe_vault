@@ -1,5 +1,6 @@
 
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:safe_vault/models/authentication/KeyGenerator.dart';
 import 'package:safe_vault/models/SharedPreferencesRepository.dart';
@@ -55,7 +56,7 @@ class AuthenticationProvider extends ChangeNotifier {
     await _sharedPreferencesRepository.setHashedPassword(passwordHash);
 
     final dbKey = KeyGenerator.keyToHex(
-      KeyGenerator.createDeriveKeyFromPassword(masterPassword),
+      await compute(KeyGenerator.createDeriveKeyFromPassword, masterPassword)
     );
 
     await _secureStorage.saveDbKey(dbKey);

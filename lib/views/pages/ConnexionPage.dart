@@ -8,8 +8,6 @@ import '../../models/theme/AppColors.dart';
 import '../widgets/CustomButton.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
-// TODO: Adam: Faire des animations de FadeIn pour le texte en mode Pro
-
 class ConnexionPage extends StatefulWidget {
   const ConnexionPage({super.key});
 
