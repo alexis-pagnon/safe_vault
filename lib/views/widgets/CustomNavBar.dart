@@ -59,7 +59,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
               width: double.infinity,
               decoration: BoxDecoration(
                 color: colors.containerBackground1,
-                borderRadius: BorderRadius.circular(25),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
                 boxShadow: [
                   BoxShadow(
                     color: colors.dropShadow,
