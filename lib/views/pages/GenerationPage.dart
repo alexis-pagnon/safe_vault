@@ -127,6 +127,7 @@ class _GenerationPageState extends State<GenerationPage> {
                             showValueIndicator: ShowValueIndicator.onDrag,
                             activeTrackColor: colors.gradientButtonsStart,
                             valueIndicatorColor: colors.gradientButtonsStart,
+                            inactiveTrackColor: colors.gradientButtonsUnavailableStart,
                             overlayColor: Colors.transparent,
                             thumbColor: colors.gradientButtonsStart,
                             valueIndicatorTextStyle: TextStyle(
