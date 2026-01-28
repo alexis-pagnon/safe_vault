@@ -19,7 +19,6 @@ Safe Vault is a secure mobile application for managing and protecting your passw
 - Add secure notes and temporary notes 
 
 ## Screenshots
-<!-- Add screenshots of your app here -->
 
 <p align="center">
   <img src="screenshots/Dashboard_light.png" alt="Dashboard Light" width="150" style="margin: 0 10px;"/>
