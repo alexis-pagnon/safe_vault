@@ -41,7 +41,8 @@ class PasswordGenerator {
     }
 
     Map<String, dynamic> analysis = completePasswordStrengthAnalysis(password);
-    while(analysis["uppercase"] != useUppercase ||
+    while(analysis["lowercase"] != useLowercase ||
+        analysis["uppercase"] != useUppercase ||
         analysis["numbers"] != useNumbers ||
         analysis["specialChars"] != useSpecialChars) {
       // Regenerate password until it meets the criteria
@@ -117,6 +118,7 @@ class PasswordGenerator {
     return {
       "strength": strength,
       "length": password.length >= 12,
+      "lowercase": password.contains(RegExp(r'[a-z]')),
       "uppercase": password.contains(RegExp(r'[A-Z]')),
       "numbers": password.contains(RegExp(r'[0-9]')),
       "specialChars":

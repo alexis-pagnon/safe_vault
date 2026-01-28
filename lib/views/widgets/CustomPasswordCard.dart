@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:safe_vault/viewmodels/DatabaseProvider.dart';
 import 'package:safe_vault/viewmodels/PageNavigatorProvider.dart';
 import 'package:safe_vault/views/widgets/CustomTextField.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../models/database/Password.dart';
 import '../../models/theme/AppColors.dart';
 
@@ -150,11 +151,22 @@ class _CustomPasswordCardState extends State<CustomPasswordCard> {
                             
                               onSelected: (String value) {
                                 if (value == 'edit') {
-
                                   Provider.of<PageNavigatorProvider>(context, listen: false).jumpToUpdatePassword(widget.password);
-
                                 } else if (value == 'delete') {
                                   dbProvider.deletePassword(widget.password.id_pwd!);
+                                } else if(value == 'access') {
+                                  // Launch URL
+                                  try {
+                                    // Check if the website starts with http:// or https:// before trying to launch
+                                    if(widget.password.website.startsWith('http://') || widget.password.website.startsWith('https://')) {
+                                      launchUrl(Uri.parse(widget.password.website));
+                                      return;
+                                    }
+                                    // Add https:// by default
+                                    launchUrl(Uri.parse('https://${widget.password.website}'));
+                                  } catch (e) {
+                                    return;
+                                  }
                                 }
                               },
                             
@@ -167,6 +179,19 @@ class _CustomPasswordCardState extends State<CustomPasswordCard> {
                               splashRadius: 0.1,
                             
                               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                                if(widget.password.website.isNotEmpty)
+                                  PopupMenuItem<String>(
+                                    value: 'access',
+                                    child: Text(
+                                      'Accéder',
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w500,
+                                        color: colors.text3,
+                                      ),
+                                    ),
+                                  ),
+
                                 PopupMenuItem<String>(
                                   value: 'edit',
                                   child: Text(
@@ -177,8 +202,8 @@ class _CustomPasswordCardState extends State<CustomPasswordCard> {
                                       color: colors.text3,
                                     ),
                                   ),
-                            
                                 ),
+
                                 PopupMenuItem<String>(
                                   value: 'delete',
                                   child: Text(
