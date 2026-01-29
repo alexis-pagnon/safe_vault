@@ -233,7 +233,6 @@ class _CustomNoteCreationPopupState extends State<CustomNoteCreationPopup> {
                         ? () async {
                           final title = titleController.text;
                           final content = contentController.text;
-                          print("isTemporary: $_isTemporary");
 
                           if(widget.isEditing) {
                             dbProvider.updateNote(Note(

@@ -62,7 +62,7 @@ class _CustomThemeSwitcherState extends State<CustomThemeSwitcher>
       _controller.value = startIsDark ? 0.0 : 1.0;
     });
 
-    bool _alreadySwapped = false;
+    bool alreadySwapped = false;
 
     // Swap theme + icon at 50% progress (forward and reverse).
     _controller.addListener(() {
@@ -74,11 +74,11 @@ class _CustomThemeSwitcherState extends State<CustomThemeSwitcher>
       final shouldSwapNow = (movingForward && _controller.value >= 0.5) ||
           (movingReverse && _controller.value <= 0.5);
 
-      if (shouldSwapNow && !_alreadySwapped) {
+      if (shouldSwapNow && !alreadySwapped) {
         setState(() {
           isDark = !isDark;
         });
-        _alreadySwapped = true;
+        alreadySwapped = true;
 
         final themeController = context.read<ThemeController>();
         final sharedPreferences = context.read<SharedPreferencesRepository>();
@@ -94,7 +94,7 @@ class _CustomThemeSwitcherState extends State<CustomThemeSwitcher>
           _controller.status == AnimationStatus.dismissed;
 
       if (shouldUnlock) {
-        _alreadySwapped = false;
+        alreadySwapped = false;
       }
     });
   }

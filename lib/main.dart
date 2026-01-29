@@ -97,7 +97,7 @@ class _MyAppState extends State<MyApp> {
     try {
       _noScreenshot.screenshotOff();
     } catch (e) {
-      print("Error disabling screenshot: $e");
+      debugPrint("Error disabling screenshot: $e");
     }
   }
 

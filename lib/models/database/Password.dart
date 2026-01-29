@@ -18,8 +18,8 @@ class Password {
     bool? is_favorite,
     required this.id_category,
     required this.last_update,
-  }) : this.website = website ?? '',
-       this.is_favorite = is_favorite ?? false;
+  }) : website = website ?? '',
+       is_favorite = is_favorite ?? false;
 
   Map<String, dynamic> toMap() {
     return {

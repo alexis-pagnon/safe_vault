@@ -1,7 +1,6 @@
 
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:safe_vault/models/authentication/KeyGenerator.dart';
 import 'package:safe_vault/models/SharedPreferencesRepository.dart';
 import 'package:safe_vault/models/authentication/SecureStorageRepository.dart';
@@ -150,7 +149,6 @@ class AuthenticationProvider extends ChangeNotifier {
         }
       }
     } catch (e) {
-      print('Error checking biometrics: $e');
       _isLoading = false;
       notifyListeners();
     }

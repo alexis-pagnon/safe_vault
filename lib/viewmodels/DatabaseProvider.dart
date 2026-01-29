@@ -95,7 +95,6 @@ class DatabaseProvider with ChangeNotifier {
     _passwords = await retrievePasswords();
     _passwordVersion++;
     notifyListeners();
-    print("Password version: $_passwordVersion");
   }
 
 
@@ -104,7 +103,6 @@ class DatabaseProvider with ChangeNotifier {
     _notes = await retrieveNotes();
     _noteVersion++;
     notifyListeners();
-    print("Note version: $_noteVersion");
   }
 
 

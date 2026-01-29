@@ -374,7 +374,6 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                         }
                         else {
                           // Update the existing password in the database
-                          print((initialPassword!.password != controllers[3].text) ? "password has changed" : "password has not changed");
                           dbProvider.updatePassword(Password(
                             id_pwd: initialPassword!.id_pwd,
                             password: controllers[3].text,

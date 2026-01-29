@@ -1,6 +1,8 @@
 
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
+
 class PasswordGenerator {
 
   /// Generate a random password
@@ -31,7 +33,7 @@ class PasswordGenerator {
     }
     catch (e) {
       // Fallback to less secure random generator
-      print("Warning: Secure random generator not available. Falling back to less secure generator.");
+      debugPrint("Warning: Secure random generator not available. Falling back to less secure generator.");
       rand = Random();
     }
 

@@ -113,7 +113,7 @@ class RobustnessProvider with ChangeNotifier {
   Future<void> analyzeAllPwdRobustness() async {
 
     if(!_databaseProvider.isOpened) {
-      print("Error: Database is not opened");
+      debugPrint("Error: Database is not opened");
       return;
     }
 
@@ -162,7 +162,7 @@ class RobustnessProvider with ChangeNotifier {
           }
         }
         catch (e) {
-          print("Error checking compromised password: $e");
+          debugPrint("Error checking compromised password: $e");
         }
 
       }
@@ -178,7 +178,7 @@ class RobustnessProvider with ChangeNotifier {
       }
     }
     catch (e) {
-     print("Error: $e");
+     debugPrint("Error: $e");
     }
     notifyListeners();
   }
@@ -188,7 +188,7 @@ class RobustnessProvider with ChangeNotifier {
   /// Passwords older than [_daysOldThreshold] days are considered old
   Future<void> checkOldPasswords() async {
     if(!_databaseProvider.isOpened) {
-      print("Error: Database is not opened");
+      debugPrint("Error: Database is not opened");
       return;
     }
 
@@ -204,13 +204,13 @@ class RobustnessProvider with ChangeNotifier {
           }
         }
         else if(_oldPasswords.contains(p.id_pwd!)) {
-          print("Password ID ${p.id_pwd} is no longer old, removing from old list.");
+          debugPrint("Password ID ${p.id_pwd} is no longer old, removing from old list.");
           _oldPasswords.remove(p.id_pwd!);
         }
       }
     }
     catch (e) {
-      print("Error: $e");
+      debugPrint("Error: $e");
     }
     notifyListeners();
   }

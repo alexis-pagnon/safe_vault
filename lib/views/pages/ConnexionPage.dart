@@ -124,7 +124,7 @@ class _ConnexionPageState extends State<ConnexionPage> {
                             try {
                               await authenticationProvider.authenticateWithBiometrics();
                             } catch (e) {
-                              print(e);
+                              debugPrint(e.toString());
                             }
                           },
                         );
