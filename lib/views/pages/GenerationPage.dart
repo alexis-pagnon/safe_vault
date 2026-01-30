@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:safe_vault/models/PasswordGenerator.dart';
 import 'package:safe_vault/views/widgets/CustomSvgButton.dart';
 import 'package:safe_vault/views/widgets/CustomTextField.dart';
+import 'package:safe_vault/views/widgets/CustomToggleSwitch.dart';
 import '../../models/theme/AppColors.dart';
 import '../widgets/CustomStrengthWidget.dart';
 
@@ -20,6 +21,12 @@ class _GenerationPageState extends State<GenerationPage> {
   List<TextEditingController> controllers = List.generate(2, (index) => TextEditingController());
   int passwordLength = 20;
 
+  // Settings for the generator
+  bool lowerCase = true;
+  bool upperCase = true;
+  bool numbers = true;
+  bool charactSpecial = true;
+
   @override
   void dispose() {
     // Dispose all controllers when the widget is disposed
@@ -35,7 +42,8 @@ class _GenerationPageState extends State<GenerationPage> {
     final totalWidth = MediaQuery.of(context).size.width;
     final totalHeight = MediaQuery.of(context).size.height;
 
-
+    final bool isAtLeastOneTypeSelected =
+        lowerCase || upperCase || numbers || charactSpecial;
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -108,6 +116,7 @@ class _GenerationPageState extends State<GenerationPage> {
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
                               color: colors.text2,
+                              fontFamily: 'Montserrat',
                             ),
                           ),
                         ),
@@ -147,12 +156,131 @@ class _GenerationPageState extends State<GenerationPage> {
                           ),
                         ),
 
+                        // Settings for generator
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // Minuscules
+                            Text(
+                              'Minuscules',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: colors.text3,
+                                fontFamily: 'Montserrat',
+                              ),
+                            ),
+
+                            // Toggle Switch
+                            CustomToggleSwitch(
+                              initialValue: 1,
+                              thumbColor: [Color(0xFFCC3C3C), Color(0xFF5C9828)],
+                              circleColor:[Color(0xFFFF4B4B), Color(0xFF77C433)],
+                              svgColor: [Colors.white, Colors.white],
+                              icons: [Icons.close_rounded, Icons.check_rounded],
+                              onToggle: () {
+                                setState(() {
+                                  lowerCase = !lowerCase;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // Minuscules
+                            Text(
+                              'Majuscules',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: colors.text3,
+                                fontFamily: 'Montserrat',
+                              ),
+                            ),
+
+                            // Toggle Switch
+                            CustomToggleSwitch(
+                              initialValue: 1,
+                              thumbColor: [Color(0xFFCC3C3C), Color(0xFF5C9828)],
+                              circleColor:[Color(0xFFFF4B4B), Color(0xFF77C433)],
+                              svgColor: [Colors.white, Colors.white],
+                              icons: [Icons.close_rounded, Icons.check_rounded],
+                              onToggle: () {
+                                setState(() {
+                                  upperCase = !upperCase;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // Minuscules
+                            Text(
+                              'Chiffres',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: colors.text3,
+                                fontFamily: 'Montserrat',
+                              ),
+                            ),
+
+                            // Toggle Switch
+                            CustomToggleSwitch(
+                              initialValue: 1,
+                              thumbColor: [Color(0xFFCC3C3C), Color(0xFF5C9828)],
+                              circleColor:[Color(0xFFFF4B4B), Color(0xFF77C433)],
+                              svgColor: [Colors.white, Colors.white],
+                              icons: [Icons.close_rounded, Icons.check_rounded],
+                              onToggle: () {
+                                setState(() {
+                                  numbers = !numbers;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // Minuscules
+                            Text(
+                              'Caractères spéciaux',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: colors.text3,
+                                fontFamily: 'Montserrat',
+                              ),
+                            ),
+
+                            // Toggle Switch
+                            CustomToggleSwitch(
+                              initialValue: 1,
+                              thumbColor: [Color(0xFFCC3C3C), Color(0xFF5C9828)],
+                              circleColor:[Color(0xFFFF4B4B), Color(0xFF77C433)],
+                              svgColor: [Colors.white, Colors.white],
+                              icons: [Icons.close_rounded, Icons.check_rounded],
+                              onToggle: () {
+                                setState(() {
+                                  charactSpecial = !charactSpecial;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+
                         // Generate Password Button
                         CustomSvgButton(
                             title: 'Générer un mot de passe',
                             svgPath: 'assets/svg/stars.svg',
+                            isAvailable: isAtLeastOneTypeSelected,
                             onPressed: () {
-                              controllers[0].text = PasswordGenerator.generateRandomPassword(passwordLength, true, true, true, true);
+                              controllers[0].text = PasswordGenerator.generateRandomPassword(passwordLength, lowerCase, upperCase, numbers, charactSpecial);
                             },
                         ),
                       ],

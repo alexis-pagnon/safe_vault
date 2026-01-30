@@ -5,13 +5,15 @@ import '../../models/theme/AppColors.dart';
 class CustomSvgButton extends StatelessWidget {
   final String title;
   final String svgPath;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
+  final bool isAvailable;
 
   const CustomSvgButton({
     super.key,
     required this.title,
     required this.svgPath,
     required this.onPressed,
+    this.isAvailable = true,
   });
 
   @override
@@ -21,14 +23,16 @@ class CustomSvgButton extends StatelessWidget {
     final totalHeight = MediaQuery.of(context).size.height;
 
     return GestureDetector(
-      onTap: onPressed,
+      onTap: isAvailable ? onPressed : null,
       child: Container(
         width: double.infinity,
         height: totalHeight * 0.06,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           gradient: LinearGradient(
-            colors: [colors.gradientButtonsStart, colors.gradientButtonsEnd],
+            colors: isAvailable
+            ? [colors.gradientButtonsStart, colors.gradientButtonsEnd]
+            : [colors.gradientButtonsUnavailableStart, colors.gradientButtonsUnavailableEnd],
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
           ),
