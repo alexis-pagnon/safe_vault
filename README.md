@@ -38,7 +38,7 @@ Safe Vault is a secure mobile application for managing and protecting your passw
 ### Installation
 1. Clone the repository:
 	```bash
-	git clone https://github.com/yourusername/safe_vault.git
+	git clone https://github.com/alexis-pagnon/safe_vault.git
 	cd safe_vault
 	```
 2. Install dependencies:
