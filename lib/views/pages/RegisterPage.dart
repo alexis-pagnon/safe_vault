@@ -25,8 +25,10 @@ class _RegisterPageState extends State<RegisterPage> with WidgetsBindingObserver
 
   bool _hasKeyboard = false;
 
+  /// Compute if the keyboard is open or not.<br>
+  /// @return True if the keyboard is open, false otherwise.
   bool _computeHasKeyboard() {
-    // Source la plus fiable: insets du moteur (ne dépend pas du BuildContext)
+    // Most reliable source: engine insets (does not depend on BuildContext)
     final view = WidgetsBinding.instance.platformDispatcher.views.first;
     return view.viewInsets.bottom > 0;
   }
@@ -36,7 +38,7 @@ class _RegisterPageState extends State<RegisterPage> with WidgetsBindingObserver
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
-    // Valeur initiale après le premier layout
+    // Initial value after the first layout
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       final hasKeyboard = _computeHasKeyboard();
@@ -50,6 +52,7 @@ class _RegisterPageState extends State<RegisterPage> with WidgetsBindingObserver
   void didChangeMetrics() {
     super.didChangeMetrics();
 
+    // Update the keyboard state when the metrics change
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       final hasKeyboard = _computeHasKeyboard();
@@ -82,6 +85,7 @@ class _RegisterPageState extends State<RegisterPage> with WidgetsBindingObserver
         backgroundColor: colors.background,
         body: Stack(
           children: [
+            // The page
             Padding(
               padding: EdgeInsets.symmetric(horizontal: totalWidth * 0.04),
               child: LayoutBuilder(
@@ -160,15 +164,20 @@ class _RegisterPageState extends State<RegisterPage> with WidgetsBindingObserver
                               onPressed: () async {
                                 final isPasswordsSimilar = controllers[0].text == controllers[1].text;
                                 bool isPasswordRespectRequirements = false;
-        
+
+                                // If the passwords are similar, check if they respect the requirements
                                 if (isPasswordsSimilar) {
                                   final Map<String, dynamic> analysis = PasswordGenerator.completePasswordStrengthAnalysis(controllers[0].text);
                                   isPasswordRespectRequirements = analysis['length'] && analysis['uppercase'] && analysis['numbers'] && analysis['specialChars'];
                                 }
-        
+
+                                // If the passwords are similar and respect the requirements, register the user
                                 if (isPasswordsSimilar && isPasswordRespectRequirements) {
                                   await authenticationProvider.registerNewUser(controllers[0].text);
-                                } else {
+                                }
+
+                                // Else, show an error message with a snackbar
+                                else {
                                   final SnackBar snackBar;
                                   if (!isPasswordsSimilar) {
                                     snackBar = SnackBar(
@@ -178,7 +187,8 @@ class _RegisterPageState extends State<RegisterPage> with WidgetsBindingObserver
         
                                       content: AwesomeSnackbarContent(title: 'Erreur', message: 'Vos mots de passe ne correspondent pas.', contentType: ContentType.failure),
                                     );
-                                  } else {
+                                  }
+                                  else {
                                     snackBar = SnackBar(
                                       elevation: 0,
                                       behavior: SnackBarBehavior.floating,
@@ -187,7 +197,8 @@ class _RegisterPageState extends State<RegisterPage> with WidgetsBindingObserver
                                       content: AwesomeSnackbarContent(title: 'Erreur', message: 'Votre mot de passe ne respecte pas les critères de sécurité.', contentType: ContentType.failure),
                                     );
                                   }
-        
+
+                                  // Permit to show the AwesomeSnackbar in the bottom of the screen
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     snackBar,
                                     snackBarAnimationStyle: AnimationStyle(curve: Curves.easeIn, duration: Duration(milliseconds: 100)),

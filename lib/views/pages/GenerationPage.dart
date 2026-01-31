@@ -25,7 +25,7 @@ class _GenerationPageState extends State<GenerationPage> {
   bool lowerCase = true;
   bool upperCase = true;
   bool numbers = true;
-  bool charactSpecial = true;
+  bool specialCharacters = true;
 
   @override
   void dispose() {
@@ -43,7 +43,7 @@ class _GenerationPageState extends State<GenerationPage> {
     final totalHeight = MediaQuery.of(context).size.height;
 
     final bool isAtLeastOneTypeSelected =
-        lowerCase || upperCase || numbers || charactSpecial;
+        lowerCase || upperCase || numbers || specialCharacters;
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -160,7 +160,7 @@ class _GenerationPageState extends State<GenerationPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            // Minuscules
+                            // LowerCase
                             Text(
                               'Minuscules',
                               style: TextStyle(
@@ -189,7 +189,7 @@ class _GenerationPageState extends State<GenerationPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            // Minuscules
+                            // UpperCase
                             Text(
                               'Majuscules',
                               style: TextStyle(
@@ -218,7 +218,7 @@ class _GenerationPageState extends State<GenerationPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            // Minuscules
+                            // Numbers
                             Text(
                               'Chiffres',
                               style: TextStyle(
@@ -247,7 +247,7 @@ class _GenerationPageState extends State<GenerationPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            // Minuscules
+                            // Specials Characters
                             Text(
                               'Caractères spéciaux',
                               style: TextStyle(
@@ -267,21 +267,24 @@ class _GenerationPageState extends State<GenerationPage> {
                               icons: [Icons.close_rounded, Icons.check_rounded],
                               onToggle: () {
                                 setState(() {
-                                  charactSpecial = !charactSpecial;
+                                  specialCharacters = !specialCharacters;
                                 });
                               },
                             ),
                           ],
                         ),
 
+                        // Little Spacing
+                        SizedBox(),
+
                         // Generate Password Button
                         CustomSvgButton(
-                            title: 'Générer un mot de passe',
-                            svgPath: 'assets/svg/stars.svg',
-                            isAvailable: isAtLeastOneTypeSelected,
-                            onPressed: () {
-                              controllers[0].text = PasswordGenerator.generateRandomPassword(passwordLength, lowerCase, upperCase, numbers, charactSpecial);
-                            },
+                          title: 'Générer un mot de passe',
+                          svgPath: 'assets/svg/stars.svg',
+                          isAvailable: isAtLeastOneTypeSelected,
+                          onPressed: () {
+                            controllers[0].text = PasswordGenerator.generateRandomPassword(passwordLength, lowerCase, upperCase, numbers, specialCharacters);
+                          },
                         ),
                       ],
                     ),

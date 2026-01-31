@@ -135,7 +135,9 @@ class CustomNote extends StatelessWidget {
                                         isEditing: true,
                                       ),
                                     );
-                                  } else if (value == 'delete') {
+                                  }
+
+                                  else if (value == 'delete') {
                                     dbProvider.deleteNote(note.id_note!);
                                   }
                                 },
@@ -149,6 +151,7 @@ class CustomNote extends StatelessWidget {
                                 splashRadius: 0.1,
 
                                 itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                                  // Edit Menu
                                   PopupMenuItem<String>(
                                     value: 'edit',
                                     child: Text(
@@ -161,6 +164,8 @@ class CustomNote extends StatelessWidget {
                                     ),
 
                                   ),
+
+                                  // Delete Menu
                                   PopupMenuItem<String>(
                                     value: 'delete',
                                     child: Text(
@@ -177,6 +182,7 @@ class CustomNote extends StatelessWidget {
                             ),
                           ),
 
+                          // Spacing
                           SizedBox(width: totalWidth * 0.01),
                         ],
                       ),

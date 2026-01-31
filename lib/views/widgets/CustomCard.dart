@@ -8,7 +8,6 @@ class CustomCard extends StatelessWidget {
   final String subtitle;
   final VoidCallback onPressed;
 
-
   const CustomCard({
     super.key,
     required this.svgPath,
@@ -44,11 +43,14 @@ class CustomCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Image
             SvgPicture.asset(
               svgPath,
               height: totalHeight * 0.04,
               colorFilter: ColorFilter.mode(colors.text3, BlendMode.srcIn),
             ),
+
+            // Title
             Text(
               title,
               style: TextStyle(
@@ -57,6 +59,8 @@ class CustomCard extends StatelessWidget {
                 color: colors.text3,
               ),
             ),
+
+            // Subtitle
             Text(
               subtitle,
               style: TextStyle(

@@ -33,7 +33,9 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  List<Color> _getGradientForScore(int score, AppColors colors) {
+  /// Get the gradient for the score.<br>
+  /// @param score The score.<br>
+  List<Color> _getGradientForScore(int score) {
     if (score < 25) {
       return [ Color(0xFFFF3939).withAlpha(76), Color(0xFFFF3939)];
     } else if (score < 50) {
@@ -111,7 +113,7 @@ class _HomePageState extends State<HomePage> {
                         builder: (BuildContext context, RobustnessProvider robustnessProvider, Widget? child) {
 
                           // Update the gradient based on the score
-                          currentGradient = _getGradientForScore(robustnessProvider.totalScore, colors);
+                          currentGradient = _getGradientForScore(robustnessProvider.totalScore);
 
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -327,6 +329,7 @@ class _HomePageState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     spacing: totalHeight * 0.022,
                     children: [
+                      // Title
                       Text(
                         "Catégories",
                         style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: colors.text2),
@@ -349,7 +352,7 @@ class _HomePageState extends State<HomePage> {
                             },),
                           ),
 
-                          // Website
+                          // Social Network
                           AnimatedOpacity(
                             opacity: globalOpacity,
                             curve: Curves.easeIn,
@@ -377,7 +380,7 @@ class _HomePageState extends State<HomePage> {
                             },),
                           ),
 
-                          // Website
+                          // Payments
                           AnimatedOpacity(
                             opacity: globalOpacity,
                             curve: Curves.easeIn,

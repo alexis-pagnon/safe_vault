@@ -7,7 +7,6 @@ class CustomStrengthWidget extends StatefulWidget {
   final TextEditingController controller;
   final bool obligation;
 
-
   const CustomStrengthWidget({
     super.key,
     required this.controller,
@@ -36,6 +35,7 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
     super.dispose();
   }
 
+  /// Change the color of the indicator based on the strength.
   void changeColor(String strength) {
     switch (strength) {
       case "Très faible":
@@ -58,6 +58,7 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
     }
   }
 
+  /// Get the value of the strength.
   double getValue(String strength) {
     switch (strength) {
       case "Très faible":
@@ -75,6 +76,7 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
     }
   }
 
+  /// Update the strength of the password & the UI color
   void _onTextChanged() {
     String password = widget.controller.text;
 
@@ -115,6 +117,7 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
               ),
             ),
 
+            // Spacing
             Spacer(),
 
             // Indicator Title
@@ -168,11 +171,13 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
                 Row(
                 spacing: totalWidth * 0.02,
                 children: [
+                  // Cancel Icon
                   SvgPicture.asset(
                     "assets/svg/cancel.svg",
                     height: totalHeight * 0.028,
                   ),
 
+                  // Length Text
                   Text(
                     "Au moins 12 caractères",
                     style: TextStyle(
@@ -189,11 +194,13 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
                 Row(
                 spacing: totalWidth * 0.02,
                 children: [
+                  // Cancel Icon
                   SvgPicture.asset(
                     "assets/svg/cancel.svg",
                     height: totalHeight * 0.028,
                   ),
 
+                  // Upper Text
                   Text(
                     "Ajouter des majuscules",
                     style: TextStyle(
@@ -210,11 +217,13 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
                 Row(
                 spacing: totalWidth * 0.02,
                 children: [
+                  // Cancel Icon
                   SvgPicture.asset(
                     "assets/svg/cancel.svg",
                     height: totalHeight * 0.028,
                   ),
 
+                  // Numbers Text
                   Text(
                     "Ajouter des chiffres",
                     style: TextStyle(
@@ -231,11 +240,13 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
                 Row(
                 spacing: totalWidth * 0.02,
                 children: [
+                  // Cancel Icon
                   SvgPicture.asset(
                     "assets/svg/cancel.svg",
                     height: totalHeight * 0.028,
                   ),
 
+                  // Special Text
                   Text(
                     "Ajoutez des symboles",
                     style: TextStyle(
@@ -246,7 +257,6 @@ class _CustomStrengthWidgetState extends State<CustomStrengthWidget> {
                   ),
                 ],
               ),
-
             ],
           ),
         )

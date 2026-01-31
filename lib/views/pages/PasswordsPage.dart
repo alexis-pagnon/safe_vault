@@ -27,6 +27,8 @@ class _PasswordsPageState extends State<PasswordsPage> {
   @override
   void initState() {
     super.initState();
+
+    // Initializing the global opacity at 1 when the page load to start the animations
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       setState(() {
@@ -282,8 +284,6 @@ class _PasswordsPageState extends State<PasswordsPage> {
                               },
                             ),
 
-
-
                             // Spacing
                             SizedBox(width: totalWidth * 0.03),
                           ],
@@ -299,6 +299,7 @@ class _PasswordsPageState extends State<PasswordsPage> {
 
                     final passwords = dbProvider.filteredPasswords();
 
+                    // If there are no passwords, show a message
                     if (passwords.isEmpty) {
                       return Text(
                         "Aucun mot de passe trouvé.",
@@ -309,12 +310,15 @@ class _PasswordsPageState extends State<PasswordsPage> {
                         ),
                       );
                     }
+
+                    // If there are passwords, show them
                     return Column(
                       spacing: totalHeight * 0.025,
                       children: passwords.asMap().entries.map((entry) {
                         int index = entry.key + 1;
                         var pwd = entry.value;
 
+                        // Fade in the password cards
                         return AnimatedOpacity(
                           key: ValueKey(pwd.id_pwd),
                           opacity: opacity,

@@ -15,6 +15,7 @@ class ThemeController extends ChangeNotifier {
 
   bool get isDark => _isDark;
 
+  /// Toggle theme between light and dark
   void toggleTheme() {
     _theme = isDark ? AppThemes.light : AppThemes.dark;
     _isDark = !isDark;

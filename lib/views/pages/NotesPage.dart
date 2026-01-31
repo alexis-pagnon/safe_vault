@@ -24,6 +24,8 @@ class _NotesPageState extends State<NotesPage> {
   @override
   void initState() {
     super.initState();
+
+    // Initializing the global opacity at 1 when the page load to start the animations
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         opacity = 1;
@@ -188,6 +190,7 @@ class _NotesPageState extends State<NotesPage> {
 
                     final notes = dbProvider.searchNotes();
 
+                    // If there are no notes, show a message
                     if (notes.isEmpty) {
                       return Text(
                         "Aucune notes trouvé.",
@@ -198,6 +201,8 @@ class _NotesPageState extends State<NotesPage> {
                         ),
                       );
                     }
+
+                    // If there are notes, show them
                     return Column(
                       spacing: totalHeight * 0.025,
                       children: notes.asMap().entries.map((entry) {
@@ -205,6 +210,7 @@ class _NotesPageState extends State<NotesPage> {
                         final note = entry.value;
                         final position = index + 1;
 
+                        // Fade in the note cards
                         return AnimatedOpacity(
                           duration: Duration(milliseconds: 400 + position * 100),
                           curve: Curves.easeInOut,

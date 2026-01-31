@@ -14,7 +14,6 @@ class CustomNoteVisualisationPopup extends StatelessWidget {
     required this.content
   });
 
-
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>()!;

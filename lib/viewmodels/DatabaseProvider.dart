@@ -56,6 +56,8 @@ class DatabaseProvider with ChangeNotifier {
   }
 
 
+  /// Set the name of the database.<br>
+  /// @param name The name of the database.<br>
   void setDatabaseName(String name) {
     _databaseName = name;
     notifyListeners();

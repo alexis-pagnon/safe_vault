@@ -29,7 +29,7 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
   // Creation of a list of 4 TextEditingController for the 4 TextFields
   List<TextEditingController> controllers = List.generate(4, (index) => TextEditingController());
 
-  // Permet d’éviter de réinitialiser les champs à chaque appel de didChangeDependencies
+  // This avoids resetting the fields on each call to didChangeDependencies
   Password? _lastPasswordToUpdate;
 
 
@@ -104,7 +104,6 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
           children: <Widget>[
             // Top Side
             Container(
-              //height: totalHeight * 0.1,
               width: double.infinity,
               padding: EdgeInsets.all(totalWidth * 0.08),
               decoration: BoxDecoration(
@@ -330,7 +329,7 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                             ),
                           ),
                         ),
-                        // Name Input
+                        // Password Input
                         CustomTextField(
                           hintText: 'ex: w!qn&fXI)4+FVL8jFZ',
                           eye: true,
@@ -346,6 +345,7 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                             title: 'Générer un mot de passe',
                             svgPath: 'assets/svg/stars.svg',
                             onPressed: (){
+                              // Generate a random password of 20 characters and update the TextField
                               controllers[3].text = PasswordGenerator.generateRandomPassword(20, true, true, true, true);
                               setState(() {});
                             }

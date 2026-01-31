@@ -23,7 +23,7 @@ class CustomSvgButton extends StatelessWidget {
     final totalHeight = MediaQuery.of(context).size.height;
 
     return GestureDetector(
-      onTap: isAvailable ? onPressed : null,
+      onTap: isAvailable ? onPressed : null, // Disable button if not available
       child: Container(
         width: double.infinity,
         height: totalHeight * 0.06,
@@ -39,6 +39,7 @@ class CustomSvgButton extends StatelessWidget {
         ),
         child: Row(
           children: [
+            // Svg
             Padding(
               padding: EdgeInsets.symmetric(horizontal: totalWidth * 0.025),
               child: SvgPicture.asset(
@@ -47,6 +48,8 @@ class CustomSvgButton extends StatelessWidget {
                 colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
               ),
             ),
+
+            // Title
             Text(
               title,
               style: const TextStyle(

@@ -27,6 +27,7 @@ class CustomCategoryButton extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         decoration: BoxDecoration(
+          // The color changes when the button is selected
           color: isSelected
               ? colors.gradientButtonsStart
               : colors.containerBackground1,

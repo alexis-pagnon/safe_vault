@@ -34,7 +34,6 @@ class _CustomNavBarState extends State<CustomNavBar> {
     selectedIndex = context.watch<PageNavigatorProvider>().currentPage;
   }
 
-
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>()!;
@@ -71,25 +70,34 @@ class _CustomNavBarState extends State<CustomNavBar> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
+                  // Home Page Button
                   InkWell(
                     onTap: () {
                       navigator.jumpToPage(0);
                     },
                     child: _navItem(Icons.home_rounded, selectedIndex == 0, context)
                   ),
+
+                  // Passwords Page Button
                   InkWell(
                       onTap: () {
                         navigator.jumpToPage(1);
                       },
                       child: _navItem(Icons.lock, selectedIndex == 1, context)
                   ),
+
+                  // Spacing
                   SizedBox(width: 60),
+
+                  // Generation Page Button
                   InkWell(
                       onTap: () {
                         navigator.jumpToPage(3);
                       },
                       child: _navItem(Icons.auto_awesome_rounded, selectedIndex == 3, context)
                   ),
+
+                  // Notes Page Button
                   InkWell(
                       onTap: () {
                         navigator.jumpToPage(4);
@@ -101,7 +109,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
             ),
           ),
 
-          // Circle
+          // Middle Circle
           Positioned(
             top: -20,
             left: 0,
@@ -140,6 +148,10 @@ class _CustomNavBarState extends State<CustomNavBar> {
   }
 }
 
+/// Create a navigation item for the bottom navigation bar.
+/// @param icon The icon to display.
+/// @param active Whether the item is active or not.
+/// @param context The context of the widget.
 Widget _navItem(IconData icon, bool active, BuildContext context) {
   final colors = Theme.of(context).extension<AppColors>()!;
 

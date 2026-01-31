@@ -35,6 +35,7 @@ class _CustomLittleCardState extends State<CustomLittleCard> {
     super.dispose();
   }
 
+  /// Update the state of the widget when the selected index changes.
   void _updateState() {
     setState(() {});
   }
@@ -58,7 +59,7 @@ class _CustomLittleCardState extends State<CustomLittleCard> {
         width: totalWidth * 0.365,
 
         decoration: BoxDecoration(
-          //color: selectedIndex == widget.index ? Color(0xFF0069FF).withOpacity(0.1) : colors.containerBackground1,
+          // The color changes when the button is selected
           gradient: selectedIndex == widget.index
             ? LinearGradient(
                 begin: Alignment.topCenter,
@@ -81,11 +82,14 @@ class _CustomLittleCardState extends State<CustomLittleCard> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            // Image
             SvgPicture.asset(
               widget.svgPath,
               height: totalHeight * 0.04,
               colorFilter: ColorFilter.mode(colors.text3, BlendMode.srcIn),
             ),
+
+            // Title
             Text(
               widget.title,
               style: TextStyle(

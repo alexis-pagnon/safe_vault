@@ -43,6 +43,7 @@ class _CustomNoteCreationPopupState extends State<CustomNoteCreationPopup> {
     contentController.addListener(_recomputeFormValidity);
   }
 
+  /// Recompute the form validity.
   void _recomputeFormValidity() {
     bool isValid = (titleController.text.trim().isNotEmpty &&
         contentController.text.trim().isNotEmpty);
@@ -181,7 +182,7 @@ class _CustomNoteCreationPopupState extends State<CustomNoteCreationPopup> {
                   ),
                 ),
 
-                // Toggle Switch
+                // Toggle Switch for Temporary Note
                 CustomToggleSwitch(
                   initialValue: widget.initialIsTemporary ? 1 : 0,
                   thumbColor: [Color(0xFFCC3C3C), Color(0xFF5C9828)],
@@ -234,6 +235,7 @@ class _CustomNoteCreationPopupState extends State<CustomNoteCreationPopup> {
                           final title = titleController.text;
                           final content = contentController.text;
 
+                          // Update or Insert the note
                           if(widget.isEditing) {
                             dbProvider.updateNote(Note(
                               id_note: widget.idNote,
@@ -242,14 +244,14 @@ class _CustomNoteCreationPopupState extends State<CustomNoteCreationPopup> {
                               date: DateTime.now().millisecondsSinceEpoch,
                               isTemporary: _isTemporary,
                             ));
-                          } else {
+                          }
+                          else {
                             dbProvider.insertNote(Note(
                               title: title,
                               content: content,
                               date: DateTime.now().millisecondsSinceEpoch,
                               isTemporary: _isTemporary,
                             ));
-
                           }
 
                           if (context.mounted) {

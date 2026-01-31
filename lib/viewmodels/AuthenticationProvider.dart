@@ -99,6 +99,7 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
+  /// Check if biometrics are available
   void _initBiometrics() async {
     final localAuth = LocalAuthentication();
     final canCheckBiometrics = await localAuth.canCheckBiometrics;

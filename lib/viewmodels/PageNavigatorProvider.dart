@@ -53,6 +53,8 @@ class PageNavigatorProvider extends ChangeNotifier {
   }
 
 
+  /// Jump to the update password page and notify listeners.<br>
+  /// @param password The password to update.
   void jumpToUpdatePassword(Password password) {
     _passwordToUpdate = password;
     notifyListeners();

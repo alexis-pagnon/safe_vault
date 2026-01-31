@@ -130,6 +130,7 @@ class _CustomPasswordCardState extends State<CustomPasswordCard> {
                           },
                         ),
 
+                        // Spacing
                         SizedBox(width: totalWidth * 0.01),
 
                         // Menu
@@ -180,6 +181,7 @@ class _CustomPasswordCardState extends State<CustomPasswordCard> {
                             
                               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                                 if(widget.password.website.isNotEmpty)
+                                  // Website Menu
                                   PopupMenuItem<String>(
                                     value: 'access',
                                     child: Text(
@@ -192,6 +194,7 @@ class _CustomPasswordCardState extends State<CustomPasswordCard> {
                                     ),
                                   ),
 
+                                // Edit Menu
                                 PopupMenuItem<String>(
                                   value: 'edit',
                                   child: Text(
@@ -204,6 +207,7 @@ class _CustomPasswordCardState extends State<CustomPasswordCard> {
                                   ),
                                 ),
 
+                                // Delete Menu
                                 PopupMenuItem<String>(
                                   value: 'delete',
                                   child: Text(

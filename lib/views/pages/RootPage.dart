@@ -13,6 +13,8 @@ import 'HomePage.dart';
 import 'NotesPage.dart';
 import 'PasswordsPage.dart';
 
+// This page is the root of our application. It contains the navigation bar and the pages.
+// With the widget PageView, we can navigate between the pages.
 class RootPage extends StatefulWidget {
   const RootPage({super.key});
 
@@ -33,12 +35,13 @@ class _RootPageState extends State<RootPage> {
       if (robustness.initialized) {
         checkOldAndCompromisedPasswords();
       } else {
-        // Attendre l'initialisation
+        // Await the initialization of the robustness provider
         robustness.addListener(_onRobustnessReady);
       }
     });
   }
 
+  /// Callback when the robustness provider is ready
   void _onRobustnessReady() {
     final robustness = context.read<RobustnessProvider>();
     if (!robustness.initialized) return;
@@ -114,6 +117,8 @@ class _RootPageState extends State<RootPage> {
     prefs.setPreviousCompromisedPassword(robustness.compromisedPasswords);
   }
 
+  /// Show a snackbar with the given message <br>
+  /// @param message The message to show. <br>
   void showSnackBar(String message) {
     final colors = Theme.of(context).extension<AppColors>()!;
 

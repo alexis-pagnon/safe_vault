@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:safe_vault/models/theme/AppColors.dart';
 
 class AppThemes {
+  // Light Theme Colors
   static final ThemeData light = ThemeData(
     brightness: Brightness.dark,
     fontFamily: "Montserrat",
@@ -38,6 +39,7 @@ class AppThemes {
     ],
   );
 
+  // Dark Theme Colors
   static final ThemeData dark = ThemeData(
     brightness: Brightness.dark,
     fontFamily: "Montserrat",

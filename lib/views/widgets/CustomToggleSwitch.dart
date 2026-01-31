@@ -44,6 +44,7 @@ class _CustomToggleSwitchState extends State<CustomToggleSwitch> {
         });
       },
       child: AnimatedContainer(
+        // Animation to change color
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
         width: totalWidth * 0.15,
@@ -53,6 +54,7 @@ class _CustomToggleSwitchState extends State<CustomToggleSwitch> {
           borderRadius: BorderRadius.circular(30),
         ),
         child: AnimatedAlign(
+          // Animation to change position
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
           alignment: value == 1 ? Alignment.centerRight : Alignment.centerLeft,

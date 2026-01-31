@@ -4,12 +4,12 @@ import '../../models/theme/AppColors.dart';
 
 class CustomTextField extends StatefulWidget {
   final String hintText;
-  final bool copy;
-  final bool eye;
-  final bool search;
-  final bool delete;
+  final bool copy; // Copy to clipboard icon
+  final bool eye; // Show password icon
+  final bool search; // Search icon
+  final bool delete; // Delete icon
   final TextEditingController controller;
-  final bool editable;
+  final bool editable; // If the text field is editable or not
   final Function(String)? onChanged;
 
   const CustomTextField({
@@ -39,6 +39,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
     widget.controller.addListener(_onChanged);
   }
 
+  /// Listener for the controller changes.
   void _onChanged() {
     if(widget.onChanged != null) {
       widget.onChanged!(widget.controller.text);
@@ -63,7 +64,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
       readOnly: !widget.editable,
       controller: widget.controller,
 
-
       style: TextStyle(
         fontFamily: 'Montserrat',
         fontSize: 14,
@@ -72,7 +72,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
       ),
 
       decoration: InputDecoration(
-
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
@@ -100,7 +99,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
         fillColor: colors.containerBackground2,
         filled: true,
 
-
         prefixIcon: widget.search
           ? Padding(
               padding: EdgeInsets.only(left: totalWidth * 0.03, right: totalWidth * 0.01),
@@ -114,6 +112,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           mainAxisAlignment: MainAxisAlignment.end,
           mainAxisSize: MainAxisSize.min,
           children: [
+            // Eye Icon
             if(widget.eye)
               InkWell(
                   onTap: () {
@@ -127,9 +126,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   ),
                 ),
 
+            // Spacing only if they are 2 icons on the right
             if(widget.eye && widget.copy || widget.eye && widget.delete || widget.copy && widget.delete)
               SizedBox(width: totalWidth * 0.02),
 
+            // Copy Icon
             if(widget.copy)
               InkWell(
                 onTap: () {
@@ -141,6 +142,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 ),
               ),
 
+            // Delete Icon
             if(widget.delete)
               InkWell(
                 onTap: () {
@@ -153,6 +155,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 )
               ),
 
+            // Spacing only if they are minimum 1 icon on the right
             if(widget.eye || widget.copy || widget.delete)
               SizedBox(width: totalWidth * 0.03),
           ],

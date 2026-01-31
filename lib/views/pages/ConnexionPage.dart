@@ -33,7 +33,6 @@ class _ConnexionPageState extends State<ConnexionPage> {
     final colors = Theme.of(context).extension<AppColors>()!;
     final totalWidth = MediaQuery.of(context).size.width;
     final totalHeight = MediaQuery.of(context).size.height;
-
     final authenticationProvider = Provider.of<AuthenticationProvider>(context, listen: false);
 
     return SafeArea(
@@ -41,6 +40,7 @@ class _ConnexionPageState extends State<ConnexionPage> {
         backgroundColor: colors.background,
         body: Stack(
           children: [
+            // The page
             Padding(
               padding: EdgeInsets.symmetric(horizontal: totalWidth * 0.04),
               child: Column(
